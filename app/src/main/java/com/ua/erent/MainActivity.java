@@ -36,28 +36,34 @@ import retrofit2.http.POST;
 
 public class MainActivity extends AppCompatActivity {
 
-    @Inject ITestService service;
+    @Inject
+    ITestService service;
 
-    @BindView(R.id.button) Button button;
-    @BindView(R.id.text_view) TextView textView;
-    @BindView(R.id.login_fld) EditText loginFld;
-    @BindView(R.id.password_fld) EditText passwordFld;
+    @BindView(R.id.button)
+    Button button;
+    @BindView(R.id.text_view)
+    TextView textView;
+    @BindView(R.id.login_fld)
+    EditText loginFld;
+    @BindView(R.id.password_fld)
+    EditText passwordFld;
 
-    private static final String API_BASE = "http://your url goes here/";
+    private static final String API_BASE = "http://erent.bget.ru/";
 
+    private final Retrofit retrofit;
     private final IAuthAPI api;
 
     public interface IAuthAPI {
 
         @Headers("Content-Type: application/json")
-        @POST("/v1/auth")
+        @POST("/app_acceptance.php/login")
         Call<AuthResponse> authorize(@Body RequestBody requestBody);
 
     }
 
     private static class AuthContainer {
 
-        @SerializedName("login")
+        @SerializedName("username")
         String login;
         @SerializedName("password")
         String password;
@@ -104,7 +110,8 @@ public class MainActivity extends AppCompatActivity {
                 client(httpClient.build()).
                 addConverterFactory(GsonConverterFactory.create(gson));
 
-        api = builder.build().create(IAuthAPI.class);
+        retrofit = builder.build();
+        api = retrofit.create(IAuthAPI.class);
     }
 
     private static String bodyToString(final RequestBody request) {
@@ -147,7 +154,18 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
 
                 String message = "Response code: " + response.code() + "\n";
-                message += "Response body: " + (response.body() == null ? "none" : response.body().getToken());
+
+                message += "Response body: ";
+
+                AuthResponse authResponse = response.body();
+
+                if (authResponse == null && response.errorBody() == null) {
+                    message += "none";
+                } else if (response.errorBody() != null) {
+                    message += ErrorUtils.parseError(retrofit, response).toString();
+                } else {
+                    message += authResponse.toString();
+                }
 
                 textView.setText(message);
             }
