@@ -1,6 +1,9 @@
-package com.ua.erent;
+package com.ua.erent.module.core.di.module;
 
 import android.app.Application;
+
+import com.ua.erent.AppServiceImp;
+import com.ua.erent.IAppService;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -10,14 +13,18 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
+ * <p>
+ *     Module that provides with application
+ *     context
+ * </p>
  * Created by Максим on 10/9/2016.
  */
 @Module
-public class TestModule {
+public final class AppModule {
 
     private final Application app;
 
-    public TestModule(@NotNull Application application) {
+    public AppModule(@NotNull Application application) {
         app = application;
     }
 
@@ -29,8 +36,8 @@ public class TestModule {
 
     @Provides
     @Singleton
-    ITestService provideTestService() {
-        return new TestService(app);
+    protected IAppService provideAppService() {
+        return new AppServiceImp(app);
     }
 
 }

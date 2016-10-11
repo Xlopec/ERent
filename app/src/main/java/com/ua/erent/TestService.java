@@ -10,11 +10,15 @@ import javax.inject.Inject;
  */
 public class TestService implements ITestService {
 
+    static int i = 0;
+
     private final Context context;
 
     @Inject
     public TestService(Context context) {
         this.context = context;
+        Toast.makeText(context, String.format("%d instances were created", i), Toast.LENGTH_SHORT).show();
+        i++;
     }
 
     @Override

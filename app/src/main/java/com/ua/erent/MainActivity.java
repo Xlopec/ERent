@@ -1,5 +1,6 @@
 package com.ua.erent;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
+import com.ua.erent.module.core.di.Injector;
+import com.ua.erent.module.core.di.component.TestComponent;
 
 import java.io.IOException;
 
@@ -19,15 +22,12 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import okio.Buffer;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
@@ -73,16 +73,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public MainActivity() {
-        final ITestComponent component = AndroidApplication.getComponent();
 
-        component.inject(this);
-        this.service = component.getService();
+       // InjectionManager.instance().addMapping(getClass(), TestComponent.class);
+        TestComponent provider = Injector.injector().getComponent(TestComponent.class);
+
+        service = provider.getTestService();
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
-        final Gson gson = new GsonBuilder().
-                //registerTypeAdapter(ParametrizedResponse.class, new ParameterizedJSONParser<>());
-                        create();
+        final Gson gson = new GsonBuilder().create();
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
@@ -139,7 +138,9 @@ public class MainActivity extends AppCompatActivity {
 
         service.f();
 
-        AuthContainer authContainer = new AuthContainer();
+        this.startActivity(new Intent(this, NextActivity.class));
+        finish();
+       /* AuthContainer authContainer = new AuthContainer();
 
         authContainer.login = loginFld.getText().toString();
         authContainer.password = passwordFld.getText().toString();
@@ -174,7 +175,11 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(Call<AuthResponse> call, Throwable t) {
                 textView.setText("Failure: " + t.getMessage());
             }
-        });
+        });*/
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }
