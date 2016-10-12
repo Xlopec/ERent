@@ -1,9 +1,7 @@
-package com.ua.erent.module.core.di.module;
+package com.ua.erent;
 
 import android.app.Application;
 
-import com.ua.erent.ITestService;
-import com.ua.erent.TestService;
 import com.ua.erent.module.core.di.scopes.PerActivity;
 
 import dagger.Module;

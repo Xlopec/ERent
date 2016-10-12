@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 
 import com.ua.erent.module.core.di.Injector;
-import com.ua.erent.module.core.di.component.AppComponent;
+import com.ua.erent.module.core.app.component.AppComponent;
 
 public class NextActivity extends AppCompatActivity {
 

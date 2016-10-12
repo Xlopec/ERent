@@ -1,9 +1,6 @@
-package com.ua.erent.module.core.di.component;
+package com.ua.erent;
 
-import android.app.Activity;
-
-import com.ua.erent.ITestService;
-import com.ua.erent.module.core.di.module.TestModule;
+import com.ua.erent.module.core.app.component.AppComponent;
 import com.ua.erent.module.core.di.scopes.PerActivity;
 
 import dagger.Component;
@@ -20,6 +17,6 @@ public interface TestComponent {
 
     ITestService getTestService();
 
-    void inject(Activity activity);
+    //void inject(Activity activity);
 
 }

@@ -1,9 +1,9 @@
-package com.ua.erent.module.core.di.component;
+package com.ua.erent.module.core.app.component;
 
 import android.app.Application;
 
 import com.ua.erent.IAppService;
-import com.ua.erent.module.core.di.module.AppModule;
+import com.ua.erent.module.core.app.module.AppModule;
 
 import javax.inject.Singleton;
 

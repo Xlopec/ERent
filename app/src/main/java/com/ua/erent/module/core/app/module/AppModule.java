@@ -1,4 +1,4 @@
-package com.ua.erent.module.core.di.module;
+package com.ua.erent.module.core.app.module;
 
 import android.app.Application;
 

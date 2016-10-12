@@ -3,17 +3,14 @@ package com.ua.erent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import com.ua.erent.module.core.di.Injector;
-import com.ua.erent.module.core.di.component.TestComponent;
+import com.ua.erent.module.core.networking.component.NetworkingComponent;
 
 import java.io.IOException;
 
@@ -22,17 +19,15 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.logging.HttpLoggingInterceptor;
 import okio.Buffer;
 import retrofit2.Call;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+
+import static com.ua.erent.module.core.di.Injector.injector;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String API_BASE = "http://erent.bget.ru/";
 
-    private final Retrofit retrofit;
-    private final IAuthAPI api;
+    private Retrofit retrofit;
+    private IAuthAPI api;
 
     public interface IAuthAPI {
 
@@ -75,41 +70,11 @@ public class MainActivity extends AppCompatActivity {
     public MainActivity() {
 
        // InjectionManager.instance().addMapping(getClass(), TestComponent.class);
-        TestComponent provider = Injector.injector().getComponent(TestComponent.class);
+        TestComponent provider = injector().getComponent(TestComponent.class);
+        NetworkingComponent networkingComponent = Injector.injector().getComponent(NetworkingComponent.class);
 
         service = provider.getTestService();
-
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-
-        final Gson gson = new GsonBuilder().create();
-
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
-
-        httpClient.
-                addNetworkInterceptor(
-                        (chain) -> {
-                            final Request original = chain.request();
-
-                            final String toString = bodyToString(original.body());
-
-                            Log.d("Tag", "Request body: " + toString);
-
-                            final Request request = original.newBuilder().
-                                    method(original.method(), original.body()).
-                                    build();
-
-                            return chain.proceed(request);
-                        }
-                ).
-                addInterceptor(logging);
-
-        Retrofit.Builder builder = new Retrofit.Builder().
-                baseUrl(API_BASE).
-                client(httpClient.build()).
-                addConverterFactory(GsonConverterFactory.create(gson));
-
-        retrofit = builder.build();
+        retrofit = networkingComponent.getRetrofit();
         api = retrofit.create(IAuthAPI.class);
     }
 

@@ -1,9 +1,6 @@
-package com.ua.erent.module.core.di;
+package com.ua.erent;
 
-import com.ua.erent.module.core.di.component.AppComponent;
-import com.ua.erent.module.core.di.component.DaggerTestComponent;
-import com.ua.erent.module.core.di.component.TestComponent;
-import com.ua.erent.module.core.di.module.TestModule;
+import com.ua.erent.module.core.app.component.AppComponent;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
