@@ -2,8 +2,8 @@ package com.ua.erent.module.core.app.module;
 
 import android.app.Application;
 
-import com.ua.erent.AppServiceImp;
-import com.ua.erent.IAppService;
+import com.ua.erent.trash.AppServiceImp;
+import com.ua.erent.trash.IAppService;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -14,8 +14,7 @@ import dagger.Provides;
 
 /**
  * <p>
- *     Module that provides with application
- *     context
+ *     Module which provides application context
  * </p>
  * Created by Максим on 10/9/2016.
  */
@@ -30,13 +29,13 @@ public final class AppModule {
 
     @Provides
     @Singleton
-    protected Application provideApplication() {
+    Application provideApplication() {
         return app;
     }
 
     @Provides
     @Singleton
-    protected IAppService provideAppService() {
+    IAppService provideAppService() {
         return new AppServiceImp(app);
     }
 

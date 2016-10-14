@@ -5,7 +5,6 @@ import android.app.Application;
 import com.ua.erent.BuildConfig;
 import com.ua.erent.module.core.config.IConfigModule;
 import com.ua.erent.module.core.di.Injector;
-import com.ua.erent.TestConfigModule;
 import com.ua.erent.module.core.util.IBuilder;
 
 import org.jetbrains.annotations.NotNull;
@@ -57,7 +56,7 @@ public final class InjectionConfig extends IConfigModule < Void >  {
         // Dependency injection configuration
         Injector.initialize(BuildConfig.DEBUG)
                 // your config goes here
-                .addConfig(new TestConfigModule(retrofit.configure(application), application));
+                .addConfig(new InjectConfigModule(retrofit.configure(application), application));
         return null;
     }
 }

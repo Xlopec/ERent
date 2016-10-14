@@ -2,7 +2,7 @@ package com.ua.erent.module.core.app.component;
 
 import android.app.Application;
 
-import com.ua.erent.IAppService;
+import com.ua.erent.trash.IAppService;
 import com.ua.erent.module.core.app.module.AppModule;
 
 import javax.inject.Singleton;

@@ -4,8 +4,10 @@ import com.ua.erent.module.core.di.util.IProviderFactory;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import dagger.Component;
 
@@ -103,7 +105,8 @@ public final class Injector {
     }
 
     /**
-     * @param configModule
+     * Configures specified config module
+     * @param configModule config module instance
      * @return
      */
     public Injector addConfig(IConfigModule configModule) {
@@ -116,9 +119,10 @@ public final class Injector {
     }
 
     /**
-     * @param component
-     * @param <T>
-     * @return
+     * Returns registered component by its class
+     * @param component component class to return
+     * @param <T> component type
+     * @return component class instance
      */
     @SuppressWarnings("unchecked")
     public <T> T getComponent(Class<T> component) {
@@ -139,6 +143,13 @@ public final class Injector {
         }
 
         return factory.create().get();
+    }
+
+    /**
+     * @return class set of all registered components
+     */
+    public Set<Class<?>> getRegisteredComponents() {
+        return Collections.unmodifiableSet(providerMap.keySet());
     }
 
     private static void checkIsComponent(Class<?> cl) {
