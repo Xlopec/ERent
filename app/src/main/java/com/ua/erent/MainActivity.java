@@ -1,8 +1,8 @@
 package com.ua.erent;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,14 +10,17 @@ import android.widget.TextView;
 
 import com.google.gson.annotations.SerializedName;
 import com.ua.erent.module.core.di.Injector;
+import com.ua.erent.module.core.mvp.view.IBaseView;
+import com.ua.erent.module.core.mvp.view.InjectableActivity;
 import com.ua.erent.module.core.networking.component.NetworkingComponent;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.RequestBody;
 import okio.Buffer;
@@ -27,12 +30,13 @@ import retrofit2.http.Body;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
-import static com.ua.erent.module.core.di.Injector.injector;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends InjectableActivity<MainActivity, ITestPresenter> implements IBaseView {
 
     @Inject
     ITestService service;
+
+    //@Inject
+    //ITestPresenter presenter;
 
     @BindView(R.id.button)
     Button button;
@@ -47,6 +51,12 @@ public class MainActivity extends AppCompatActivity {
 
     private Retrofit retrofit;
     private IAuthAPI api;
+
+    @NotNull
+    @Override
+    public Context getContext() {
+        return this;
+    }
 
     public interface IAuthAPI {
 
@@ -68,14 +78,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public MainActivity() {
-
-       // InjectionManager.instance().addMapping(getClass(), TestComponent.class);
-        TestComponent provider = injector().getComponent(TestComponent.class);
-        NetworkingComponent networkingComponent = Injector.injector().getComponent(NetworkingComponent.class);
-
-        service = provider.getTestService();
-        retrofit = networkingComponent.getRetrofit();
-        api = retrofit.create(IAuthAPI.class);
+        super(R.layout.activity_main, TestComponent.class);
     }
 
     private static String bodyToString(final RequestBody request) {
@@ -94,15 +97,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        NetworkingComponent networkingComponent = Injector.injector().getComponent(NetworkingComponent.class);
+        retrofit = networkingComponent.getRetrofit();
+        api = retrofit.create(IAuthAPI.class);
+        presenter.attachView(this, getIntent().getExtras(), savedInstanceState);
     }
 
     @OnClick(R.id.button)
     public void onClick(View view) {
 
         service.f();
-
         this.startActivity(new Intent(this, NextActivity.class));
         finish();
        /* AuthContainer authContainer = new AuthContainer();

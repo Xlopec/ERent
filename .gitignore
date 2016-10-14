@@ -7,3 +7,4 @@
 /build
 /captures
 .idea
+app\src\main\java\com\ua\erent\module\core\networking\config\RetrofitConfigModule.java

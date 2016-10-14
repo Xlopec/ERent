@@ -19,4 +19,16 @@ public final class TestModule {
         return new TestService(app);
     }
 
+    /*@Provides
+    @PerActivity
+    protected IBasePresenter<MainActivity> providePresenter() {
+        return new TestPresenter();
+    }*/
+
+    @Provides
+    @PerActivity
+    protected ITestPresenter provideTestPresenter() {
+        return new TestPresenter();
+    }
+
 }

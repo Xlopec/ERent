@@ -2,6 +2,7 @@ package com.ua.erent;
 
 import com.ua.erent.module.core.app.component.AppComponent;
 import com.ua.erent.module.core.di.scopes.PerActivity;
+import com.ua.erent.module.core.mvp.IMVPComponent;
 
 import dagger.Component;
 
@@ -13,10 +14,8 @@ import dagger.Component;
  */
 @Component(dependencies = AppComponent.class, modules = {TestModule.class})
 @PerActivity
-public interface TestComponent {
+public interface TestComponent extends IMVPComponent<MainActivity, ITestPresenter> {
 
     ITestService getTestService();
-
-    //void inject(Activity activity);
 
 }
