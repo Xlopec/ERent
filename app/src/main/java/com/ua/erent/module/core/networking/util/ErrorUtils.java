@@ -1,4 +1,6 @@
-package com.ua.erent.trash;
+package com.ua.erent.module.core.networking.util;
+
+import com.ua.erent.trash.APIError;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -11,10 +13,15 @@ import retrofit2.Retrofit;
 /**
  * Created by Максим on 10/9/2016.
  */
-public class ErrorUtils {
+public final class ErrorUtils {
+
+    private ErrorUtils() {
+        throw new RuntimeException();
+    }
 
     public static APIError parseError(Retrofit retrofit, Response<?> response) {
-        Converter<ResponseBody, APIError> converter =
+
+        final Converter<ResponseBody, APIError> converter =
                 retrofit.responseBodyConverter(APIError.class, new Annotation[0]);
 
         APIError error;

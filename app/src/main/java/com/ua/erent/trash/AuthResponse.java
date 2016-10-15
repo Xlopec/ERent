@@ -5,10 +5,14 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Максим on 10/9/2016.
  */
-public class AuthResponse {
+public final class AuthResponse {
 
     @SerializedName("token")
     private String token;
+
+    public String getToken() {
+        return token;
+    }
 
     @Override
     public String toString() {
