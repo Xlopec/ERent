@@ -43,5 +43,10 @@ public final class LoginActivity extends InjectableActivity<LoginActivity, ILogi
     public Context getContext() {
         return this;
     }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+    }
 }
 

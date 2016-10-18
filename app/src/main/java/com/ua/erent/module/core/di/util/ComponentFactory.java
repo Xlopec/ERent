@@ -11,10 +11,10 @@ import javax.inject.Provider;
  * <p><b>Component</b> is plain dagger component</p>
  * Created by Максим on 10/11/2016.
  */
-public interface IProviderFactory < Component > {
+public interface ComponentFactory< Component > {
     /**
-     * @return new instance of {@linkplain Provider}
+     * @return new instance of {@linkplain Component}
      */
-    Provider < Component > create();
+    Component create();
 
 }

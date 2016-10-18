@@ -49,7 +49,7 @@ public class InjectableActivity<View extends IBaseView, Presenter extends IBaseP
      */
     public <Component extends IMVPComponent<View, Presenter>> InjectableActivity(final int layoutResId, @NotNull Class<Component> cl) {
 
-        final Component component = injector().getComponent(cl);
+        final Component component = injector().getComponent(this, cl);
         // fields injection
         view = (View) this;
         this.layoutResId = layoutResId;
@@ -101,6 +101,7 @@ public class InjectableActivity<View extends IBaseView, Presenter extends IBaseP
         } catch (final Exception exc) {
             Log.e(TAG, "exception in #onDestroy", exc);
         } finally {
+            injector().destroyComponent(this);
             super.onDestroy();
         }
     }

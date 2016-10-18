@@ -9,15 +9,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.gson.annotations.SerializedName;
-import com.ua.erent.trash.AuthResponse;
-import com.ua.erent.trash.ITestService;
 import com.ua.erent.R;
 import com.ua.erent.module.core.presentation.mvp.component.TestComponent;
-import com.ua.erent.module.core.di.Injector;
 import com.ua.erent.module.core.presentation.mvp.core.IBaseView;
 import com.ua.erent.module.core.presentation.mvp.core.InjectableActivity;
-import com.ua.erent.module.core.networking.component.NetworkingComponent;
 import com.ua.erent.module.core.presentation.mvp.presenter.ITestPresenter;
+import com.ua.erent.trash.AuthResponse;
+import com.ua.erent.trash.ITestService;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -102,9 +100,6 @@ public class MainActivity extends InjectableActivity<MainActivity, ITestPresente
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        NetworkingComponent networkingComponent = Injector.injector().getComponent(NetworkingComponent.class);
-        retrofit = networkingComponent.getRetrofit();
-        api = retrofit.create(IAuthAPI.class);
         presenter.attachView(this, getIntent().getExtras(), savedInstanceState);
     }
 

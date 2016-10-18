@@ -1,13 +1,18 @@
 package com.ua.erent.module.core.di;
 
-import com.ua.erent.module.core.di.util.IProviderFactory;
+import android.content.Context;
+
+import com.ua.erent.module.core.di.util.ComponentFactory;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import dagger.Component;
 
@@ -59,7 +64,8 @@ public final class Injector {
     }
 
     private final boolean isDebugMode;
-    private final Map<Class<?>, IProviderFactory<?>> providerMap = new HashMap<>(10);
+    private final Map<Context, Collection<?>> contextToComponent = new WeakHashMap<>();
+    private final Map<Class<?>, ComponentFactory<?>> providerMap = new HashMap<>(10);
 
     /**
      * Represents injection configuration module.
@@ -88,7 +94,7 @@ public final class Injector {
      * @param component app component
      * @param factory   provider factory implementation
      */
-    public <T> Injector registerComponentFactory(Class<T> component, IProviderFactory<T> factory) {
+    public <T> Injector registerComponentFactory(Class<T> component, ComponentFactory<T> factory) {
 
         if (component == null)
             throw new NullPointerException("class == null");
@@ -106,8 +112,9 @@ public final class Injector {
 
     /**
      * Configures specified config module
+     *
      * @param configModule config module instance
-     * @return
+     * @return same instance of this injector
      */
     public Injector addConfig(IConfigModule configModule) {
 
@@ -119,13 +126,81 @@ public final class Injector {
     }
 
     /**
+     * @return class set of all registered components
+     */
+    public Set<Class<?>> getRegisteredComponents() {
+        return Collections.unmodifiableSet(providerMap.keySet());
+    }
+
+    /**
+     * <p>
+     * Returns registered component to inject which will be attached to a given
+     * context. It means that lifecycle of this component will not be longer that
+     * lifecycle of given context.
+     * </p>
+     * <p>
+     * Component should be released by invocation of {@link #destroyComponent(Context)}
+     * </p>
+     *
+     * @param context   context for which component should be retrieved
+     * @param component component's class
+     * @param <T>       component's type
+     * @return component instance which is attached to a specified context
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T getComponent(@NotNull Context context, @NotNull Class<T> component) {
+
+        synchronized (contextToComponent) {
+
+            Collection components = contextToComponent.get(context);
+
+            if (components == null) {
+
+                final T mComponent = getComponent(component);
+
+                components = new ArrayList<>(1);
+                components.add(mComponent);
+                contextToComponent.put(context, components);
+                return mComponent;
+            }
+
+            for (final Object tmpComp : components) {
+                if (component.isAssignableFrom(tmpComp.getClass())) {
+                    return (T) tmpComp;
+                }
+            }
+
+            final T mComponent = getComponent(component);
+
+            components.add(component);
+            contextToComponent.put(context, components);
+            return mComponent;
+        }
+    }
+
+    /**
+     * <p>
+     * Detaches component from specified context, so that can be garbage collected
+     * </p>
+     *
+     * @param context context for which components should be released
+     */
+    public void destroyComponent(@NotNull Context context) {
+
+        synchronized (contextToComponent) {
+            contextToComponent.remove(context);
+        }
+    }
+
+    /**
      * Returns registered component by its class
+     *
      * @param component component class to return
-     * @param <T> component type
+     * @param <T>       component type
      * @return component class instance
      */
     @SuppressWarnings("unchecked")
-    public <T> T getComponent(Class<T> component) {
+    private <T> T getComponent(Class<T> component) {
 
         if (component == null)
             throw new NullPointerException("class == null");
@@ -135,21 +210,14 @@ public final class Injector {
             checkIsComponent(component);
         }
         // safe cast because we store provider factories in #providerMap
-        final IProviderFactory <T> factory = (IProviderFactory<T>) providerMap.get(component);
+        final ComponentFactory<T> factory = (ComponentFactory<T>) providerMap.get(component);
 
         if (factory == null) {
             throw new RuntimeException(String.format("Unknown component class (%s), did you forget " +
                     "to register corresponding provider factory?", component));
         }
 
-        return factory.create().get();
-    }
-
-    /**
-     * @return class set of all registered components
-     */
-    public Set<Class<?>> getRegisteredComponents() {
-        return Collections.unmodifiableSet(providerMap.keySet());
+        return factory.create();
     }
 
     private static void checkIsComponent(Class<?> cl) {

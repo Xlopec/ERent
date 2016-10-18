@@ -6,10 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 
-import com.ua.erent.trash.IAppService;
 import com.ua.erent.R;
-import com.ua.erent.module.core.di.Injector;
-import com.ua.erent.module.core.app.component.AppComponent;
 import com.ua.erent.module.core.presentation.mvp.core.IBaseView;
 
 import org.jetbrains.annotations.NotNull;
@@ -24,15 +21,15 @@ public class NextActivity extends AppCompatActivity implements IBaseView {
         Button button = (Button) findViewById(R.id.back);
 
         button.setOnClickListener((v) -> {
-            NextActivity.this.startActivity(new Intent(NextActivity.this, MainActivity.class));
+            NextActivity.this.startActivity(new Intent(NextActivity.this, LoginActivity.class));
            // NextActivity.this.finish();
         });
-
-        AppComponent provider = Injector.injector().getComponent(AppComponent.class);
+        System.gc();
+        /*AppComponent provider = Injector.injector().getComponent(this, AppComponent.class);
 
         IAppService service = provider.getAppService();
 
-        service.z();
+        service.z();*/
     }
 
     @NotNull

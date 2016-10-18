@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.ua.erent.module.core.account.auth.bo.Session;
+import com.ua.erent.module.core.account.auth.domain.session.ISessionStorage;
 import com.ua.erent.module.core.account.auth.dto.Credentials;
 import com.ua.erent.module.core.presentation.mvp.model.ILoginModel;
 import com.ua.erent.module.core.presentation.mvp.view.LoginActivity;
@@ -26,9 +27,11 @@ public final class LoginPresenter extends ILoginPresenter {
     private final Context context;
 
     @Inject
-    public LoginPresenter(Context context, ILoginModel model) {
+    public LoginPresenter(Context context, ILoginModel model, ISessionStorage sessionStorage) {
         this.model = model;
         this.context = context;
+        int id = sessionStorage.hashCode();
+        Log.i("TAG", "hash code " + id);
     }
 
     @Override
@@ -45,6 +48,8 @@ public final class LoginPresenter extends ILoginPresenter {
                 Toast.makeText(context, "err " + exc.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+       // getView().startActivity(new Intent(context, NextActivity.class));
+      //  getView().finish();
     }
 
     @Override

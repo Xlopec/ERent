@@ -2,6 +2,7 @@ package com.ua.erent.module.core.account.auth.bo;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 /**
  * <p>
@@ -17,6 +18,13 @@ public final class Session implements Parcelable {
     private final String tokenType;
 
     public Session(String login, String token, String tokenType) {
+
+        if(TextUtils.isEmpty(login))
+            throw new IllegalArgumentException(String.format("illegal login, was %s", login));
+
+        if(TextUtils.isEmpty(tokenType))
+            throw new IllegalArgumentException(String.format("illegal token type, was %s", tokenType));
+
         this.login = login;
         this.token = token;
         this.tokenType = tokenType;
@@ -65,7 +73,7 @@ public final class Session implements Parcelable {
     }
 
     public boolean isExpired() {
-        return token == null;
+        return TextUtils.isEmpty(getToken());
     }
 
     @Override
