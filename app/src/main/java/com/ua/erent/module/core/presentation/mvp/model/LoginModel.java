@@ -2,7 +2,7 @@ package com.ua.erent.module.core.presentation.mvp.model;
 
 import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
 import com.ua.erent.module.core.account.auth.domain.ILoginCallback;
-import com.ua.erent.module.core.account.auth.dto.Credentials;
+import com.ua.erent.module.core.account.auth.vo.Credentials;
 
 import javax.inject.Inject;
 
@@ -21,7 +21,7 @@ public class LoginModel implements ILoginModel {
 
     @Override
     public void login(Credentials credentials, ILoginCallback callback) {
-        authHandler.loginAsync(credentials, callback);
+        authHandler.login(credentials, callback);
     }
 
 }

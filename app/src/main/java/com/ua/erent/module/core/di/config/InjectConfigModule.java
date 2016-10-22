@@ -1,6 +1,6 @@
 package com.ua.erent.module.core.di.config;
 
-import com.ua.erent.module.core.account.auth.component.AuthComponent;
+import com.ua.erent.module.core.account.auth.di.AuthComponent;
 import com.ua.erent.module.core.app.component.AppComponent;
 import com.ua.erent.module.core.di.Injector;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerLoginComponent;

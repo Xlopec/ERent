@@ -1,7 +1,7 @@
 package com.ua.erent.module.core.presentation.mvp.model;
 
 import com.ua.erent.module.core.account.auth.domain.ILoginCallback;
-import com.ua.erent.module.core.account.auth.dto.Credentials;
+import com.ua.erent.module.core.account.auth.vo.Credentials;
 
 /**
  * Created by Максим on 10/15/2016.

@@ -3,10 +3,10 @@ package com.ua.erent.module.core.app;
 import android.app.Application;
 
 import com.ua.erent.BuildConfig;
-import com.ua.erent.module.core.account.auth.component.AuthComponent;
-import com.ua.erent.module.core.account.auth.component.DaggerAuthComponent;
-import com.ua.erent.module.core.account.auth.domain.init.InitModule;
-import com.ua.erent.module.core.account.auth.module.AuthModule;
+import com.ua.erent.module.core.account.auth.di.AuthComponent;
+import com.ua.erent.module.core.account.auth.di.AuthModule;
+import com.ua.erent.module.core.account.auth.di.DaggerAuthComponent;
+import com.ua.erent.module.core.account.auth.di.InitModule;
 import com.ua.erent.module.core.app.component.AppComponent;
 import com.ua.erent.module.core.app.component.DaggerAppComponent;
 import com.ua.erent.module.core.app.module.AppModule;

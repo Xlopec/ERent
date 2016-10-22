@@ -25,8 +25,6 @@ import rx.schedulers.Schedulers;
  */
 public final class RetrofitConfigModule extends IConfigModule<Retrofit> {
 
-    private static final String API_BASE = "http://erent.bget.ru/";
-
     private final IPacketInterceptService interceptService;
 
     public static final class Builder implements IBuilder<RetrofitConfigModule> {
@@ -67,7 +65,7 @@ public final class RetrofitConfigModule extends IConfigModule<Retrofit> {
         logging.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY
                 : HttpLoggingInterceptor.Level.NONE);
 
-        if(interceptService != null) {
+        if (interceptService != null) {
 
             httpClient.addInterceptor(chain -> {
                 final Response response = chain.proceed(chain.request());
@@ -92,13 +90,11 @@ public final class RetrofitConfigModule extends IConfigModule<Retrofit> {
                 }
         ).addInterceptor(logging);
 
-        final RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io());
-
         return retrofit = new Retrofit.Builder().
-                baseUrl(API_BASE).
+                baseUrl(BuildConfig.API_BASE_URL).
                 client(httpClient.build()).
-        addCallAdapterFactory(rxAdapter).
-        addConverterFactory(GsonConverterFactory.create(gson)).build();
+                addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io())).
+                addConverterFactory(GsonConverterFactory.create(gson)).build();
     }
 
 }

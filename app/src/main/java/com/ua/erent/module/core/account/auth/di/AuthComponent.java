@@ -1,11 +1,10 @@
-package com.ua.erent.module.core.account.auth.component;
+package com.ua.erent.module.core.account.auth.di;
 
 import com.ua.erent.module.core.account.auth.domain.IAuthDomain;
 import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
 import com.ua.erent.module.core.account.auth.domain.api.ISessionProvider;
 import com.ua.erent.module.core.account.auth.domain.session.ISessionManager;
 import com.ua.erent.module.core.account.auth.domain.session.ISessionStorage;
-import com.ua.erent.module.core.account.auth.module.AuthModule;
 import com.ua.erent.module.core.networking.service.IPacketInterceptService;
 
 import javax.inject.Singleton;

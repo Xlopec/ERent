@@ -1,6 +1,6 @@
 package com.ua.erent.module.core.account.auth.domain;
 
-import com.ua.erent.module.core.account.auth.dto.Credentials;
+import com.ua.erent.module.core.account.auth.vo.Credentials;
 import com.ua.erent.module.core.networking.service.IPacketInterceptService;
 import com.ua.erent.module.core.networking.util.HTTP_CODE;
 
@@ -25,7 +25,7 @@ public final class AuthAppService implements IAuthAppService {
 
             final HTTP_CODE httpCode = HTTP_CODE.fromHttpCode(response.code());
 
-            if(httpCode == HTTP_CODE.UNAUTHORIZED) {
+            if (httpCode == HTTP_CODE.UNAUTHORIZED) {
                 // token expired
                 logout();
             }
@@ -33,7 +33,7 @@ public final class AuthAppService implements IAuthAppService {
     }
 
     @Override
-    public void loginAsync(@NotNull Credentials credentials, @NotNull ILoginCallback callback) {
+    public void login(@NotNull Credentials credentials, @NotNull ILoginCallback callback) {
         domain.login(credentials, callback);
     }
 

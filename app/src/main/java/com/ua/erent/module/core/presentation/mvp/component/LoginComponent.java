@@ -1,6 +1,6 @@
 package com.ua.erent.module.core.presentation.mvp.component;
 
-import com.ua.erent.module.core.account.auth.component.AuthComponent;
+import com.ua.erent.module.core.account.auth.di.AuthComponent;
 import com.ua.erent.module.core.di.scopes.ActivityScope;
 import com.ua.erent.module.core.presentation.mvp.core.IMVPComponent;
 import com.ua.erent.module.core.presentation.mvp.module.LoginModule;

@@ -9,7 +9,7 @@ import com.ua.erent.module.core.account.auth.bo.Session;
 import com.ua.erent.module.core.account.auth.domain.api.ISessionProvider;
 import com.ua.erent.module.core.account.auth.domain.init.InitializationManager;
 import com.ua.erent.module.core.account.auth.domain.session.ISessionManager;
-import com.ua.erent.module.core.account.auth.dto.Credentials;
+import com.ua.erent.module.core.account.auth.vo.Credentials;
 import com.ua.erent.module.core.util.Initializeable;
 
 import org.jetbrains.annotations.NotNull;
@@ -34,6 +34,48 @@ public final class AuthDomain implements IAuthDomain {
     private final Class<? extends Activity> loginActivity;
     private final Collection<? extends Initializeable> initializeables;
 
+    private final class LoginCallbackWrapper implements ILoginCallback {
+
+        private final ILoginCallback original;
+        private final Session session;
+
+        LoginCallbackWrapper(ILoginCallback original, Session session) {
+            this.original = original;
+            this.session = session;
+        }
+
+        @Override
+        public void onPreExecute() {
+            original.onPreExecute();
+        }
+
+        @Override
+        public void onInitialized() {
+            sessionManager.setSession(session);
+            original.onInitialized();
+        }
+
+        @Override
+        public void onComponentInitialized(@NotNull Initializeable initializeable, int progress, int total) {
+            original.onComponentInitialized(initializeable, progress, total);
+        }
+
+        @Override
+        public void onException(@NotNull Initializeable initializeable, @NotNull Throwable th) {
+            original.onException(initializeable, th);
+        }
+
+        @Override
+        public void onFailure(@NotNull Initializeable initializeable, @NotNull Throwable th) {
+            original.onFailure(initializeable, th);
+        }
+
+        @Override
+        public void onFailure(@NotNull Throwable th) {
+            original.onFailure(th);
+        }
+    }
+
     @Inject
     public AuthDomain(Class<? extends Activity> loginActivity, Application application,
                       ISessionManager sessionManager, ISessionProvider provider,
@@ -50,7 +92,11 @@ public final class AuthDomain implements IAuthDomain {
 
     @Override
     public void login(@NotNull Credentials credentials, @NotNull ILoginCallback callback) {
-
+        /*
+         * At first, try to get a session from server,
+         * then try to initialize modules which needs it;
+         * After this operations session can be finally set
+         */
         provider.fetchSession(credentials).subscribe(new Subscriber<Session>() {
 
             @Override
@@ -65,14 +111,15 @@ public final class AuthDomain implements IAuthDomain {
             @Override
             public void onNext(Session session) {
                 unsubscribe();
-                initializationManager.initialize(session, initializeables, callback);
+                initializationManager.
+                        initialize(session, initializeables, new LoginCallbackWrapper(callback, session));
             }
         });
     }
 
     @Override
     public void logout() {
-
+        // destroy session, activities and tasks and open login activity
         final Session session = sessionManager.getSession();
         final Intent intent = new Intent(application, loginActivity);
 

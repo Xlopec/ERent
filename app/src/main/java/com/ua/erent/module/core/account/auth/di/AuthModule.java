@@ -1,4 +1,4 @@
-package com.ua.erent.module.core.account.auth.module;
+package com.ua.erent.module.core.account.auth.di;
 
 import android.app.Activity;
 import android.app.Application;
@@ -9,7 +9,6 @@ import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
 import com.ua.erent.module.core.account.auth.domain.IAuthDomain;
 import com.ua.erent.module.core.account.auth.domain.api.ISessionProvider;
 import com.ua.erent.module.core.account.auth.domain.api.SessionProvider;
-import com.ua.erent.module.core.account.auth.domain.init.InitModule;
 import com.ua.erent.module.core.account.auth.domain.init.InitializationManager;
 import com.ua.erent.module.core.account.auth.domain.session.ISessionManager;
 import com.ua.erent.module.core.account.auth.domain.session.ISessionStorage;

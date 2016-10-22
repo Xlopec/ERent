@@ -1,6 +1,6 @@
 package com.ua.erent.module.core.account.auth.domain;
 
-import com.ua.erent.module.core.account.auth.dto.Credentials;
+import com.ua.erent.module.core.account.auth.vo.Credentials;
 
 import org.jetbrains.annotations.NotNull;
 

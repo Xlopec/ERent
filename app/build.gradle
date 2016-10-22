@@ -13,6 +13,8 @@ android {
         versionName "1.0"
         generatedDensities = []
         vectorDrawables.useSupportLibrary = true
+        buildConfigField("String", "API_BASE_URL", "\"\"")
+        buildConfigField("String", "SERVER_API_KEY", "\"\"")
     }
     buildTypes {
         release {
