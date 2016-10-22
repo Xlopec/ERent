@@ -1,9 +1,8 @@
 package com.ua.erent.module.core.presentation.mvp.model;
 
-import com.ua.erent.module.core.account.auth.bo.Session;
-import com.ua.erent.module.core.account.auth.domain.IAuthHandler;
+import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
+import com.ua.erent.module.core.account.auth.domain.ILoginCallback;
 import com.ua.erent.module.core.account.auth.dto.Credentials;
-import com.ua.erent.module.core.util.IRetrieveCallback;
 
 import javax.inject.Inject;
 
@@ -13,15 +12,15 @@ import javax.inject.Inject;
 
 public class LoginModel implements ILoginModel {
 
-    private final IAuthHandler authHandler;
+    private final IAuthAppService authHandler;
 
     @Inject
-    public LoginModel(IAuthHandler authHandler) {
+    public LoginModel(IAuthAppService authHandler) {
         this.authHandler = authHandler;
     }
 
     @Override
-    public void login(Credentials credentials, IRetrieveCallback<Session> callback) {
+    public void login(Credentials credentials, ILoginCallback callback) {
         authHandler.loginAsync(credentials, callback);
     }
 

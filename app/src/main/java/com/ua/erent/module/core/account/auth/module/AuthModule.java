@@ -1,31 +1,50 @@
 package com.ua.erent.module.core.account.auth.module;
 
+import android.app.Activity;
 import android.app.Application;
 
+import com.ua.erent.module.core.account.auth.domain.AuthAppService;
 import com.ua.erent.module.core.account.auth.domain.AuthDomain;
-import com.ua.erent.module.core.account.auth.domain.AuthHandler;
+import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
 import com.ua.erent.module.core.account.auth.domain.IAuthDomain;
-import com.ua.erent.module.core.account.auth.domain.IAuthHandler;
 import com.ua.erent.module.core.account.auth.domain.api.ISessionProvider;
 import com.ua.erent.module.core.account.auth.domain.api.SessionProvider;
+import com.ua.erent.module.core.account.auth.domain.init.InitModule;
+import com.ua.erent.module.core.account.auth.domain.init.InitializationManager;
 import com.ua.erent.module.core.account.auth.domain.session.ISessionManager;
 import com.ua.erent.module.core.account.auth.domain.session.ISessionStorage;
 import com.ua.erent.module.core.account.auth.domain.session.SessionManager;
 import com.ua.erent.module.core.account.auth.domain.session.SessionStorage;
 import com.ua.erent.module.core.app.module.AppModule;
 import com.ua.erent.module.core.networking.module.NetworkingModule;
+import com.ua.erent.module.core.networking.service.IPacketInterceptService;
+import com.ua.erent.module.core.util.Initializeable;
+
+import java.util.Collection;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import dagger.internal.Preconditions;
 import retrofit2.Retrofit;
 
 /**
  * Created by Максим on 10/15/2016.
  */
-@Module(includes = {AppModule.class, NetworkingModule.class})
+@Module(includes = {AppModule.class, NetworkingModule.class, InitModule.class})
 public final class AuthModule {
+
+    private final Class<? extends Activity> loginActivity;
+
+    public AuthModule(Class<? extends Activity> loginActivity) {
+        this.loginActivity = Preconditions.checkNotNull(loginActivity);
+    }
+
+    @Provides
+    Class<? extends Activity> provideLoginActivity() {
+        return loginActivity;
+    }
 
     @Provides
     @Singleton
@@ -47,14 +66,16 @@ public final class AuthModule {
 
     @Provides
     @Singleton
-    IAuthDomain provideAuthDomain(ISessionManager sessionManager, ISessionProvider provider) {
-        return new AuthDomain(sessionManager, provider);
+    IAuthDomain provideAuthDomain(Class<? extends Activity> loginActivity, Application app, ISessionManager sessionManager,
+                                  ISessionProvider provider, InitializationManager initializationManager,
+                                  Collection<? extends Initializeable> initializeables) {
+        return new AuthDomain(loginActivity, app, sessionManager, provider, initializationManager, initializeables);
     }
 
     @Provides
     @Singleton
-    IAuthHandler provideAuthHandler(IAuthDomain domain) {
-        return new AuthHandler(domain);
+    IAuthAppService provideAuthHandler(IPacketInterceptService interceptService, IAuthDomain domain) {
+        return new AuthAppService(interceptService, domain);
     }
 
 }

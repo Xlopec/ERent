@@ -1,36 +1,64 @@
 package com.ua.erent.module.core.networking.config;
 
-import android.app.Application;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ua.erent.BuildConfig;
 import com.ua.erent.module.core.config.IConfigModule;
+import com.ua.erent.module.core.networking.service.IPacketInterceptService;
+import com.ua.erent.module.core.util.IBuilder;
 
-import org.jetbrains.annotations.NotNull;
-
+import dagger.internal.Preconditions;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.schedulers.Schedulers;
 
 /**
  * <p>
- *     Contains set of Retrofit library configurations
+ * Contains set of Retrofit library configurations
  * </p>
  * Created by Максим on 10/12/2016.
  */
-public final class RetrofitConfigModule extends IConfigModule < Retrofit > {
+public final class RetrofitConfigModule extends IConfigModule<Retrofit> {
 
     private static final String API_BASE = "http://erent.bget.ru/";
 
+    private final IPacketInterceptService interceptService;
+
+    public static final class Builder implements IBuilder<RetrofitConfigModule> {
+
+        private IPacketInterceptService interceptService;
+
+        public IPacketInterceptService getInterceptService() {
+            return interceptService;
+        }
+
+        public Builder setInterceptService(IPacketInterceptService interceptService) {
+            this.interceptService = interceptService;
+            return this;
+        }
+
+        @Override
+        public RetrofitConfigModule build() {
+            return new RetrofitConfigModule(this);
+        }
+    }
+
     private Retrofit retrofit;
 
-    @Override
-    public Retrofit configure(@NotNull Application application) {
+    private RetrofitConfigModule(Builder builder) {
+        Preconditions.checkNotNull(builder);
+        this.interceptService = builder.getInterceptService();
+    }
 
-        if(retrofit != null) return retrofit;
+    @Override
+    public Retrofit configure() {
+
+        if (retrofit != null) return retrofit;
 
         final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         final Gson gson = new GsonBuilder().create();
@@ -38,27 +66,39 @@ public final class RetrofitConfigModule extends IConfigModule < Retrofit > {
         // http request/response logging
         logging.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY
                 : HttpLoggingInterceptor.Level.NONE);
-        httpClient.
-                addNetworkInterceptor(
-                        (chain) -> {
-                            // packet interception
-                            final Request original = chain.request();
+
+        if(interceptService != null) {
+
+            httpClient.addInterceptor(chain -> {
+                final Response response = chain.proceed(chain.request());
+                interceptService.intercept(response);
+                return response;
+            });
+        }
+
+        httpClient.addNetworkInterceptor(
+                (chain) -> {
+                    // packet interception
+                    final Request original = chain.request();
                             /*final String toString = bodyToString(original.body());
 
                             Log.d("Tag", "Request body: " + toString);*/
 
-                            final Request request = original.newBuilder().
-                                    method(original.method(), original.body()).
-                                    build();
+                    final Request request = original.newBuilder().
+                            method(original.method(), original.body()).
+                            build();
 
-                            return chain.proceed(request);
-                        }
-                ).addInterceptor(logging);
+                    return chain.proceed(request);
+                }
+        ).addInterceptor(logging);
+
+        final RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io());
 
         return retrofit = new Retrofit.Builder().
                 baseUrl(API_BASE).
                 client(httpClient.build()).
-                addConverterFactory(GsonConverterFactory.create(gson)).build();
+        addCallAdapterFactory(rxAdapter).
+        addConverterFactory(GsonConverterFactory.create(gson)).build();
     }
 
 }

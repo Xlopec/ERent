@@ -1,6 +1,6 @@
 package com.ua.erent.module.core.util;
 
-import android.os.Bundle;
+import com.ua.erent.module.core.account.auth.bo.Session;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -14,10 +14,14 @@ public interface Initializeable {
 
         void onInitialized();
 
-        void onFailure(@NotNull Throwable th);
+        void onException(@NotNull Throwable th);
 
     }
 
-    void initialize(@NotNull Bundle arguments, @NotNull ICallback callback);
+    void initialize(@NotNull Session session, @NotNull ICallback callback);
+
+    void reject();
+
+    boolean failOnException();
 
 }

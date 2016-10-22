@@ -3,14 +3,13 @@ package com.ua.erent.module.core.presentation.mvp.presenter;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.ua.erent.module.core.account.auth.bo.Session;
+import com.ua.erent.module.core.account.auth.domain.ILoginCallback;
 import com.ua.erent.module.core.account.auth.domain.session.ISessionStorage;
 import com.ua.erent.module.core.account.auth.dto.Credentials;
 import com.ua.erent.module.core.presentation.mvp.model.ILoginModel;
 import com.ua.erent.module.core.presentation.mvp.view.LoginActivity;
-import com.ua.erent.module.core.util.IRetrieveCallback;
+import com.ua.erent.module.core.util.Initializeable;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,16 +35,35 @@ public final class LoginPresenter extends ILoginPresenter {
 
     @Override
     public void onLogin(String login, String password) {
-        model.login(new Credentials(login, password), new IRetrieveCallback<Session>() {
-
+        model.login(new Credentials(login, password), new ILoginCallback() {
             @Override
-            public void onResult(Session result) {
-                Toast.makeText(context, "response " + result.toString(), Toast.LENGTH_SHORT).show();
+            public void onPreExecute() {
+                Log.i("tag", "initialized");
             }
 
             @Override
-            public void onException(@NotNull Exception exc) {
-                Toast.makeText(context, "err " + exc.getMessage(), Toast.LENGTH_SHORT).show();
+            public void onInitialized() {
+                Log.i("tag", "initialized");
+            }
+
+            @Override
+            public void onComponentInitialized(@NotNull Initializeable initializeable, int progress, int total) {
+                Log.i("tag", "initialized");
+            }
+
+            @Override
+            public void onException(@NotNull Initializeable initializeable, @NotNull Throwable th) {
+                Log.i("tag", "initialized");
+            }
+
+            @Override
+            public void onFailure(@NotNull Initializeable initializeable, @NotNull Throwable th) {
+                Log.i("tag", "initialized");
+            }
+
+            @Override
+            public void onFailure(@NotNull Throwable th) {
+                Log.i("tag", "initialized");
             }
         });
        // getView().startActivity(new Intent(context, NextActivity.class));

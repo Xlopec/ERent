@@ -9,7 +9,6 @@ import com.ua.erent.module.core.account.auth.dto.Credentials;
 import com.ua.erent.module.core.app.Constant;
 import com.ua.erent.module.core.networking.util.DefaultRetrieveRequest;
 import com.ua.erent.module.core.networking.util.ErrorUtils;
-import com.ua.erent.module.core.networking.util.IRequest;
 import com.ua.erent.module.core.util.IRetrieveCallback;
 import com.ua.erent.trash.APIError;
 import com.ua.erent.trash.AuthResponse;
@@ -27,6 +26,11 @@ import retrofit2.Retrofit;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import rx.Observable;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by Максим on 10/15/2016.
@@ -85,7 +89,7 @@ public final class SessionProvider implements ISessionProvider {
 
         @Headers("Content-Type: application/json")
         @POST("/app_acceptance.php/login")
-        Call<AuthResponse> authorize(@Body RequestBody requestBody);
+        Observable<AuthResponse> authorize(@Body RequestBody requestBody);
 
     }
 
@@ -96,13 +100,46 @@ public final class SessionProvider implements ISessionProvider {
     }
 
     @Override
-    public IRequest authAsync(@NotNull Credentials credentials, @NotNull IRetrieveCallback<Session> callback) {
+    public Observable<Session> fetchSession(@NotNull Credentials credentials) {
 
-        final Call<AuthResponse> call = api.authorize(RequestBody.create(
+        final Observable<AuthResponse> call = api.authorize(RequestBody.create(
                 MediaType.parse("application/json"),
                 new Gson().toJson(new AuthRequest(credentials.getLogin(), credentials.getPassword(), ""))
         ));
 
-        return new RetrSessionReq(credentials, call, callback);
+        /*call.observeOn(AndroidSchedulers.mainThread()).
+                map(authResponse ->
+                        new Session(credentials.getLogin(), authResponse.getToken(), Constant.ACCOUNT_TOKEN_TYPE))
+                .subscribe(new Subscriber<Session>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Session session) {
+
+                    }
+                });*/
+
+       return call.observeOn(AndroidSchedulers.mainThread()).
+                map(authResponse ->
+                        new Session(credentials.getLogin(), authResponse.getToken(), Constant.ACCOUNT_TOKEN_TYPE));
     }
+
+    public static <T> Subscription performAsyncRequest(Observable<T> observable, Action1<? super T> onAction, Action1<Throwable> onError) {
+        // Specify a scheduler (Scheduler.newThread(), Scheduler.immediate(), ...)
+        // We choose Scheduler.io() to perform network request in a thread pool
+        return observable.subscribeOn(Schedulers.io())
+                // Observe result in the main thread to be able to update UI
+                .observeOn(AndroidSchedulers.mainThread())
+                // Set callbacks actions
+                .subscribe(onAction, onError);
+    }
+
 }

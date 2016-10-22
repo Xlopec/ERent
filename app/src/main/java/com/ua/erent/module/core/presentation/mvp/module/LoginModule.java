@@ -2,7 +2,7 @@ package com.ua.erent.module.core.presentation.mvp.module;
 
 import android.app.Application;
 
-import com.ua.erent.module.core.account.auth.domain.IAuthHandler;
+import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
 import com.ua.erent.module.core.account.auth.domain.session.ISessionStorage;
 import com.ua.erent.module.core.di.scopes.ActivityScope;
 import com.ua.erent.module.core.presentation.mvp.model.ILoginModel;
@@ -27,7 +27,7 @@ public final class LoginModule {
 
     @Provides
     @ActivityScope
-    ILoginModel provideLoginModel(IAuthHandler handler) {
+    ILoginModel provideLoginModel(IAuthAppService handler) {
         return new LoginModel(handler);
     }
 

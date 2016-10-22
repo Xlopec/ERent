@@ -1,7 +1,5 @@
 package com.ua.erent.module.core.config;
 
-import android.app.Application;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -24,9 +22,9 @@ public abstract class AbstractConfigComposer {
 
     public abstract void registerModules();
 
-    public final void configure(@NotNull Application app) {
+    public final void configure() {
         for (final IConfigModule config : configurables) {
-            config.configure(app);
+            config.configure();
         }
     }
 

@@ -126,7 +126,7 @@ public final class Injector {
     }
 
     /**
-     * @return class set of all registered components
+     * @return set of all registered components
      */
     public Set<Class<?>> getRegisteredComponents() {
         return Collections.unmodifiableSet(providerMap.keySet());

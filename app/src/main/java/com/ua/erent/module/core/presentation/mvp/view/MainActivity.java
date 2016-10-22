@@ -141,7 +141,7 @@ public class MainActivity extends InjectableActivity<MainActivity, ITestPresente
             }
 
             @Override
-            public void onFailure(Call<AuthResponse> call, Throwable t) {
+            public void onException(Call<AuthResponse> call, Throwable t) {
                 textView.setText("Failure: " + t.getMessage());
             }
         });*/

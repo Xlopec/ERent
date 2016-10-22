@@ -3,6 +3,10 @@ package com.ua.erent.trash;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.ua.erent.module.core.account.auth.bo.Session;
+
+import org.jetbrains.annotations.NotNull;
+
 import javax.inject.Inject;
 
 /**
@@ -24,5 +28,20 @@ public class AppServiceImp implements IAppService {
     @Override
     public void z() {
         Toast.makeText(context, "z() was fired", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void initialize(@NotNull Session session, @NotNull ICallback callback) {
+        callback.onInitialized();
+    }
+
+    @Override
+    public void reject() {
+
+    }
+
+    @Override
+    public boolean failOnException() {
+        return false;
     }
 }
