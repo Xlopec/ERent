@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 
 import dagger.internal.Preconditions;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by Максим on 10/22/2016.
@@ -29,17 +30,22 @@ public final class InitializationManagerImp implements InitializationManager {
         Preconditions.checkNotNull(initializeables);
         Preconditions.checkNotNull(callback);
 
-        if(initializeables.isEmpty())
+        if (initializeables.isEmpty())
             throw new IllegalArgumentException("nothing to init");
+
+        callback.onPreExecute();
 
         // delegate all work to a special handler
         final AbstractInitDelegate delegate = InitDelegates.createDelegate(callback, initializeables);
 
-        callback.onPreExecute();
-
-        for(final Initializeable initializeable : initializeables) {
+        for (final Initializeable initializeable : initializeables) {
             // run initialization process
-            initializeable.initialize(session, InitDelegates.createCallback(delegate, initializeable));
+            initializeable.initialize(session)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                    delegate::handleInitialized,
+                    err -> delegate.handleException(initializeable, err)
+            );
         }
     }
 }

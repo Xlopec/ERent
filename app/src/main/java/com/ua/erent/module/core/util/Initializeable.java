@@ -15,24 +15,13 @@ import rx.Observable;
 
 public interface Initializeable {
 
-    interface ICallback {
-
-        void onInitialized();
-
-        void onException(@NotNull Throwable th);
-
-    }
-
     /**
      * Runs component initialization. Classes which implement
      * this interface, should provide their own behaviour
      *
-     * @deprecated will be replaced by rx java observable
      * @param session  session to provide access to server api (if needed)
-     * @param callback callback to handle initialization process
      */
-    @Deprecated
-    Observable<Session> initialize(@NotNull Session session, @NotNull ICallback callback);
+    Observable<Initializeable> initialize(@NotNull Session session);
 
     /**
      * Handles reject event which may occur while initializing

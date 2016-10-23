@@ -1,5 +1,7 @@
 package com.ua.erent.module.core.networking.config;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ua.erent.BuildConfig;
@@ -7,11 +9,15 @@ import com.ua.erent.module.core.config.IConfigModule;
 import com.ua.erent.module.core.networking.service.IPacketInterceptService;
 import com.ua.erent.module.core.util.IBuilder;
 
+import java.io.IOException;
+
 import dagger.internal.Preconditions;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
+import okio.Buffer;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -78,9 +84,9 @@ public final class RetrofitConfigModule extends IConfigModule<Retrofit> {
                 (chain) -> {
                     // packet interception
                     final Request original = chain.request();
-                            /*final String toString = bodyToString(original.body());
+                            final String toString = bodyToString(original.body());
 
-                            Log.d("Tag", "Request body: " + toString);*/
+                            Log.d("Tag", "Request body: " + toString);
 
                     final Request request = original.newBuilder().
                             method(original.method(), original.body()).
@@ -95,6 +101,19 @@ public final class RetrofitConfigModule extends IConfigModule<Retrofit> {
                 client(httpClient.build()).
                 addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io())).
                 addConverterFactory(GsonConverterFactory.create(gson)).build();
+    }
+
+    private static String bodyToString(final RequestBody request) {
+        try {
+            final Buffer buffer = new Buffer();
+            if (request != null)
+                request.writeTo(buffer);
+            else
+                return "";
+            return buffer.readUtf8();
+        } catch (final IOException e) {
+            return "did not work";
+        }
     }
 
 }

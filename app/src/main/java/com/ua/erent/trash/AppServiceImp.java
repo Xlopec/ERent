@@ -4,10 +4,13 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.ua.erent.module.core.account.auth.bo.Session;
+import com.ua.erent.module.core.util.Initializeable;
 
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
+
+import rx.Observable;
 
 /**
  * Created by Максим on 10/11/2016.
@@ -31,8 +34,12 @@ public class AppServiceImp implements IAppService {
     }
 
     @Override
-    public void initialize(@NotNull Session session, @NotNull ICallback callback) {
-        callback.onInitialized();
+    public Observable<Initializeable> initialize(@NotNull Session session) {
+
+        /*if(5==5)
+            return Observable.error(new RuntimeException("some exc"));*/
+
+        return Observable.just(this);
     }
 
     @Override
@@ -44,4 +51,5 @@ public class AppServiceImp implements IAppService {
     public boolean failOnException() {
         return false;
     }
+
 }

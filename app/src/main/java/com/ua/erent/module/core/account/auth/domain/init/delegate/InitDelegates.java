@@ -20,24 +20,10 @@ public final class InitDelegates {
      * Creates default init delegate
      *
      * @param loginCallback
-     * @param initializeables
-     * @return
+     * @param initializeables @return
      */
-    public static AbstractInitDelegate createDelegate(@NotNull ILoginCallback loginCallback,
-                                                      @NotNull Collection<? extends Initializeable> initializeables) {
+    public static AbstractInitDelegate createDelegate(@NotNull ILoginCallback loginCallback, @NotNull Collection<? extends Initializeable> initializeables) {
         return new InitDelegateImp(loginCallback, initializeables);
-    }
-
-    /**
-     * Creates callback and attaches it to the specified delegate
-     *
-     * @param delegate
-     * @param initializeable
-     * @return
-     */
-    public static Initializeable.ICallback createCallback(@NotNull AbstractInitDelegate delegate,
-                                                          @NotNull Initializeable initializeable) {
-        return new DelegateCallback(initializeable, delegate);
     }
 
 }
