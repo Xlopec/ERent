@@ -73,8 +73,9 @@ public final class AuthModule {
 
     @Provides
     @Singleton
-    IAuthAppService provideAuthHandler(IPacketInterceptService interceptService, IAuthDomain domain) {
-        return new AuthAppService(interceptService, domain);
+    IAuthAppService provideAuthHandler(IPacketInterceptService interceptService, ISessionManager sessionManager,
+                                       IAuthDomain domain) {
+        return new AuthAppService(interceptService, sessionManager, domain);
     }
 
 }

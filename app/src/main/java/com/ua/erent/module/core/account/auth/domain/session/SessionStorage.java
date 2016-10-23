@@ -7,12 +7,12 @@ import android.content.SharedPreferences;
 
 import com.ua.erent.module.core.account.auth.bo.Session;
 import com.ua.erent.module.core.app.Constant;
-import com.ua.erent.module.core.util.IObserver;
-import com.ua.erent.module.core.util.Observable;
 
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
+
+import rx.subjects.PublishSubject;
 
 public final class SessionStorage implements ISessionStorage {
 
@@ -20,12 +20,13 @@ public final class SessionStorage implements ISessionStorage {
     private static final String ARG_STORAGE = "argSessionStorage";
     private final AccountManager accountManager;
     private final SharedPreferences preferences;
-    private final Observable<Session> sessionObservable;
+    private Session currentSession;
+    private final PublishSubject<Session> sessionObservable;
 
     @Inject
     public SessionStorage(Context context) {
 
-        sessionObservable = new Observable<>();
+        sessionObservable = PublishSubject.create();
         accountManager = AccountManager.get(context.getApplicationContext());
         preferences = context.getSharedPreferences(SessionStorage.ARG_STORAGE, Context.MODE_PRIVATE);
 
@@ -42,7 +43,10 @@ public final class SessionStorage implements ISessionStorage {
 
                 if (authToken != null) {
                     // session can be set
-                    sessionObservable.setValue(new Session(account.name, authToken, account.type));
+                    final Session newSession = new Session(account.name, authToken, account.type);
+
+                    currentSession = newSession;
+                    sessionObservable.onNext(newSession);
                 }
             }
         }
@@ -63,7 +67,7 @@ public final class SessionStorage implements ISessionStorage {
             // reset auth token for a given account
             accountManager.setAuthToken(account, Constant.ACCOUNT_TOKEN_TYPE, session.getToken());
             preferences.edit().putString(SessionStorage.ARG_ACC_KEY, session.getLogin()).apply();
-            sessionObservable.setValue(session);
+            sessionObservable.onNext(session);
         }
     }
 
@@ -85,17 +89,12 @@ public final class SessionStorage implements ISessionStorage {
 
     @Override
     public Session getSession() {
-        return sessionObservable.getCurrent();
+        return currentSession;
     }
 
     @Override
-    public void addSessionObserver(@NotNull IObserver<Session> observer) {
-        sessionObservable.addObserver(observer);
-    }
-
-    @Override
-    public void removeSessionObserver(@NotNull IObserver<Session> observer) {
-        sessionObservable.removeObserver(observer);
+    public rx.Observable<Session> getSessionObs() {
+        return sessionObservable.asObservable();
     }
 
     private Account getAccountByName(@NotNull String name) {

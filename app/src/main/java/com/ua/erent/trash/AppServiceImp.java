@@ -36,7 +36,7 @@ public class AppServiceImp implements IAppService {
     }
 
     @Override
-    public void reject() {
+    public void onReject() {
 
     }
 

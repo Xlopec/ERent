@@ -1,5 +1,7 @@
 package com.ua.erent.module.core.account.auth.domain;
 
+import com.ua.erent.module.core.account.auth.bo.Session;
+import com.ua.erent.module.core.account.auth.domain.session.ISessionManager;
 import com.ua.erent.module.core.account.auth.vo.Credentials;
 import com.ua.erent.module.core.networking.service.IPacketInterceptService;
 import com.ua.erent.module.core.networking.util.HTTP_CODE;
@@ -8,6 +10,8 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
+import rx.Observable;
+
 /**
  * Created by Максим on 10/15/2016.
  */
@@ -15,10 +19,13 @@ import javax.inject.Inject;
 public final class AuthAppService implements IAuthAppService {
 
     private final IAuthDomain domain;
+    private final ISessionManager sessionManager;
 
     @Inject
-    public AuthAppService(IPacketInterceptService interceptService, IAuthDomain domain) {
+    public AuthAppService(IPacketInterceptService interceptService, ISessionManager sessionManager,
+                          IAuthDomain domain) {
 
+        this.sessionManager = sessionManager;
         this.domain = domain;
 
         interceptService.addResponseObserver(response -> {
@@ -40,6 +47,16 @@ public final class AuthAppService implements IAuthAppService {
     @Override
     public void logout() {
         domain.logout();
+    }
+
+    @Override
+    public Observable<Session> getSessionObs() {
+        return sessionManager.getSessionObs();
+    }
+
+    @Override
+    public Session getSession() {
+        return sessionManager.getSession();
     }
 
 }

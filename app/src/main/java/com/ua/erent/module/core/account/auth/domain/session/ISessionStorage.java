@@ -1,9 +1,10 @@
 package com.ua.erent.module.core.account.auth.domain.session;
 
 import com.ua.erent.module.core.account.auth.bo.Session;
-import com.ua.erent.module.core.util.IObserver;
 
 import org.jetbrains.annotations.NotNull;
+
+import rx.Observable;
 
 /**
  * Created by Максим on 10/14/2016.
@@ -19,8 +20,6 @@ public interface ISessionStorage {
 
     Session getSession();
 
-    void addSessionObserver(@NotNull IObserver<Session> observer);
-
-    void removeSessionObserver(@NotNull IObserver<Session> observer);
+    Observable<Session> getSessionObs();
 
 }

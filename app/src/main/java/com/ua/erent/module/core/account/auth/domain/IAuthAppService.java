@@ -1,8 +1,11 @@
 package com.ua.erent.module.core.account.auth.domain;
 
+import com.ua.erent.module.core.account.auth.bo.Session;
 import com.ua.erent.module.core.account.auth.vo.Credentials;
 
 import org.jetbrains.annotations.NotNull;
+
+import rx.Observable;
 
 /**
  * <p>
@@ -28,5 +31,9 @@ public interface IAuthAppService {
      * stopping all running services and opening login activity
      */
     void logout();
+
+    Observable<Session> getSessionObs();
+
+    Session getSession();
 
 }

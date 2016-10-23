@@ -48,7 +48,7 @@ final class InitDelegateImp extends AbstractInitDelegate {
                 loginCallback.onFailure(initializeable, th);
 
                 for (final Initializeable init : initializeables) {
-                    init.reject();
+                    init.onReject();
                 }
             }
         } else {
