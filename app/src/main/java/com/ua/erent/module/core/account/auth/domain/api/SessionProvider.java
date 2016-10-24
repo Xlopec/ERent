@@ -4,14 +4,12 @@ import com.ua.erent.BuildConfig;
 import com.ua.erent.module.core.account.auth.bo.Session;
 import com.ua.erent.module.core.account.auth.vo.Credentials;
 import com.ua.erent.module.core.app.Constant;
-import com.ua.erent.module.core.networking.util.ApiUtils;
 import com.ua.erent.trash.AuthResponse;
 
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
-import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;
@@ -36,7 +34,7 @@ public final class SessionProvider implements ISessionProvider {
 
         @Headers("Content-Type: application/json")
         @POST("/app_acceptance.php/login")
-        Observable<AuthResponse> authorize(@Body RequestBody requestBody);
+        Observable<AuthResponse> authorize(@Body AuthRequest requestBody);
 
     }
 
@@ -49,7 +47,7 @@ public final class SessionProvider implements ISessionProvider {
     public Observable<Session> fetchSession(@NotNull Credentials credentials) {
 
         final Observable<AuthResponse> call =
-                api.authorize(ApiUtils.createReqBody(new AuthRequest(credentials.getLogin(), credentials.getPassword(), BuildConfig.SERVER_API_KEY)));
+                api.authorize(new AuthRequest(credentials.getLogin(), credentials.getPassword(), BuildConfig.SERVER_API_KEY));
 
         return call.observeOn(AndroidSchedulers.mainThread()).
                 map(authResponse -> new Session(credentials.getLogin(), authResponse.getToken(), Constant.ACCOUNT_TOKEN_TYPE));
