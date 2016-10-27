@@ -116,7 +116,7 @@ public class MainActivity extends InjectableActivity<MainActivity, ITestPresente
         authContainer.apiKey = "";
 
         Call<AuthResponse> call =
-                api.authorize(RequestBody.create(MediaType.parse("application/json"), new Gson().toJson(authContainer)));
+                api.fetchToken(RequestBody.create(MediaType.parse("application/json"), new Gson().toJson(authContainer)));
 
         call.enqueue(new Callback<AuthResponse>() {
 

@@ -31,10 +31,25 @@ public final class SessionProvider implements ISessionProvider {
      * Represents server auth api
      */
     private interface AuthApi {
-
+        /**
+         * Fetches authorization token from API server
+         *
+         * @param requestBody authorization request json
+         * @return rx observable to monitor request status
+         */
         @Headers("Content-Type: application/json")
-        @POST("/app_acceptance.php/login")
-        Observable<AuthResponse> authorize(@Body AuthRequest requestBody);
+        @POST("api/login")
+        Observable<AuthResponse> fetchToken(@Body AuthRequest requestBody);
+
+        /**
+         * Checks whether specified authorization token is valid
+         *
+         * @param requestBody authorization request json
+         * @return rx observable to monitor request status
+         */
+        @Headers("Content-Type: application/json")
+        @POST("api/login_check")
+        Observable<AuthResponse> checkToken(@Body AuthRequest requestBody);
 
     }
 
@@ -47,7 +62,7 @@ public final class SessionProvider implements ISessionProvider {
     public Observable<Session> fetchSession(@NotNull Credentials credentials) {
 
         final Observable<AuthResponse> call =
-                api.authorize(new AuthRequest(credentials.getLogin(), credentials.getPassword(), BuildConfig.SERVER_API_KEY));
+                api.fetchToken(new AuthRequest(credentials.getLogin(), credentials.getPassword(), BuildConfig.SERVER_API_KEY));
 
         return call.observeOn(AndroidSchedulers.mainThread()).
                 map(authResponse -> new Session(credentials.getLogin(), authResponse.getToken(), Constant.ACCOUNT_TOKEN_TYPE));

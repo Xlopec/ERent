@@ -1,6 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="lightPrimary">#D1C4E9</color>
+    <color name="lightSecondary">#727272</color>
+    <color name="divider">#B6B6B6</color>
+    <color name="default_background">#FFF2F2F2</color>
+    <color name="primaryTextW">#90FFFFFF</color>
+    <color name="secondaryTextW">#54FFFFFF</color>
+    <color name="titleTextW">#96FFFFFF</color>
+    <color name="titleTextB">#96000000</color>
+    <color name="primaryTextB">#86000000</color>
+    <color name="secondaryTextB">#54000000</color>
+    <color name="primary">#FF006891</color>
+    <color name="primaryDark">#005b80</color>
+    <color name="accent">#FFF07E3C</color>
+
+    <color name="button_pressed_bg_def">#20727272</color>
+
+    <!-- Buttons -->
+    <color name="white_ic_color">#90FFFFFF</color>
+    <color name="dark_ic_color">#000</color>
+    <!-- FAB button -->
+    <color name="fab_ic_color">#FFF</color>
+    <!-- Raised button -->
+    <color name="raised_btn_normal">@color/accent</color>
+    <color name="raised_btn_pressed">#ef722a</color>
+    <color name="raised_btn_disabled">#12000000</color>
+    <color name="raised_btn_txt">#FFFFFF</color>
+    <color name="raised_btn_disabled_txt">#26000000</color>
+    <!-- Flat button -->
+    <color name="flat_btn_normal">#00000000</color>
+    <color name="flat_btn_pressed">#40999999</color>
+    <color name="flat_btn_disabled">#00000000</color>
+    <color name="flat_btn_txt">@color/accent</color>
+    <color name="flat_btn_disabled_txt">#26000000</color>
+
+    <color name="fab_menu_bg">#91005b80</color>
+    <color name="fab_ripple">#99FFFFFF</color>
+    <color name="fab_menu_shadow">#66000000</color>
+
 </resources>

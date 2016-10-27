@@ -3,7 +3,6 @@ package com.ua.erent.module.core.presentation.mvp.view;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -23,9 +22,9 @@ import butterknife.BindView;
 public final class LoginActivity extends InjectableActivity<LoginActivity, ILoginPresenter> implements IBaseView {
 
     // UI references.
-    @BindView(R.id.email) protected AutoCompleteTextView mEmailView;
-    @BindView(R.id.password) protected EditText mPasswordView;
-    @BindView(R.id.email_sign_in_button) protected Button loginBtn;
+    @BindView(R.id.login_fld) protected EditText loginEditText;
+    @BindView(R.id.password_fld) protected EditText passwordEditText;
+    @BindView(R.id.login_btn) protected Button loginBtn;
 
     public LoginActivity() {
        super(R.layout.activity_login, LoginComponent.class);
@@ -34,8 +33,8 @@ public final class LoginActivity extends InjectableActivity<LoginActivity, ILogi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loginBtn.setOnClickListener(v -> presenter.onLogin(mEmailView.getText().toString(),
-                mPasswordView.getText().toString()));
+        loginBtn.setOnClickListener(v -> presenter.onLogin(loginEditText.getText().toString(),
+                passwordEditText.getText().toString()));
     }
 
     @NotNull
@@ -44,9 +43,5 @@ public final class LoginActivity extends InjectableActivity<LoginActivity, ILogi
         return this;
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-    }
 }
 

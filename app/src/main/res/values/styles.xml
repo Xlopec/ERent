@@ -1,11 +1,131 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="MyTheme" parent="MyTheme.Base" />
+    <!-- Base theme applied no matter what API -->
+    <style name="MyTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--If you are using revision 22.1 please use just windowNoTitle. Without android:-->
+        <item name="windowNoTitle">true</item>
+        <!--We will be using the toolbar so no need to show ActionBar-->
+        <item name="windowActionBar">false</item>
+        <!-- Set theme colors from http://www.google.com/design/spec/style/color.html#color-color-palette-->
+        <!-- colorPrimary is used for the default action bar background -->
+        <item name="colorPrimary">@color/primary</item>
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">@color/primaryDark</item>
+        <!-- colorAccent is used as the default value for colorControlActivated
+             which is used to tint widgets -->
+        <item name="colorAccent">@color/accent</item>
+        <!-- You can also set colorControlNormal, colorControlActivated
+            colorControlHighlight and colorSwitchThumbNormal. -->
+        <item name="colorButtonNormal">@color/primary</item>
+        <!--<item name="android:fontFamily">sans-serif</item>-->
+        <item name="android:textViewStyle">@style/TextViewStyle</item>
+        <item name="android:buttonStyle">@style/ButtonStyle</item>
     </style>
+
+    <style name="TextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="ButtonStyle" parent="android:Widget.Holo.Button">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <!-- Login layout theme -->
+    <style name="Login.Theme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primaryDark</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="colorControlNormal">@color/primaryTextB</item>
+        <item name="colorControlHighlight">@color/primaryTextB</item>
+        <item name="colorSwitchThumbNormal">@color/primaryTextW</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="Login.TextLabel" parent="TextAppearance.AppCompat">
+        <item name="android:textColorHint">@color/primaryTextW</item>
+        <item name="colorAccent">@color/primaryTextW</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">20sp</item>
+        <item name="colorControlNormal">@color/primaryTextW</item>
+        <item name="colorControlActivated">@color/primaryTextW</item>
+    </style>
+    <!-- End of login layout theme -->
+
+    <style name="DefaultButton">
+        <item name="android:background">@drawable/default_button</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:textColor">@color/lightPrimary</item>/>
+    </style>
+
+    <style name="input" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/primaryTextB</item>
+        <item name="android:textColorSecondary">@color/secondaryTextB</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
+
+    <style name="input.white" parent="Widget.AppCompat.EditText">
+        <item name="colorAccent">#FFF</item>
+        <item name="colorControlNormal">#FFF</item>
+        <item name="colorControlActivated">#FFF</item>
+        <item name="android:textColor">#FFF</item>
+        <item name="android:textColorSecondary">#FFF</item>
+        <item name="android:textColorHint">#FFF</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
+
+    <style name="secondaryText" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/primaryTextB</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="iconButton">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="Button.Raised" parent="Base.Widget.AppCompat.Button">
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:minHeight">@dimen/btn_raised_height</item>
+        <item name="android:minWidth">@dimen/btn_raised_min_width</item>
+        <item name="android:background">@drawable/raised_btn_def</item>
+        <item name="android:textColor">@drawable/raised_btn_txt_col</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat</item>
+    </style>
+
+    <style name="Button.Flat" parent="Base.Widget.AppCompat.Button">
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:minHeight">@dimen/btn_flat_height</item>
+        <item name="android:minWidth">@dimen/btn_flat_min_width</item>
+        <item name="android:background">@drawable/flat_btn_def</item>
+        <item name="android:textColor">@drawable/flat_btn_txt_col</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat</item>
+    </style>
+
+    <style name="SpinnerItem.Light" parent="android:Widget.TextView.SpinnerItem">
+        <item name="android:textColor">@color/primaryTextW</item>
+    </style>
+
+    <style name="SpinnerItem.Dropdown.Light" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+        <item name="android:textColor">@color/primaryTextB</item>
+        <item name="android:popupBackground">@color/primaryTextW</item>
+    </style>
+
+    <style name="ShadowFrameWhite">
+        <item name="android:background">@android:drawable/dialog_holo_light_frame</item>
+        <!--<item name="android:padding">10dp</item>-->
+    </style>
+
+    <style name="divider">
+        <item name="android:background">@color/primaryTextB</item>
+        <item name="android:alpha">0.12</item>
+    </style>
+
+    <style name="MyTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="MyTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

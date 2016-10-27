@@ -1,5 +1,59 @@
 <resources>
+
+    <!-- -->
+    <dimen name="marker_window_width">280dp</dimen>
+    <dimen name="nav_header_avatar_size">72dp</dimen>
+
+    <!-- Default screen background padding -->
+    <dimen name="activity_side_pad">15dp</dimen>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="nav_header_vertical_spacing">4dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="dev_tag_txt_size">12sp</dimen>
+
+    <!-- Login screen -->
+    <dimen name="log_header_ic_size">45dp</dimen>
+
+    <!-- Registration screen -->
+    <dimen name="reg_logo_margin">25dp</dimen>
+    <dimen name="reg_btn_pad">20dp</dimen>
+    <dimen name="reg_wrap_vertical_margin">10dp</dimen>
+
+    <!-- Default padding for icons in input fields -->
+    <dimen name="draw_pad_inp">9dp</dimen>
+
+    <dimen name="def_pad_end">15dp</dimen>
+    <dimen name="def_pad_start">15dp</dimen>
+    <dimen name="def_divider_side_margin">5dp</dimen>
+
+    <dimen name="def_btn_ic_size">32dp</dimen>
+    <dimen name="def_btn_bg_size">42dp</dimen>
+
+    <dimen name="small_btn_ic_size">24dp</dimen>
+    <dimen name="small_btn_bg_size">34dp</dimen>
+    <dimen name="def_btn_pad">5dp</dimen>
+
+    <dimen name="def_elevation">4dp</dimen>
+
+    <!-- Map dimensions -->
+    <dimen name="map_btn_arrow_pad">7dp</dimen>
+
+    <!-- Car activity dimen -->
+    <dimen name="car_status_icon_size">55dp</dimen>
+    <dimen name="car_tab_icon_size">10dp</dimen>
+
+    <!-- Buttons -->
+    <dimen name="btn_raised_min_width">72dp</dimen>
+    <dimen name="btn_raised_height">36dp</dimen>
+    <dimen name="btn_flat_min_width">72dp</dimen>
+    <dimen name="btn_flat_height">36dp</dimen>
+    <dimen name="app_bar_height">200dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+
 </resources>
