@@ -3,6 +3,7 @@ package com.ua.erent.module.core.presentation.mvp.core;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
@@ -28,6 +29,11 @@ public class InjectableActivity<View extends IBaseView, Presenter extends IBaseP
         extends AppCompatActivity {
 
     private static final String TAG = InjectableActivity.class.getSimpleName();
+
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
+
     /**
      * Subclass of {@linkplain IBaseView} which represents view
      */

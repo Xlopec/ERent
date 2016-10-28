@@ -10,6 +10,7 @@ import com.ua.erent.module.core.account.auth.domain.api.ISessionProvider;
 import com.ua.erent.module.core.account.auth.domain.init.InitializationManager;
 import com.ua.erent.module.core.account.auth.domain.session.ISessionManager;
 import com.ua.erent.module.core.account.auth.vo.Credentials;
+import com.ua.erent.module.core.app.Constant;
 import com.ua.erent.module.core.util.Initializeable;
 
 import org.jetbrains.annotations.NotNull;
@@ -18,8 +19,6 @@ import java.util.Collection;
 import java.util.Collections;
 
 import javax.inject.Inject;
-
-import rx.Subscriber;
 
 /**
  * Created by Максим on 10/15/2016.
@@ -97,7 +96,11 @@ public final class AuthDomain implements IAuthDomain {
          * then try to initialize modules which needs it;
          * After this operations session can be finally set
          */
-        provider.fetchSession(credentials).subscribe(new Subscriber<Session>() {
+        final Session session = new Session(credentials.getLogin(), credentials.getPassword(), Constant.ACCOUNT_TOKEN_TYPE);
+        initializationManager.
+                initialize(session,
+                        initializeables, new LoginCallbackWrapper(callback, session));
+       /* provider.fetchSession(credentials).subscribe(new Subscriber<Session>() {
 
             @Override
             public void onCompleted() { unsubscribe(); }
@@ -114,7 +117,7 @@ public final class AuthDomain implements IAuthDomain {
                 initializationManager.
                         initialize(session, initializeables, new LoginCallbackWrapper(callback, session));
             }
-        });
+        });*/
     }
 
     @Override

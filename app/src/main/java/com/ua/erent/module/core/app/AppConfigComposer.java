@@ -18,6 +18,7 @@ import com.ua.erent.module.core.networking.config.RetrofitConfigModule;
 import com.ua.erent.module.core.networking.module.BaseNetworkingModule;
 import com.ua.erent.module.core.networking.module.NetworkingModule;
 import com.ua.erent.module.core.presentation.mvp.module.LoginModule;
+import com.ua.erent.module.core.presentation.mvp.module.PreLoaderModule;
 import com.ua.erent.module.core.presentation.mvp.view.LoginActivity;
 import com.ua.erent.module.core.util.IBuilder;
 
@@ -89,6 +90,7 @@ final class AppConfigComposer extends AbstractConfigComposer {
                 .configure();
 
         final NetworkingModule networkingModule = new NetworkingModule(retrofit);
+        final PreLoaderModule preLoaderModule = new PreLoaderModule();
         final AppComponent appComponent = DaggerAppComponent.builder().appModule(appModule).build();
 
         final InitModule initModule = new InitModule(
@@ -100,7 +102,8 @@ final class AppConfigComposer extends AbstractConfigComposer {
 
         // register target dependency inject modules
         final IBuilder<InjectConfigModule> injectModuleBuilder = new InjectConfigModule.Builder()
-                .setLoginModule(loginModule).setAppComponent(appComponent).setAuthComponent(authComponent);
+                .setLoginModule(loginModule).setAppComponent(appComponent).
+                        setAuthComponent(authComponent).setPreLoaderModule(preLoaderModule);
 
         Injector.initialize(BuildConfig.DEBUG).addConfig(injectModuleBuilder.build());
     }

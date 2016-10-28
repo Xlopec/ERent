@@ -1,115 +1,189 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:fillViewport="true"
-    android:gravity="center"
-    android:scrollbars="none">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
+    <ImageView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop"
+        android:src="@drawable/login_activity_bg" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
         android:gravity="center"
-        android:orientation="vertical"
-        android:paddingBottom="3dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="10dp">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/login_ic_logo"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center_vertical"
-                android:gravity="center"
-                style="@style/Base.TextAppearance.AppCompat.Display2"
-                android:text="ERent" />
-
-        </RelativeLayout>
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:gravity="center"
             android:orientation="vertical">
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/usernameWrapper"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/login_fld"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Email"
-                    android:inputType="phone" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/passwordWrapper"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
-
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/password_fld"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Password"
-                    android:inputType="textPassword" />
-
-            </android.support.design.widget.TextInputLayout>
-
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/login_btn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:background="@color/primaryDark"
-                    android:paddingBottom="20dp"
-                    android:paddingTop="20dp"
-                    android:text="Login" />
+                android:layout_height="?attr/actionBarSize"
+                android:background="#00000000"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:gravity="center_vertical|end"
-                android:orientation="horizontal">
+                android:layout_marginBottom="45dp"
+                android:layout_weight="0.5"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/link_sign_up"
-                    android:layout_width="wrap_content"
+                <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+                    style="@style/Base.TextAppearance.AppCompat.Display2"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="15dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_gravity="center_vertical"
                     android:gravity="center"
-                    android:text="Register me"
-                    android:textSize="16sp" />
+                    android:text="E-Rent"
+                    android:textColor="@color/accent"
+                    app:customFont="Roboto-Medium" />
 
-                <TextView
-                    android:id="@+id/login_restore_pass"
-                    android:layout_width="wrap_content"
+                <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+                    style="@style/Base.TextAppearance.AppCompat.Title"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:gravity="center"
-                    android:text="Forgot password?"
-                    android:textSize="16sp" />
+                    android:text="Internet rent service"
+                    android:textColor="#FFF"
+                    app:customFont="Roboto-Light" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:orientation="vertical"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/usernameWrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.AppCompatEditText
+                        android:id="@+id/login_fld"
+                        style="@style/input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/wr_ic_account_circle_default_24dp"
+                        android:drawablePadding="@dimen/draw_pad_inp"
+                        android:drawableStart="@drawable/wr_ic_account_circle_default_24dp"
+                        android:hint="Email"
+                        android:inputType="textEmailAddress" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/passwordWrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:passwordToggleEnabled="false">
+
+                    <android.support.v7.widget.AppCompatEditText
+                        android:id="@+id/password_fld"
+                        style="@style/input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/wr_lock_default_24dp"
+                        android:drawablePadding="@dimen/draw_pad_inp"
+                        android:drawableStart="@drawable/wr_lock_default_24dp"
+                        android:hint="Password"
+                        android:inputType="textPassword"
+                        android:textColor="@color/primaryTextW" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/login_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="35dp"
+                    android:background="@drawable/login_button"
+                    android:text="Login"
+                    android:textColor="#FFF" />
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/login_vk_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/login_button_vk"
+                    android:text="Login with VK"
+                    android:textColor="#FFF"
+                    android:visibility="gone" />
+
             </LinearLayout>
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="70dp" />
+                android:minHeight="30dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+                    android:id="@+id/register_link"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Create account"
+                    android:textColor="@color/primaryTextW"
+                    android:textSize="16sp"
+                    app:customFont="Roboto-Light" />
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+    </ScrollView>
 
-</ScrollView>
+    <RelativeLayout
+        android:id="@+id/login_pre_loader_root"
+        android:layout_width="match_parent"
+        android:background="#90000000"
+        android:visibility="gone"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/pre_progress_bar"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_horizontal"
+            android:theme="@style/CircularProgress" />
+
+        <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+            android:id="@+id/pre_load_status"
+            style="@style/Base.TextAppearance.AppCompat.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pre_progress_bar"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:textColor="@color/accent"
+            app:customFont="Roboto-Light" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

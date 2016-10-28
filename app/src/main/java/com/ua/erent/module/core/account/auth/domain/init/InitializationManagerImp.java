@@ -30,10 +30,12 @@ public final class InitializationManagerImp implements InitializationManager {
         Preconditions.checkNotNull(initializeables);
         Preconditions.checkNotNull(callback);
 
-        if (initializeables.isEmpty())
-            throw new IllegalArgumentException("nothing to init");
-
         callback.onPreExecute();
+
+        if (initializeables.isEmpty()) {
+            callback.onInitialized();
+            return;
+        }
 
         // delegate all work to a special handler
         final AbstractInitDelegate delegate = InitDelegates.createDelegate(callback, initializeables);
@@ -43,9 +45,9 @@ public final class InitializationManagerImp implements InitializationManager {
             initializeable.initialize(session)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
-                    delegate::handleInitialized,
-                    err -> delegate.handleException(initializeable, err)
-            );
+                            delegate::handleInitialized,
+                            err -> delegate.handleException(initializeable, err)
+                    );
         }
     }
 }

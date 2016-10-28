@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">ERent</string>
-    <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_login">ERent login</string>
+
+    <!-- Fonts -->
+    <string name="font_name_fontawesome">fontawesome</string>
+    <string name="font_name_source_sans_pro">SourceSansPro</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

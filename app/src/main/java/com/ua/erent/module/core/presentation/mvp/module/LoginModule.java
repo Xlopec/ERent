@@ -3,7 +3,6 @@ package com.ua.erent.module.core.presentation.mvp.module;
 import android.app.Application;
 
 import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
-import com.ua.erent.module.core.account.auth.domain.session.ISessionStorage;
 import com.ua.erent.module.core.di.scopes.ActivityScope;
 import com.ua.erent.module.core.presentation.mvp.model.ILoginModel;
 import com.ua.erent.module.core.presentation.mvp.model.LoginModel;
@@ -33,8 +32,8 @@ public final class LoginModule {
 
     @Provides
     @ActivityScope
-    ILoginPresenter provideLoginPresenter(ILoginModel model, ISessionStorage storage) {
-        return new LoginPresenter(application, model, storage);
+    ILoginPresenter provideLoginPresenter(ILoginModel model) {
+        return new LoginPresenter(application, model);
     }
 
 }

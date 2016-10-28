@@ -18,16 +18,23 @@
         android:theme="@style/MyTheme">
         <activity
             android:name=".module.core.presentation.mvp.view.LoginActivity"
-            android:label="@string/title_activity_login">
+            android:label="@string/title_activity_login"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".module.core.presentation.mvp.view.NextActivity" />
 
-        <activity android:name=".module.core.presentation.mvp.view.MainActivity" />
+        <activity
+            android:name=".module.core.presentation.mvp.view.MainActivity"
+            android:launchMode="singleInstance" />
+
+        <activity android:name=".module.core.presentation.mvp.view.PreLoaderActivity">
+
+        </activity>
 
         <service android:name=".module.core.account.auth.service.AuthService">
             <intent-filter>

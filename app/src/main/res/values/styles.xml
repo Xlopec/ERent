@@ -21,6 +21,10 @@
         <!--<item name="android:fontFamily">sans-serif</item>-->
         <item name="android:textViewStyle">@style/TextViewStyle</item>
         <item name="android:buttonStyle">@style/ButtonStyle</item>
+        <item name="android:textColorHint">@color/primaryTextW</item>
+        <item name="colorControlNormal">@color/primaryTextW</item>
+        <item name="colorControlActivated">@color/primaryTextW</item>
+        <item name="colorControlHighlight">@color/primaryTextW</item>
     </style>
 
     <style name="TextViewStyle" parent="android:Widget.TextView">
@@ -29,6 +33,10 @@
 
     <style name="ButtonStyle" parent="android:Widget.Holo.Button">
         <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="CircularProgress" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/accent</item>
     </style>
 
     <!-- Login layout theme -->
@@ -57,12 +65,12 @@
     <style name="DefaultButton">
         <item name="android:background">@drawable/default_button</item>
         <item name="android:typeface">monospace</item>
-        <item name="android:textColor">@color/lightPrimary</item>/>
+        <item name="android:textColor">@color/primaryLight</item>/>
     </style>
 
     <style name="input" parent="Widget.AppCompat.EditText">
-        <item name="android:textColor">@color/primaryTextB</item>
-        <item name="android:textColorSecondary">@color/secondaryTextB</item>
+        <item name="android:textColor">@color/primaryTextW</item>
+        <item name="android:textColorSecondary">@color/secondaryTextW</item>
         <item name="android:fontFamily">sans-serif-thin</item>
     </style>
 

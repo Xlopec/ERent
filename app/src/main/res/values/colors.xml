@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="lightPrimary">#D1C4E9</color>
-    <color name="lightSecondary">#727272</color>
+    <color name="lightSecondary">#80FFFFFF</color>
     <color name="divider">#B6B6B6</color>
-    <color name="default_background">#FFF2F2F2</color>
+    <color name="default_background">#2f4159</color>
     <color name="primaryTextW">#90FFFFFF</color>
     <color name="secondaryTextW">#54FFFFFF</color>
     <color name="titleTextW">#96FFFFFF</color>
     <color name="titleTextB">#96000000</color>
     <color name="primaryTextB">#86000000</color>
     <color name="secondaryTextB">#54000000</color>
-    <color name="primary">#FF006891</color>
-    <color name="primaryDark">#005b80</color>
-    <color name="accent">#FFF07E3C</color>
+    <color name="primaryLight">#C5CAE9</color>
+    <color name="primary">#3F51B5</color>
+    <color name="primaryDark">#303F9F</color>
+    <color name="accent">#536DFE</color>
 
     <color name="button_pressed_bg_def">#20727272</color>
 

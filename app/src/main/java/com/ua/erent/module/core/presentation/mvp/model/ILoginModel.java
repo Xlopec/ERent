@@ -1,7 +1,6 @@
 package com.ua.erent.module.core.presentation.mvp.model;
 
 import com.ua.erent.module.core.account.auth.domain.ILoginCallback;
-import com.ua.erent.module.core.account.auth.vo.Credentials;
 
 /**
  * Created by Максим on 10/15/2016.
@@ -9,6 +8,6 @@ import com.ua.erent.module.core.account.auth.vo.Credentials;
 
 public interface ILoginModel {
 
-    void login(Credentials credentials, ILoginCallback callback);
+    void login(String login, String password, ILoginCallback callback);
 
 }

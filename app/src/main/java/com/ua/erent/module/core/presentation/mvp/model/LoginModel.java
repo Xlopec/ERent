@@ -20,8 +20,8 @@ public class LoginModel implements ILoginModel {
     }
 
     @Override
-    public void login(Credentials credentials, ILoginCallback callback) {
-        authHandler.login(credentials, callback);
+    public void login(String login, String password, ILoginCallback callback) {
+        authHandler.login(new Credentials(login, password), callback);
     }
 
 }
