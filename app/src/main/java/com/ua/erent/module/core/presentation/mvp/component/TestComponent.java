@@ -1,6 +1,6 @@
 package com.ua.erent.module.core.presentation.mvp.component;
 
-import com.ua.erent.module.core.app.component.AppComponent;
+import com.ua.erent.module.core.app.di.AppComponent;
 import com.ua.erent.module.core.di.scopes.ActivityScope;
 import com.ua.erent.module.core.presentation.mvp.core.IMVPComponent;
 import com.ua.erent.module.core.presentation.mvp.module.TestModule;

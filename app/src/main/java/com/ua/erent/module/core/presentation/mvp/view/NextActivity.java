@@ -27,7 +27,7 @@ public class NextActivity extends AppCompatActivity implements IBaseView {
         System.gc();
         /*AppComponent provider = Injector.injector().getComponent(this, AppComponent.class);
 
-        IAppService service = provider.getAppService();
+        ISomeAppService service = provider.getAppService();
 
         service.z();*/
     }

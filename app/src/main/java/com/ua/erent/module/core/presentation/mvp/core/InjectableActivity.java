@@ -105,7 +105,7 @@ public class InjectableActivity<View extends IBaseView, Presenter extends IBaseP
         try {
             presenter.onDestroy();
         } catch (final Exception exc) {
-            Log.e(TAG, "exception in #onDestroy", exc);
+            Log.e(TAG, "exception in #onSaveState", exc);
         } finally {
             injector().destroyComponent(this);
             super.onDestroy();

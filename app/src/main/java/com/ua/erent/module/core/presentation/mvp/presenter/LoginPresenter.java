@@ -53,7 +53,7 @@ public final class LoginPresenter extends ILoginPresenter {
                 final Intent intent = new Intent(getView(), MainActivity.class);
 
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 getView().hideProgressView();
                 getView().startActivity(intent);
                 getView().finish();

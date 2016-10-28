@@ -14,7 +14,7 @@ import com.ua.erent.module.core.account.auth.domain.session.ISessionManager;
 import com.ua.erent.module.core.account.auth.domain.session.ISessionStorage;
 import com.ua.erent.module.core.account.auth.domain.session.SessionManager;
 import com.ua.erent.module.core.account.auth.domain.session.SessionStorage;
-import com.ua.erent.module.core.app.module.AppModule;
+import com.ua.erent.module.core.app.di.AppModule;
 import com.ua.erent.module.core.networking.module.NetworkingModule;
 import com.ua.erent.module.core.networking.service.IPacketInterceptService;
 import com.ua.erent.module.core.util.Initializeable;

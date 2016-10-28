@@ -41,7 +41,7 @@ public abstract class IBasePresenter<View extends IBaseView> {
     /**
      * Defines whether view is attached first time or not. Returned
      * value will be reset to its initial state after call of
-     * {@code onDestroy} method or after new instance of presenter
+     * {@code onSaveState} method or after new instance of presenter
      * was created
      */
     protected final boolean isFirstTimeAttached() {
@@ -98,7 +98,7 @@ public abstract class IBasePresenter<View extends IBaseView> {
             }
             onDestroyed();
         } catch (Exception e) {
-            Log.e(TAG, "Exception occurred in onDestroy!", e);
+            Log.e(TAG, "Exception occurred in onSaveState!", e);
         } finally {
             isFirstTimeAttached = true;
             isAttached = false;

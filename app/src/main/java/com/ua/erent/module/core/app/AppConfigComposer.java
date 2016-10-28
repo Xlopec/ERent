@@ -7,9 +7,9 @@ import com.ua.erent.module.core.account.auth.di.AuthComponent;
 import com.ua.erent.module.core.account.auth.di.AuthModule;
 import com.ua.erent.module.core.account.auth.di.DaggerAuthComponent;
 import com.ua.erent.module.core.account.auth.di.InitModule;
-import com.ua.erent.module.core.app.component.AppComponent;
-import com.ua.erent.module.core.app.component.DaggerAppComponent;
-import com.ua.erent.module.core.app.module.AppModule;
+import com.ua.erent.module.core.app.di.AppComponent;
+import com.ua.erent.module.core.app.di.AppModule;
+import com.ua.erent.module.core.app.di.DaggerAppComponent;
 import com.ua.erent.module.core.config.AbstractConfigComposer;
 import com.ua.erent.module.core.di.Injector;
 import com.ua.erent.module.core.di.config.InjectConfigModule;
@@ -94,7 +94,7 @@ final class AppConfigComposer extends AbstractConfigComposer {
         final AppComponent appComponent = DaggerAppComponent.builder().appModule(appModule).build();
 
         final InitModule initModule = new InitModule(
-                Collections.singletonList(appComponent.getAppService())
+                Collections.singletonList(appComponent.getSomeAppService())
         );
 
         final AuthComponent authComponent = DaggerAuthComponent.builder().authModule(authModule).

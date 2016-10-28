@@ -1,0 +1,89 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "25.0.0"
+
+    defaultConfig {
+        applicationId "com.ua.erent"
+        minSdkVersion 15
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
+
+        def Properties props = new Properties()
+        def propFile = file('your path goes here')
+
+        println "Properties found: ${propFile.exists()}"
+
+        if (propFile.canRead()) {
+
+            props.load(new FileInputStream(propFile))
+
+            def serverUrl = props['api.url']
+            def apiKey = props['api.key']
+
+            println "api url: ${serverUrl}"
+            println "api key: ${apiKey}"
+
+            buildConfigField("String", "API_BASE_URL", "\"${serverUrl}\"")
+            buildConfigField("String", "SERVER_API_KEY", "\"${apiKey}\"")
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+buildscript {
+
+    repositories {
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots'
+        }
+
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.squareup.retrofit2:retrofit:2.0.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
+    compile 'joda-time:joda-time:2.3'
+    compile 'ch.acra:acra:4.8.5'
+    compile 'org.jetbrains:annotations:13.0'
+    compile 'com.google.dagger:dagger:2.7'
+    compile 'com.jakewharton:butterknife:8.4.0'
+    compile 'com.android.support:design:24.2.1'
+    provided 'javax.annotation:jsr250-api:1.0'
+    compile 'io.reactivex:rxjava:1.2.1'
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0'
+    compile 'com.mobsandgeeks:android-saripaar:2.0.2'
+
+    apt 'com.google.dagger:dagger-compiler:2.7'
+    apt 'com.jakewharton:butterknife-compiler:8.4.0'
+}
+
+apply plugin: 'me.tatarka.retrolambda'

@@ -29,8 +29,9 @@
         <activity android:name=".module.core.presentation.mvp.view.NextActivity" />
 
         <activity
+            android:alwaysRetainTaskState="true"
             android:name=".module.core.presentation.mvp.view.MainActivity"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleTask" />
 
         <activity android:name=".module.core.presentation.mvp.view.PreLoaderActivity">
 
