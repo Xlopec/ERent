@@ -30,8 +30,6 @@ public final class InitializationManagerImp implements InitializationManager {
         Preconditions.checkNotNull(initializeables);
         Preconditions.checkNotNull(callback);
 
-        callback.onPreExecute();
-
         if (initializeables.isEmpty()) {
             callback.onInitialized();
             return;

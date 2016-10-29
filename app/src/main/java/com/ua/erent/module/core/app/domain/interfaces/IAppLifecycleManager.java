@@ -8,7 +8,7 @@ import rx.Observable;
 
 /**
  * <p>
- * Handles application lifecycle changes, e.g. you can register
+ * Handles application lifecycle changes, e.g. you can signUp
  * observer to monitor app visibility or add callback to be notified
  * when component should save its state
  * </p>
@@ -52,7 +52,7 @@ public interface IAppLifecycleManager {
      * @param kind     kind of component. Each kind differs in its priority, e.g.
      *                 component tagged with {@linkplain ComponentKind#APP_SERVICE} will be restored
      *                 earlier than {@linkplain ComponentKind#VIEW_MODEL}
-     * @param callback callback to register
+     * @param callback callback to signUp
      */
     void registerCallback(@NotNull ComponentKind kind, @NotNull IStateCallback callback);
 

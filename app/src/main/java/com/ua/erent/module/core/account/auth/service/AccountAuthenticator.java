@@ -9,7 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.ua.erent.module.core.presentation.mvp.view.LoginActivity;
+import com.ua.erent.module.core.presentation.mvp.view.LoginFragment;
 
 /**
  * <p>
@@ -34,7 +34,7 @@ final class AccountAuthenticator extends AbstractAccountAuthenticator {
     @Override
     public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws NetworkErrorException {
 
-        final Intent intent = new Intent(context, LoginActivity.class);
+        final Intent intent = new Intent(context, LoginFragment.class);
         final Bundle bundle = new Bundle();
 
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
@@ -59,7 +59,7 @@ final class AccountAuthenticator extends AbstractAccountAuthenticator {
             // If we get here, then we couldn't access the user's password - so we
             // need to re-prompt them for their credentials. We do that by creating
             // an intent to display our AuthenticatorActivity.
-            final Intent intent = new Intent(context, LoginActivity.class);
+            final Intent intent = new Intent(context, LoginFragment.class);
             final Bundle bundle = new Bundle();
 
             if (null != account) {

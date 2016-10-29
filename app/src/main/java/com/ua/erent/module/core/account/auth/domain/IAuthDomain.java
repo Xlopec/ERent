@@ -1,8 +1,11 @@
 package com.ua.erent.module.core.account.auth.domain;
 
-import com.ua.erent.module.core.account.auth.vo.Credentials;
+import com.ua.erent.module.core.account.auth.vo.SignInCredentials;
+import com.ua.erent.module.core.account.auth.vo.SignUpCredentials;
 
 import org.jetbrains.annotations.NotNull;
+
+import rx.Observable;
 
 /**
  * <p>
@@ -13,16 +16,24 @@ import org.jetbrains.annotations.NotNull;
 
 public interface IAuthDomain {
     /**
-     * Completes login procedure
+     * Completes signIn procedure
      *
-     * @param credentials credentials to login with
+     * @param credentials credentials to signIn with
      * @param callback    callback to observe result
      */
-    void login(@NotNull Credentials credentials, @NotNull ILoginCallback callback);
+    void signIn(@NotNull SignInCredentials credentials, @NotNull ILoginCallback callback);
+
+    /**
+     * Completes signIn procedure
+     *
+     * @param credentials credentials to signIn with
+     * @return rx observable to monitor registration progress
+     */
+    Observable<Void> signUp(@NotNull SignUpCredentials credentials);
 
     /**
      * Completes logout procedure. After calling this method
-     * a login screen will be open
+     * a signIn screen will be open
      */
     void logout();
 

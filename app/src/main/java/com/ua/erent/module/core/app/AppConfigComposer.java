@@ -17,9 +17,10 @@ import com.ua.erent.module.core.networking.component.DaggerBaseNetworkingCompone
 import com.ua.erent.module.core.networking.config.RetrofitConfigModule;
 import com.ua.erent.module.core.networking.module.BaseNetworkingModule;
 import com.ua.erent.module.core.networking.module.NetworkingModule;
+import com.ua.erent.module.core.presentation.mvp.module.InitialScreenModule;
 import com.ua.erent.module.core.presentation.mvp.module.LoginModule;
-import com.ua.erent.module.core.presentation.mvp.module.PreLoaderModule;
-import com.ua.erent.module.core.presentation.mvp.view.LoginActivity;
+import com.ua.erent.module.core.presentation.mvp.module.RegisterModule;
+import com.ua.erent.module.core.presentation.mvp.view.InitialScreenActivity;
 import com.ua.erent.module.core.util.IBuilder;
 
 import org.jetbrains.annotations.NotNull;
@@ -81,8 +82,9 @@ final class AppConfigComposer extends AbstractConfigComposer {
         // main dependency modules
         final AppModule appModule = new AppModule(application);
         final BaseNetworkingModule baseNetworkingModule = new BaseNetworkingModule();
-        final AuthModule authModule = new AuthModule(LoginActivity.class);
+        final AuthModule authModule = new AuthModule(InitialScreenActivity.class);
         final LoginModule loginModule = new LoginModule(application);
+        final InitialScreenModule initialScreenModule = new InitialScreenModule();
 
         final RetrofitConfigModule.Builder retrofitBuilder = new RetrofitConfigModule.Builder();
         final Retrofit retrofit = retrofitBuilder.setInterceptService(DaggerBaseNetworkingComponent.builder().
@@ -90,7 +92,7 @@ final class AppConfigComposer extends AbstractConfigComposer {
                 .configure();
 
         final NetworkingModule networkingModule = new NetworkingModule(retrofit);
-        final PreLoaderModule preLoaderModule = new PreLoaderModule();
+        final RegisterModule registerModule = new RegisterModule(application);
         final AppComponent appComponent = DaggerAppComponent.builder().appModule(appModule).build();
 
         final InitModule initModule = new InitModule(
@@ -100,10 +102,11 @@ final class AppConfigComposer extends AbstractConfigComposer {
         final AuthComponent authComponent = DaggerAuthComponent.builder().authModule(authModule).
                 appModule(appModule).networkingModule(networkingModule).initModule(initModule).build();
 
-        // register target dependency inject modules
+        // signUp target dependency inject modules
         final IBuilder<InjectConfigModule> injectModuleBuilder = new InjectConfigModule.Builder()
-                .setLoginModule(loginModule).setAppComponent(appComponent).
-                        setAuthComponent(authComponent).setPreLoaderModule(preLoaderModule);
+                .setLoginModule(loginModule).setAppComponent(appComponent)
+                .setAuthComponent(authComponent).setRegisterModule(registerModule)
+                .setInitialScreenModule(initialScreenModule);
 
         Injector.initialize(BuildConfig.DEBUG).addConfig(injectModuleBuilder.build());
     }

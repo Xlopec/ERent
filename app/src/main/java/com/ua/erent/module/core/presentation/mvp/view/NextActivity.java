@@ -21,7 +21,7 @@ public class NextActivity extends AppCompatActivity implements IBaseView {
         Button button = (Button) findViewById(R.id.back);
 
         button.setOnClickListener((v) -> {
-            NextActivity.this.startActivity(new Intent(NextActivity.this, LoginActivity.class));
+            NextActivity.this.startActivity(new Intent(NextActivity.this, LoginFragment.class));
            // NextActivity.this.finish();
         });
         System.gc();

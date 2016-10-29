@@ -60,7 +60,7 @@
         <item name="colorControlNormal">@color/primaryTextW</item>
         <item name="colorControlActivated">@color/primaryTextW</item>
     </style>
-    <!-- End of login layout theme -->
+    <!-- End of signIn layout theme -->
 
     <style name="DefaultButton">
         <item name="android:background">@drawable/default_button</item>

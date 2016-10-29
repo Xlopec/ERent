@@ -17,24 +17,27 @@
         android:supportsRtl="true"
         android:theme="@style/MyTheme">
         <activity
-            android:name=".module.core.presentation.mvp.view.LoginActivity"
+            android:name=".module.core.presentation.mvp.view.LoginFragment"
             android:label="@string/title_activity_login"
             android:launchMode="singleInstance">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
 
         <activity android:name=".module.core.presentation.mvp.view.NextActivity" />
 
         <activity
-            android:alwaysRetainTaskState="true"
             android:name=".module.core.presentation.mvp.view.MainActivity"
+            android:alwaysRetainTaskState="true"
             android:launchMode="singleTask" />
 
-        <activity android:name=".module.core.presentation.mvp.view.PreLoaderActivity">
-
+        <activity
+            android:name=".module.core.presentation.mvp.view.InitialScreenActivity"
+            android:alwaysRetainTaskState="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <service android:name=".module.core.account.auth.service.AuthService">

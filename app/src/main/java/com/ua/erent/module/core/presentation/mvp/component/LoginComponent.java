@@ -5,16 +5,16 @@ import com.ua.erent.module.core.di.scopes.ActivityScope;
 import com.ua.erent.module.core.presentation.mvp.core.IMVPComponent;
 import com.ua.erent.module.core.presentation.mvp.module.LoginModule;
 import com.ua.erent.module.core.presentation.mvp.presenter.ILoginPresenter;
-import com.ua.erent.module.core.presentation.mvp.view.LoginActivity;
+import com.ua.erent.module.core.presentation.mvp.view.LoginFragment;
 
 import dagger.Component;
 
 /**
  * <p>
- * Provides dependencies for login operation
+ * Provides dependencies for signIn operation
  * </p>
  * Created by Максим on 10/15/2016.
  */
 @Component(dependencies = AuthComponent.class, modules = LoginModule.class)
 @ActivityScope
-public interface LoginComponent extends IMVPComponent<LoginActivity, ILoginPresenter> {}
+public interface LoginComponent extends IMVPComponent<LoginFragment, ILoginPresenter> {}

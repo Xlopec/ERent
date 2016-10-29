@@ -7,8 +7,8 @@ import com.ua.erent.module.core.account.auth.domain.AuthAppService;
 import com.ua.erent.module.core.account.auth.domain.AuthDomain;
 import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
 import com.ua.erent.module.core.account.auth.domain.IAuthDomain;
-import com.ua.erent.module.core.account.auth.domain.api.ISessionProvider;
-import com.ua.erent.module.core.account.auth.domain.api.SessionProvider;
+import com.ua.erent.module.core.account.auth.domain.api.AuthProvider;
+import com.ua.erent.module.core.account.auth.domain.api.IAuthProvider;
 import com.ua.erent.module.core.account.auth.domain.init.InitializationManager;
 import com.ua.erent.module.core.account.auth.domain.session.ISessionManager;
 import com.ua.erent.module.core.account.auth.domain.session.ISessionStorage;
@@ -59,14 +59,14 @@ public final class AuthModule {
 
     @Provides
     @Singleton
-    ISessionProvider provideSessionProvider(Retrofit retrofit) {
-        return new SessionProvider(retrofit);
+    IAuthProvider provideSessionProvider(Retrofit retrofit) {
+        return new AuthProvider(retrofit);
     }
 
     @Provides
     @Singleton
     IAuthDomain provideAuthDomain(Class<? extends Activity> loginActivity, Application app, ISessionManager sessionManager,
-                                  ISessionProvider provider, InitializationManager initializationManager,
+                                  IAuthProvider provider, InitializationManager initializationManager,
                                   Collection<? extends Initializeable> initializeables) {
         return new AuthDomain(loginActivity, app, sessionManager, provider, initializationManager, initializeables);
     }

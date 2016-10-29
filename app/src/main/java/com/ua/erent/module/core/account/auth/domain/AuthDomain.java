@@ -6,11 +6,11 @@ import android.app.Application;
 import android.content.Intent;
 
 import com.ua.erent.module.core.account.auth.bo.Session;
-import com.ua.erent.module.core.account.auth.domain.api.ISessionProvider;
+import com.ua.erent.module.core.account.auth.domain.api.IAuthProvider;
 import com.ua.erent.module.core.account.auth.domain.init.InitializationManager;
 import com.ua.erent.module.core.account.auth.domain.session.ISessionManager;
-import com.ua.erent.module.core.account.auth.vo.Credentials;
-import com.ua.erent.module.core.app.Constant;
+import com.ua.erent.module.core.account.auth.vo.SignInCredentials;
+import com.ua.erent.module.core.account.auth.vo.SignUpCredentials;
 import com.ua.erent.module.core.util.Initializeable;
 
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +20,9 @@ import java.util.Collections;
 
 import javax.inject.Inject;
 
+import rx.Observable;
+import rx.Subscriber;
+
 /**
  * Created by Максим on 10/15/2016.
  */
@@ -28,7 +31,7 @@ public final class AuthDomain implements IAuthDomain {
 
     private final Application application;
     private final ISessionManager sessionManager;
-    private final ISessionProvider provider;
+    private final IAuthProvider provider;
     private final InitializationManager initializationManager;
     private final Class<? extends Activity> loginActivity;
     private final Collection<? extends Initializeable> initializeables;
@@ -77,7 +80,7 @@ public final class AuthDomain implements IAuthDomain {
 
     @Inject
     public AuthDomain(Class<? extends Activity> loginActivity, Application application,
-                      ISessionManager sessionManager, ISessionProvider provider,
+                      ISessionManager sessionManager, IAuthProvider provider,
                       InitializationManager initializationManager,
                       Collection<? extends Initializeable> initializeables) {
 
@@ -90,20 +93,25 @@ public final class AuthDomain implements IAuthDomain {
     }
 
     @Override
-    public void login(@NotNull Credentials credentials, @NotNull ILoginCallback callback) {
+    public void signIn(@NotNull SignInCredentials credentials, @NotNull ILoginCallback callback) {
+
+        callback.onPreExecute();
+
         /*
          * At first, try to get a session from server,
          * then try to initialize modules which needs it;
          * After this operations session can be finally set
          */
-        final Session session = new Session(credentials.getLogin(), credentials.getPassword(), Constant.ACCOUNT_TOKEN_TYPE);
+        /*final Session session = new Session(credentials.getLogin(), credentials.getPassword(), Constant.ACCOUNT_TOKEN_TYPE);
         initializationManager.
                 initialize(session,
-                        initializeables, new LoginCallbackWrapper(callback, session));
-       /* provider.fetchSession(credentials).subscribe(new Subscriber<Session>() {
+                        initializeables, new LoginCallbackWrapper(callback, session));*/
+        provider.signIn(credentials).subscribe(new Subscriber<Session>() {
 
             @Override
-            public void onCompleted() { unsubscribe(); }
+            public void onCompleted() {
+                unsubscribe();
+            }
 
             @Override
             public void onError(Throwable e) {
@@ -117,12 +125,17 @@ public final class AuthDomain implements IAuthDomain {
                 initializationManager.
                         initialize(session, initializeables, new LoginCallbackWrapper(callback, session));
             }
-        });*/
+        });
+    }
+
+    @Override
+    public Observable<Void> signUp(@NotNull SignUpCredentials credentials) {
+        return provider.signUp(credentials).map(session -> null);
     }
 
     @Override
     public void logout() {
-        // destroy session, activities and tasks and open login activity
+        // destroy session, activities and tasks and open signIn activity
         final Session session = sessionManager.getSession();
         final Intent intent = new Intent(application, loginActivity);
 

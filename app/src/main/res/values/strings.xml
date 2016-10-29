@@ -2,11 +2,17 @@
     <string name="app_name">ERent</string>
     <string name="title_activity_login">ERent login</string>
 
+    <string name="err_app_crash">E-Rent has crashed, please, send error report</string>
+
+    <!-- Validation -->
+    <string name="regex_username">"^([_A-Za-z0-9-\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,}))|(\\w{5,20})$"</string>
+    <string name="regex_password">"^\\w{5,20}$"</string>
+
     <!-- Fonts -->
     <string name="font_name_fontawesome">fontawesome</string>
     <string name="font_name_source_sans_pro">SourceSansPro</string>
 
-    <!-- Strings related to login -->
+    <!-- Strings related to signIn -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
     <string name="action_sign_in">Sign in or register</string>

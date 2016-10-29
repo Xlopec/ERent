@@ -9,12 +9,12 @@ import dagger.internal.Preconditions;
  * Created by Максим on 10/14/2016.
  */
 
-public final class Credentials {
+public final class SignInCredentials {
 
     private final String login;
     private final String password;
 
-    public Credentials(String login, String password) {
+    public SignInCredentials(String login, String password) {
         this.login = Preconditions.checkNotNull(login);
         this.password = Preconditions.checkNotNull(password);
     }
@@ -32,7 +32,7 @@ public final class Credentials {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Credentials that = (Credentials) o;
+        SignInCredentials that = (SignInCredentials) o;
 
         if (!login.equals(that.login)) return false;
         return password.equals(that.password);
@@ -48,8 +48,8 @@ public final class Credentials {
 
     @Override
     public String toString() {
-        return "Credentials{" +
-                "login='" + login + '\'' +
+        return "SignInCredentials{" +
+                "signIn='" + login + '\'' +
                 ", password='" + password + '\'' +
                 '}';
     }

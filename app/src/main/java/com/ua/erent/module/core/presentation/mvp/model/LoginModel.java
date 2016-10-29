@@ -2,7 +2,7 @@ package com.ua.erent.module.core.presentation.mvp.model;
 
 import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
 import com.ua.erent.module.core.account.auth.domain.ILoginCallback;
-import com.ua.erent.module.core.account.auth.vo.Credentials;
+import com.ua.erent.module.core.account.auth.vo.SignInCredentials;
 
 import javax.inject.Inject;
 
@@ -10,7 +10,7 @@ import javax.inject.Inject;
  * Created by Максим on 10/15/2016.
  */
 
-public class LoginModel implements ILoginModel {
+public final class LoginModel implements ILoginModel {
 
     private final IAuthAppService authHandler;
 
@@ -21,7 +21,7 @@ public class LoginModel implements ILoginModel {
 
     @Override
     public void login(String login, String password, ILoginCallback callback) {
-        authHandler.login(new Credentials(login, password), callback);
+        authHandler.login(new SignInCredentials(login, password), callback);
     }
 
 }

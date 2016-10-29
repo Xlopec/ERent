@@ -2,7 +2,7 @@ package com.ua.erent.module.core.account.auth.di;
 
 import com.ua.erent.module.core.account.auth.domain.IAuthDomain;
 import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
-import com.ua.erent.module.core.account.auth.domain.api.ISessionProvider;
+import com.ua.erent.module.core.account.auth.domain.api.IAuthProvider;
 import com.ua.erent.module.core.account.auth.domain.session.ISessionManager;
 import com.ua.erent.module.core.account.auth.domain.session.ISessionStorage;
 import com.ua.erent.module.core.networking.service.IPacketInterceptService;
@@ -24,7 +24,7 @@ public interface AuthComponent {
 
     ISessionManager getSessionManager();
 
-    ISessionProvider getSessionProvider();
+    IAuthProvider getSessionProvider();
 
     IAuthDomain getAuthDomain();
 

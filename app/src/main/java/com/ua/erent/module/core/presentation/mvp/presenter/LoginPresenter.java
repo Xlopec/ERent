@@ -8,7 +8,8 @@ import android.os.Looper;
 
 import com.ua.erent.module.core.account.auth.domain.ILoginCallback;
 import com.ua.erent.module.core.presentation.mvp.model.ILoginModel;
-import com.ua.erent.module.core.presentation.mvp.view.LoginActivity;
+import com.ua.erent.module.core.presentation.mvp.view.IInitialScreenView;
+import com.ua.erent.module.core.presentation.mvp.view.LoginFragment;
 import com.ua.erent.module.core.presentation.mvp.view.MainActivity;
 import com.ua.erent.module.core.util.Initializeable;
 
@@ -29,6 +30,7 @@ import rx.Subscriber;
 public final class LoginPresenter extends ILoginPresenter {
 
     private final ILoginModel model;
+    private IInitialScreenView.NavigationListener callback;
     private final Context context;
 
     private class LoginCallbackImp implements ILoginCallback {
@@ -50,13 +52,13 @@ public final class LoginPresenter extends ILoginPresenter {
             subscriber.onNext("Loaded...");
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
 
-                final Intent intent = new Intent(getView(), MainActivity.class);
+                final Intent intent = new Intent(getView().getActivity(), MainActivity.class);
 
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 getView().hideProgressView();
                 getView().startActivity(intent);
-                getView().finish();
+                getView().getActivity().finish();
             }, 2000L);
         }
 
@@ -108,10 +110,24 @@ public final class LoginPresenter extends ILoginPresenter {
     }
 
     @Override
-    protected void onViewAttached(@NotNull LoginActivity view, @Nullable Bundle savedState, @Nullable Bundle data) {
+    public void onNavigateCreateAccount() {
+        callback.onCreateAccount();
+    }
+
+    @Override
+    protected void onViewAttached(@NotNull LoginFragment view, @Nullable Bundle savedState, @Nullable Bundle data) {
+
+        try {
+            callback = (IInitialScreenView.NavigationListener) view.getActivity();
+        } catch (final ClassCastException e) {
+            throw new RuntimeException(
+                    String.format("%s should implement %s interface!", view.getContext().toString(),
+                            IInitialScreenView.NavigationListener.class.getSimpleName()));
+        }
     }
 
     @Override
     protected void onDestroyed() {
+        callback = null;
     }
 }

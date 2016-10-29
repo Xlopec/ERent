@@ -13,24 +13,26 @@ android {
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
 
-        def Properties props = new Properties()
-        def propFile = file('your path goes here')
+        def final propFile = file(project.projectDir.absolutePath.concat("\\app.properties"))
 
-        println "Properties found: ${propFile.exists()}"
+        if (propFile.canRead() && propFile.exists()) {
 
-        if (propFile.canRead()) {
+            def final Properties props = new Properties()
 
             props.load(new FileInputStream(propFile))
 
-            def serverUrl = props['api.url']
-            def apiKey = props['api.key']
+            def final serverUrl = props['api.url']
+            def final apiKey = props['api.key']
+            def final mailTo = props['app.crash.mailto']
 
             println "api url: ${serverUrl}"
             println "api key: ${apiKey}"
 
             buildConfigField("String", "API_BASE_URL", "\"${serverUrl}\"")
             buildConfigField("String", "SERVER_API_KEY", "\"${apiKey}\"")
-        }
+            buildConfigField("String", "APP_CRASH_MAILTO", "\"${mailTo}\"")
+        } else
+            throw new RuntimeException("Config file with path ${propFile.absolutePath} doesn't exist");
     }
 
     buildTypes {
@@ -81,6 +83,8 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0'
     compile 'com.mobsandgeeks:android-saripaar:2.0.2'
+    compile 'commons-validator:commons-validator:1.5.1'
+
 
     apt 'com.google.dagger:dagger-compiler:2.7'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'

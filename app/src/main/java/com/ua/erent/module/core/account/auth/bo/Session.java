@@ -20,7 +20,7 @@ public final class Session implements Parcelable {
     public Session(String login, String token, String tokenType) {
 
         if(TextUtils.isEmpty(login))
-            throw new IllegalArgumentException(String.format("illegal login, was %s", login));
+            throw new IllegalArgumentException(String.format("illegal signIn, was %s", login));
 
         if(TextUtils.isEmpty(tokenType))
             throw new IllegalArgumentException(String.format("illegal token type, was %s", tokenType));
@@ -100,7 +100,7 @@ public final class Session implements Parcelable {
     @Override
     public String toString() {
         return "Session{" +
-                "login='" + login + '\'' +
+                "signIn='" + login + '\'' +
                 ", token='" + token + '\'' +
                 ", tokenType='" + tokenType + '\'' +
                 '}';

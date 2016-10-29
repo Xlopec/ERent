@@ -4,11 +4,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -21,7 +21,7 @@ import com.mobsandgeeks.saripaar.annotation.Password;
 import com.mobsandgeeks.saripaar.annotation.Pattern;
 import com.ua.erent.R;
 import com.ua.erent.module.core.presentation.mvp.component.LoginComponent;
-import com.ua.erent.module.core.presentation.mvp.core.InjectableActivity;
+import com.ua.erent.module.core.presentation.mvp.core.InjectableV4Fragment;
 import com.ua.erent.module.core.presentation.mvp.presenter.ILoginPresenter;
 
 import org.jetbrains.annotations.NotNull;
@@ -32,9 +32,9 @@ import butterknife.BindView;
 import rx.Observable;
 
 /**
- * A login screen that offers login via email/password.
+ * A signIn screen that offers signIn via email/password.
  */
-public final class LoginActivity extends InjectableActivity<LoginActivity, ILoginPresenter>
+public final class LoginFragment extends InjectableV4Fragment<LoginFragment, ILoginPresenter>
         implements ILoginView, Validator.ValidationListener {
 
     // UI references.
@@ -42,13 +42,16 @@ public final class LoginActivity extends InjectableActivity<LoginActivity, ILogi
     @BindView(R.id.login_fld)
     protected EditText loginEditText;
 
-    @Password(scheme = Password.Scheme.ALPHA_NUMERIC)
-    @Length(sequence = 2, min = 6, max = 20)
+    @Password(scheme = Password.Scheme.ALPHA)
+    @Length(min = 6, max = 20)
     @BindView(R.id.password_fld)
     protected EditText passwordEditText;
 
     @BindView(R.id.login_btn)
     protected Button loginBtn;
+
+    @BindView(R.id.register_link)
+    protected TextView registerTextView;
 
     @BindView(R.id.login_pre_loader_root)
     protected View preLoaderRootView;
@@ -58,56 +61,57 @@ public final class LoginActivity extends InjectableActivity<LoginActivity, ILogi
     private final Validator validator;
     private ProgressDialog progressBar;
 
-    public LoginActivity() {
-        super(R.layout.activity_login, LoginComponent.class);
+    public LoginFragment() {
+        super(LoginComponent.class);
         validator = new Validator(this);
         validator.setValidationListener(this);
     }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
-        );
-
-        progressBar = new ProgressDialog(this);
+        progressBar = new ProgressDialog(getActivity());
         progressBar.setIndeterminate(true);
         progressBar.setCancelable(false);
+    }
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        return inflater.inflate(R.layout.fragment_login, container, false);
+    }
 
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         loginBtn.setOnClickListener(v -> validator.validate());
+        registerTextView.setOnClickListener(v -> presenter.onNavigateCreateAccount());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+
+        if(actionBar != null) {
+           // actionBar.setDisplayHomeAsUpEnabled(false);
+          //  actionBar.setDisplayShowHomeEnabled(false);
+        }
     }
 
     @NotNull
     @Override
     public Context getContext() {
-        return this;
+        return getActivity();
     }
 
+    @NotNull
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.login_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        final int id = item.getItemId();
-
-        if (id == R.id.action_web) {
-            // open web browser
-        } else if (id == R.id.action_settings) {
-            // open settings
-        }
-
-        return super.onOptionsItemSelected(item);
+    public Context getApplicationContext() {
+        return getActivity().getApplicationContext();
     }
 
     @Override
@@ -151,12 +155,12 @@ public final class LoginActivity extends InjectableActivity<LoginActivity, ILogi
         for (final ValidationError error : errors) {
 
             final View view = error.getView();
-            final String message = error.getCollatedErrorMessage(this);
+            final String message = error.getCollatedErrorMessage(getActivity());
 
             if (view instanceof EditText) {
                 ((EditText) view).setError(message);
             } else {
-                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
             }
         }
     }

@@ -89,6 +89,7 @@ public final class RetrofitConfigModule extends IConfigModule<Retrofit> {
                             Log.d("Tag", "Request body: " + toString);
 
                     final Request request = original.newBuilder().
+                            header("Content-Type", "application/json").
                             method(original.method(), original.body()).
                             build();
 

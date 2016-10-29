@@ -7,4 +7,4 @@
 /build
 /captures
 .idea
-app/src/main/app.properties
+app/app.properties

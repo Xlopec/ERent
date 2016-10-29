@@ -2,7 +2,8 @@ package com.ua.erent.module.core.account.auth.domain;
 
 import com.ua.erent.module.core.account.auth.bo.Session;
 import com.ua.erent.module.core.account.auth.domain.session.ISessionManager;
-import com.ua.erent.module.core.account.auth.vo.Credentials;
+import com.ua.erent.module.core.account.auth.vo.SignInCredentials;
+import com.ua.erent.module.core.account.auth.vo.SignUpCredentials;
 import com.ua.erent.module.core.networking.service.IPacketInterceptService;
 import com.ua.erent.module.core.networking.util.HTTP_CODE;
 
@@ -40,13 +41,18 @@ public final class AuthAppService implements IAuthAppService {
     }
 
     @Override
-    public void login(@NotNull Credentials credentials, @NotNull ILoginCallback callback) {
-        domain.login(credentials, callback);
+    public void login(@NotNull SignInCredentials credentials, @NotNull ILoginCallback callback) {
+        domain.signIn(credentials, callback);
     }
 
     @Override
     public void logout() {
         domain.logout();
+    }
+
+    @Override
+    public Observable<Void> signUp(@NotNull SignUpCredentials credentials) {
+        return domain.signUp(credentials);
     }
 
     @Override

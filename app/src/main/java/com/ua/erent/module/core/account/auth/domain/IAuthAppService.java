@@ -1,7 +1,8 @@
 package com.ua.erent.module.core.account.auth.domain;
 
 import com.ua.erent.module.core.account.auth.bo.Session;
-import com.ua.erent.module.core.account.auth.vo.Credentials;
+import com.ua.erent.module.core.account.auth.vo.SignInCredentials;
+import com.ua.erent.module.core.account.auth.vo.SignUpCredentials;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -18,19 +19,21 @@ import rx.Observable;
 
 public interface IAuthAppService {
     /**
-     * Processes login action. This action involves creating of new session, initialing
+     * Processes signIn action. This action involves creating of new session, initialing
      * app components and so on
      *
      * @param credentials credentials to log with
-     * @param callback    callback to handle login process
+     * @param callback    callback to handle signIn process
      */
-    void login(@NotNull Credentials credentials, @NotNull ILoginCallback callback);
+    void login(@NotNull SignInCredentials credentials, @NotNull ILoginCallback callback);
 
     /**
      * Processes logout action. This action involves destroying of current session,
-     * stopping all running services and opening login activity
+     * stopping all running services and opening signIn activity
      */
     void logout();
+
+    Observable<Void> signUp(@NotNull SignUpCredentials credentials);
 
     Observable<Session> getSessionObs();
 

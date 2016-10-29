@@ -4,12 +4,12 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * <p>
- *     Represents auth api request body
+ *     Represents signIn api request body
  * </p>
  * Created by Максим on 10/15/2016.
  */
 
-final class AuthRequest {
+final class SignInRequest {
 
     @SerializedName("username")
     private final String login;
@@ -20,7 +20,7 @@ final class AuthRequest {
     @SerializedName("apiKey")
     private final String apiKey;
 
-    AuthRequest(String login, String password, String apiKey) {
+    SignInRequest(String login, String password, String apiKey) {
         this.login = login;
         this.password = password;
         this.apiKey = apiKey;
@@ -38,4 +38,12 @@ final class AuthRequest {
         return apiKey;
     }
 
+    @Override
+    public String toString() {
+        return "SignInRequest{" +
+                "signIn='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", apiKey='" + apiKey + '\'' +
+                '}';
+    }
 }
