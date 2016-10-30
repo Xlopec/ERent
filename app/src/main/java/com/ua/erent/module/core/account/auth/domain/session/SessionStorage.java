@@ -1,55 +1,77 @@
 package com.ua.erent.module.core.account.auth.domain.session;
 
+import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
+import com.j256.ormlite.dao.CloseableIterator;
+import com.j256.ormlite.table.TableUtils;
 import com.ua.erent.module.core.account.auth.bo.Session;
+import com.ua.erent.module.core.account.auth.domain.api.db.SessionDao;
+import com.ua.erent.module.core.account.auth.domain.api.db.SessionMapper;
+import com.ua.erent.module.core.account.auth.domain.api.db.SessionPO;
 import com.ua.erent.module.core.app.Constant;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.SQLException;
+
 import javax.inject.Inject;
 
+import dagger.internal.Preconditions;
 import rx.subjects.PublishSubject;
 
 public final class SessionStorage implements ISessionStorage {
 
-    private static final String ARG_ACC_KEY = "argAccKey";
-    private static final String ARG_STORAGE = "argSessionStorage";
+    private static final String TAG = SessionStorage.class.getSimpleName();
+
+    private final Context context;
+    private final SessionDao dao;
     private final AccountManager accountManager;
-    private final SharedPreferences preferences;
-    private Session currentSession;
     private final PublishSubject<Session> sessionObservable;
+    private Session currentSession;
 
     @Inject
-    public SessionStorage(Context context) {
+    public SessionStorage(Context context, SessionDao dao) {
+
+        this.dao = Preconditions.checkNotNull(dao, "session dao was null");
+        this.context = context;
+        final CloseableIterator<SessionPO> it = this.dao.iterator();
 
         sessionObservable = PublishSubject.create();
         accountManager = AccountManager.get(context.getApplicationContext());
-        preferences = context.getSharedPreferences(SessionStorage.ARG_STORAGE, Context.MODE_PRIVATE);
+        SessionPO po = null;
 
-        // get last used account name
-        final String lastAccount = preferences.getString(SessionStorage.ARG_ACC_KEY, null);
-        // restore session if application was destroyed by the system, not by user
-        if (lastAccount != null) {
+        do {
+            // while database has stored session po, move cursor
+            if (it.hasNext()) {
 
-            final Account account = getAccountByName(lastAccount);
+                po = it.next();
 
-            if (account != null) {
-
-                final String authToken = accountManager.peekAuthToken(account, Constant.ACCOUNT_TYPE);
-
-                if (authToken != null) {
-                    // session can be set
-                    final Session newSession = new Session(account.name, authToken, account.type);
-
-                    currentSession = newSession;
-                    sessionObservable.onNext(newSession);
+                final String token = accountManager
+                        .peekAuthToken(getAccountByName(po.getLogin()), Constant.ACCOUNT_TOKEN_TYPE);
+                // peek auth token, that was cached by account manager
+                if (token != null) {
+                    // token is still valid, session can be set
+                    currentSession = SessionMapper.toSession(po);
+                } else {
+                    // session token is invalid, clear table and continue
+                    try {
+                        TableUtils.clearTable(dao.getConnectionSource(), SessionPO.class);
+                    } catch (final SQLException e) {
+                        Log.e(TAG, "exception while clearing table", e);
+                        throw new RuntimeException(e);
+                    }
+                    break;
                 }
             }
-        }
+        } while (po != null && it.hasNext());
+
+        it.closeQuietly();
     }
 
     @Override
@@ -64,9 +86,15 @@ public final class SessionStorage implements ISessionStorage {
                 account = new Account(session.getLogin(), Constant.ACCOUNT_TYPE);
                 accountManager.addAccountExplicitly(account, null, null);
             }
+
+            try {
+                dao.createOrUpdate(SessionMapper.toPersistenceObject(session));
+            } catch (final SQLException e) {
+                Log.e(TAG, "exception while updating session table", e);
+                throw new RuntimeException(e);
+            }
             // reset auth token for a given account
             accountManager.setAuthToken(account, Constant.ACCOUNT_TOKEN_TYPE, session.getToken());
-            preferences.edit().putString(SessionStorage.ARG_ACC_KEY, session.getLogin()).apply();
             sessionObservable.onNext(session);
         }
     }
@@ -76,9 +104,16 @@ public final class SessionStorage implements ISessionStorage {
 
         final Session session = getSession();
 
-        if(session != null) {
+        if (session != null) {
+
             accountManager.invalidateAuthToken(Constant.ACCOUNT_TYPE, session.getToken());
-            preferences.edit().putString(SessionStorage.ARG_ACC_KEY, null).apply();
+
+            try {
+                TableUtils.clearTable(dao.getConnectionSource(), SessionPO.class);
+            } catch (final SQLException e) {
+                Log.e(TAG, "exception while clearing table", e);
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -98,6 +133,10 @@ public final class SessionStorage implements ISessionStorage {
     }
 
     private Account getAccountByName(@NotNull String name) {
+
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.GET_ACCOUNTS)
+                != PackageManager.PERMISSION_GRANTED)
+            throw new RuntimeException("Permission to get accounts not granted");
 
         final Account[] accounts = accountManager.getAccountsByType(Constant.ACCOUNT_TYPE);
 

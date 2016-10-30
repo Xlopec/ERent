@@ -10,18 +10,27 @@ final class SignInResponse {
     @SerializedName("token")
     private final String token;
 
-    public SignInResponse(String token) {
+    @SerializedName("id")
+    private final int userId;
+
+    public SignInResponse(String token, int userId) {
         this.token = token;
+        this.userId = userId;
     }
 
     public String getToken() {
         return token;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
     @Override
     public String toString() {
         return "SignInResponse{" +
                 "token='" + token + '\'' +
+                ", userId=" + userId +
                 '}';
     }
 }

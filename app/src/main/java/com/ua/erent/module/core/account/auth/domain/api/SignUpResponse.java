@@ -14,9 +14,13 @@ final class SignUpResponse {
     @SerializedName("token")
     private final String token;
 
-    public SignUpResponse(String message, String token) {
+    @SerializedName("id")
+    private final int userId;
+
+    public SignUpResponse(String message, String token, int userId) {
         this.message = message;
         this.token = token;
+        this.userId = userId;
     }
 
     public String getMessage() {
@@ -27,11 +31,16 @@ final class SignUpResponse {
         return token;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
     @Override
     public String toString() {
         return "SignUpResponse{" +
                 "message='" + message + '\'' +
                 ", token='" + token + '\'' +
+                ", userId=" + userId +
                 '}';
     }
 }

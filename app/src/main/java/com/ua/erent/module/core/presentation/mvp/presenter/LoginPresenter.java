@@ -8,7 +8,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 
 import com.ua.erent.module.core.account.auth.domain.ILoginCallback;
-import com.ua.erent.module.core.presentation.mvp.model.ILoginModel;
+import com.ua.erent.module.core.presentation.mvp.model.interfaces.ILoginModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ILoginPresenter;
 import com.ua.erent.module.core.presentation.mvp.view.interfaces.IInitialScreenView;
 import com.ua.erent.module.core.presentation.mvp.view.LoginFragment;

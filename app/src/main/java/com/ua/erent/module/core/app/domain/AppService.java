@@ -1,5 +1,6 @@
 package com.ua.erent.module.core.app.domain;
 
+import com.ua.erent.module.core.app.domain.interfaces.IAppInitManager;
 import com.ua.erent.module.core.app.domain.interfaces.IAppLifecycleManager;
 import com.ua.erent.module.core.app.domain.interfaces.IAppService;
 
@@ -16,8 +17,9 @@ public final class AppService implements IAppService {
     private final IAppLifecycleManager lifecycleManager;
 
     @Inject
-    public AppService(IAppLifecycleManager lifecycleManager) {
+    public AppService(IAppLifecycleManager lifecycleManager, IAppInitManager initManager) {
         this.lifecycleManager = Preconditions.checkNotNull(lifecycleManager);
+        initManager.initialize();
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
+import com.ua.erent.module.core.presentation.mvp.model.interfaces.IRegisterModel;
 import com.ua.erent.module.core.presentation.mvp.util.SignUpFormConverter;
 
 import org.jetbrains.annotations.NotNull;

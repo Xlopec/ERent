@@ -1,4 +1,4 @@
-package com.ua.erent.module.core.presentation.mvp.model;
+package com.ua.erent.module.core.presentation.mvp.model.interfaces;
 
 import com.ua.erent.module.core.account.auth.domain.ILoginCallback;
 

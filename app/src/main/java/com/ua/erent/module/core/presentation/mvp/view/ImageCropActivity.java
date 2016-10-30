@@ -18,9 +18,6 @@ import com.ua.erent.module.core.presentation.mvp.view.interfaces.ICropView;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.IOException;
-
 import butterknife.BindView;
 import dagger.internal.Preconditions;
 
@@ -42,8 +39,6 @@ public final class ImageCropActivity extends InjectableActivity<ImageCropActivit
 
     @BindView(R.id.fab)
     protected FloatingActionButton fab;
-
-    private Uri saveUri;
 
     public enum Shape {
         OVAL, RECT
@@ -70,12 +65,10 @@ public final class ImageCropActivity extends InjectableActivity<ImageCropActivit
 
         fab.setOnClickListener(v -> {
 
-            try {
-                saveUri = Uri.fromFile(File.createTempFile("image", ".tmp", getExternalCacheDir()));
-                cropImageView.saveCroppedImageAsync(saveUri, Bitmap.CompressFormat.PNG, 100);
-            } catch (IOException e) {
-                showToast("Failed to save image");
-                e.printStackTrace();
+            final Uri uri = presenter.onSaveCroppedImage();
+
+            if(uri != null) {
+                cropImageView.saveCroppedImageAsync(uri, Bitmap.CompressFormat.PNG, 100);
             }
         });
     }

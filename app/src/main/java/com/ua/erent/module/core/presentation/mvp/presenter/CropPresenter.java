@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.theartofdev.edmodo.cropper.CropImageView;
+import com.ua.erent.module.core.presentation.mvp.model.interfaces.IImageCropModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ICropPresenter;
 import com.ua.erent.module.core.presentation.mvp.view.ImageCropActivity;
 import com.ua.erent.module.core.presentation.mvp.view.interfaces.ICropView;
@@ -14,6 +15,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
+
+import javax.inject.Inject;
 
 import static android.R.attr.x;
 import static android.R.attr.y;
@@ -30,10 +33,17 @@ public final class CropPresenter extends ICropPresenter {
     private static final String ARG_RATIO_Y = "argRatioYState";
     private static final String ARG_SHAPE = "argShapeState";
 
+    private final IImageCropModel model;
+
     private Uri uri;
     private boolean isFixedAspectRatio;
     private int aspectX, aspectY;
     private CropImageView.CropShape shape;
+
+    @Inject
+    public CropPresenter(IImageCropModel model) {
+        this.model = model;
+    }
 
     @Override
     protected void onViewAttached(@NotNull ImageCropActivity view, @Nullable Bundle savedState, @Nullable Bundle data) {
@@ -90,6 +100,19 @@ public final class CropPresenter extends ICropPresenter {
         } else {
             getView().showToast(result.getError().getMessage());
         }
+    }
+
+    @Nullable
+    @Override
+    public Uri onSaveCroppedImage() {
+
+        final Uri uri = model.createStoreFileUri(getView());
+
+        if(uri == null) {
+            getView().showToast("Failed to create temp file to store image");
+        }
+
+        return uri;
     }
 
     private void syncWithView() {

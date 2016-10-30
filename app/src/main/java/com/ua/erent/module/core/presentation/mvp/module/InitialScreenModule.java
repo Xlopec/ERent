@@ -1,7 +1,7 @@
 package com.ua.erent.module.core.presentation.mvp.module;
 
 import com.ua.erent.module.core.di.scopes.ActivityScope;
-import com.ua.erent.module.core.presentation.mvp.model.IInitialScreenModel;
+import com.ua.erent.module.core.presentation.mvp.model.interfaces.IInitialScreenModel;
 import com.ua.erent.module.core.presentation.mvp.model.InitialScreenModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IInitialScreenPresenter;
 import com.ua.erent.module.core.presentation.mvp.presenter.InitialScreenPresenter;

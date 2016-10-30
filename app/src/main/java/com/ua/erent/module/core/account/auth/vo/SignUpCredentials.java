@@ -1,9 +1,17 @@
 package com.ua.erent.module.core.account.auth.vo;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.ua.erent.R;
 import com.ua.erent.module.core.util.IBuilder;
+
+import org.apache.commons.validator.routines.EmailValidator;
+import org.apache.commons.validator.routines.RegexValidator;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
 
 import dagger.internal.Preconditions;
 
@@ -17,15 +25,32 @@ public final class SignUpCredentials implements Parcelable {
     private final String username;
     private final String password;
     private final String confPassword;
+    private final File avatarImage;
 
     public static final class Builder implements IBuilder<SignUpCredentials> {
 
+        private final Context context;
         private String email;
         private String username;
         private String password;
         private String confPassword;
+        private File avatarImage;
 
-        public Builder() {
+        public Builder(@NotNull Context context) {
+            this.context = Preconditions.checkNotNull(context);
+        }
+
+        public Context getContext() {
+            return context;
+        }
+
+        public File getAvatarImage() {
+            return avatarImage;
+        }
+
+        public Builder setAvatarImage(File avatarImage) {
+            this.avatarImage = avatarImage;
+            return this;
         }
 
         public String getEmail() {
@@ -72,10 +97,34 @@ public final class SignUpCredentials implements Parcelable {
 
     private SignUpCredentials(Builder builder) {
         Preconditions.checkNotNull(builder);
+
+        final RegexValidator usernameValid =
+                new RegexValidator(builder.getContext().getString(R.string.regex_username), true);
+        final EmailValidator emailValidator = EmailValidator.getInstance();
+        final RegexValidator passwordValidator =
+                new RegexValidator(builder.getContext().getString(R.string.regex_password), true);
+
+        if (!usernameValid.isValid(builder.getUsername()))
+            throw new IllegalArgumentException(String.format("Username %s is malformed", builder.getUsername()));
+
+        if (!emailValidator.isValid(builder.getEmail()))
+            throw new IllegalArgumentException(String.format("Email %s is malformed", builder.getEmail()));
+
+        if (!passwordValidator.isValid(builder.getPassword()) ||
+                !builder.getPassword().equals(builder.getConfPassword()))
+            throw new IllegalArgumentException(String.format(
+                    "Illegal password %s or conf pass %s", builder.getPassword(), builder.getConfPassword()));
+
+        if (builder.getAvatarImage() != null && (!builder.getAvatarImage().exists() ||
+                !builder.getAvatarImage().isFile()))
+            throw new IllegalArgumentException(String.format("Invalid user avatar file exists %s, is file %s",
+                    builder.getAvatarImage().exists(), builder.getAvatarImage().isFile()));
+
         this.email = builder.getEmail();
         this.username = builder.getUsername();
         this.password = builder.getPassword();
         this.confPassword = builder.getPassword();
+        this.avatarImage = builder.getAvatarImage();
     }
 
     private SignUpCredentials(Parcel in) {
@@ -83,6 +132,8 @@ public final class SignUpCredentials implements Parcelable {
         username = in.readString();
         password = in.readString();
         confPassword = in.readString();
+        final String absPath = in.readString();
+        avatarImage = absPath == null ? null : new File(absPath);
     }
 
     public static final Creator<SignUpCredentials> CREATOR = new Creator<SignUpCredentials>() {
@@ -108,6 +159,13 @@ public final class SignUpCredentials implements Parcelable {
         dest.writeString(username);
         dest.writeString(password);
         dest.writeString(confPassword);
+        if (avatarImage != null) {
+            dest.writeString(avatarImage.getAbsolutePath());
+        }
+    }
+
+    public File getAvatarImage() {
+        return avatarImage;
     }
 
     public String getEmail() {

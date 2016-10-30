@@ -73,7 +73,8 @@ public final class AuthProvider implements IAuthProvider {
                 api.fetchToken(new SignInRequest(credentials.getLogin(), credentials.getPassword(), BuildConfig.SERVER_API_KEY));
 
         return call.observeOn(AndroidSchedulers.mainThread())
-                .map(authResponse -> new Session(credentials.getLogin(), authResponse.getToken(), Constant.ACCOUNT_TOKEN_TYPE));
+                .map(authResponse -> new Session(credentials.getLogin(), authResponse.getToken(),
+                        Constant.ACCOUNT_TOKEN_TYPE, authResponse.getUserId()));
     }
 
     @Override
@@ -85,7 +86,8 @@ public final class AuthProvider implements IAuthProvider {
                 api.signUp(new SignUpRequest(credentials.getEmail(), credentials.getUsername(), plainPassword));
 
         return call.observeOn(AndroidSchedulers.mainThread())
-                .map(signUpResponse -> new Session(credentials.getUsername(), signUpResponse.getToken(), Constant.ACCOUNT_TOKEN_TYPE));
+                .map(signUpResponse -> new Session(credentials.getUsername(), signUpResponse.getToken(),
+                        Constant.ACCOUNT_TOKEN_TYPE, signUpResponse.getUserId()));
     }
 
 }

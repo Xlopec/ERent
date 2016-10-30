@@ -1,6 +1,8 @@
-package com.ua.erent.module.core.presentation.mvp.model;
+package com.ua.erent.module.core.presentation.mvp.model.interfaces;
 
 import android.graphics.Bitmap;
+
+import com.ua.erent.module.core.presentation.mvp.model.SignUpForm;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -2,6 +2,7 @@ package com.ua.erent.module.core.app.di;
 
 import android.app.Application;
 
+import com.ua.erent.module.core.app.domain.interfaces.IAppInitManager;
 import com.ua.erent.module.core.app.domain.interfaces.IAppLifecycleManager;
 import com.ua.erent.module.core.app.domain.interfaces.IAppService;
 import com.ua.erent.trash.ISomeAppService;
@@ -24,5 +25,7 @@ public interface AppComponent {
     IAppLifecycleManager getAppLifecycleManager();
 
     IAppService getAppService();
+
+    IAppInitManager getInitManager();
 
 }

@@ -4,7 +4,7 @@ import android.app.Application;
 
 import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
 import com.ua.erent.module.core.di.scopes.ActivityScope;
-import com.ua.erent.module.core.presentation.mvp.model.ILoginModel;
+import com.ua.erent.module.core.presentation.mvp.model.interfaces.ILoginModel;
 import com.ua.erent.module.core.presentation.mvp.model.LoginModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ILoginPresenter;
 import com.ua.erent.module.core.presentation.mvp.presenter.LoginPresenter;

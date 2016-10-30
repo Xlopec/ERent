@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.ua.erent.module.core.presentation.mvp.model.IRegisterModel;
+import com.ua.erent.module.core.presentation.mvp.model.interfaces.IRegisterModel;
 import com.ua.erent.module.core.presentation.mvp.model.SignUpForm;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IRegisterPresenter;
 import com.ua.erent.module.core.presentation.mvp.view.interfaces.IInitialScreenView;
@@ -76,7 +76,7 @@ public final class RegisterPresenter extends IRegisterPresenter {
     public void onCreateAccount(@NotNull SignUpForm form) {
         getView().showProgress("Registering in progress...");
 
-        model.signUp(form).subscribe(
+        model.signUp(form.setAvatarUri(avatarUri)).subscribe(
                 aVoid -> {
                     getView().showToast("You've successfully registered");
                     getView().hideProgress();

@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
+import java.util.Locale;
+
 /**
  * <p>
  *     Business-object, describing app session
@@ -14,10 +16,11 @@ import android.text.TextUtils;
 public final class Session implements Parcelable {
 
     private final String login;
+    private final int userId;
     private final String token;
     private final String tokenType;
 
-    public Session(String login, String token, String tokenType) {
+    public Session(String login, String token, String tokenType, int userId) {
 
         if(TextUtils.isEmpty(login))
             throw new IllegalArgumentException(String.format("illegal signIn, was %s", login));
@@ -25,15 +28,23 @@ public final class Session implements Parcelable {
         if(TextUtils.isEmpty(tokenType))
             throw new IllegalArgumentException(String.format("illegal token type, was %s", tokenType));
 
+        if(TextUtils.isEmpty(token))
+            throw new IllegalArgumentException(String.format("illegal token, was %s", token));
+
+        if(userId < 1)
+            throw new IllegalArgumentException(String.format(Locale.getDefault(), "illegal user id %d", userId));
+
         this.login = login;
         this.token = token;
         this.tokenType = tokenType;
+        this.userId = userId;
     }
 
     private Session(Parcel in) {
         login = in.readString();
         token = in.readString();
         tokenType = in.readString();
+        userId = in.readInt();
     }
 
     @Override
@@ -41,6 +52,7 @@ public final class Session implements Parcelable {
         dest.writeString(login);
         dest.writeString(token);
         dest.writeString(tokenType);
+        dest.writeInt(userId);
     }
 
     @Override
@@ -76,6 +88,10 @@ public final class Session implements Parcelable {
         return TextUtils.isEmpty(getToken());
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -83,8 +99,9 @@ public final class Session implements Parcelable {
 
         Session session = (Session) o;
 
+        if (userId != session.userId) return false;
         if (!login.equals(session.login)) return false;
-        if (token != null ? !token.equals(session.token) : session.token != null) return false;
+        if (!token.equals(session.token)) return false;
         return tokenType.equals(session.tokenType);
 
     }
@@ -92,7 +109,8 @@ public final class Session implements Parcelable {
     @Override
     public int hashCode() {
         int result = login.hashCode();
-        result = 31 * result + (token != null ? token.hashCode() : 0);
+        result = 31 * result + userId;
+        result = 31 * result + token.hashCode();
         result = 31 * result + tokenType.hashCode();
         return result;
     }
@@ -100,7 +118,8 @@ public final class Session implements Parcelable {
     @Override
     public String toString() {
         return "Session{" +
-                "signIn='" + login + '\'' +
+                "login='" + login + '\'' +
+                ", userId=" + userId +
                 ", token='" + token + '\'' +
                 ", tokenType='" + tokenType + '\'' +
                 '}';

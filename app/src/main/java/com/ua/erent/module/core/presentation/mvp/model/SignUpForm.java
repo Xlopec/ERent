@@ -1,5 +1,7 @@
 package com.ua.erent.module.core.presentation.mvp.model;
 
+import android.net.Uri;
+
 /**
  * Created by Максим on 10/29/2016.
  */
@@ -10,6 +12,7 @@ public final class SignUpForm {
     private String username;
     private String password;
     private String confPassword;
+    private Uri avatarUri;
 
     public SignUpForm() {
     }
@@ -47,6 +50,15 @@ public final class SignUpForm {
 
     public SignUpForm setConfPassword(String confPassword) {
         this.confPassword = confPassword;
+        return this;
+    }
+
+    public Uri getAvatarUri() {
+        return avatarUri;
+    }
+
+    public SignUpForm setAvatarUri(Uri avatarUri) {
+        this.avatarUri = avatarUri;
         return this;
     }
 }

@@ -4,7 +4,7 @@ import android.app.Application;
 
 import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
 import com.ua.erent.module.core.di.scopes.ActivityScope;
-import com.ua.erent.module.core.presentation.mvp.model.IRegisterModel;
+import com.ua.erent.module.core.presentation.mvp.model.interfaces.IRegisterModel;
 import com.ua.erent.module.core.presentation.mvp.model.RegisterModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IRegisterPresenter;
 import com.ua.erent.module.core.presentation.mvp.presenter.RegisterPresenter;

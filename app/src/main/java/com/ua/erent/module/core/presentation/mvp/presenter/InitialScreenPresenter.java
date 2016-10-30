@@ -2,7 +2,7 @@ package com.ua.erent.module.core.presentation.mvp.presenter;
 
 import android.os.Bundle;
 
-import com.ua.erent.module.core.presentation.mvp.model.IInitialScreenModel;
+import com.ua.erent.module.core.presentation.mvp.model.interfaces.IInitialScreenModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IInitialScreenPresenter;
 import com.ua.erent.module.core.presentation.mvp.view.InitialScreenActivity;
 

@@ -4,8 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +36,6 @@ import rx.Observable;
 public final class LoginFragment extends InjectableV4Fragment<LoginFragment, ILoginPresenter>
         implements ILoginView, Validator.ValidationListener {
 
-    // UI references.
     @Pattern(regex = "^([_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,}))|(\\w{5,20})$")
     @BindView(R.id.login_fld)
     protected EditText loginEditText;
@@ -89,18 +86,6 @@ public final class LoginFragment extends InjectableV4Fragment<LoginFragment, ILo
         super.onViewCreated(view, savedInstanceState);
         loginBtn.setOnClickListener(v -> validator.validate());
         registerTextView.setOnClickListener(v -> presenter.onNavigateCreateAccount());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-
-        if(actionBar != null) {
-           // actionBar.setDisplayHomeAsUpEnabled(false);
-          //  actionBar.setDisplayShowHomeEnabled(false);
-        }
     }
 
     @NotNull
