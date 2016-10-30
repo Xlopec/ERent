@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 
 import com.ua.erent.module.core.account.auth.domain.ILoginCallback;
 import com.ua.erent.module.core.presentation.mvp.model.ILoginModel;
-import com.ua.erent.module.core.presentation.mvp.view.IInitialScreenView;
+import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ILoginPresenter;
+import com.ua.erent.module.core.presentation.mvp.view.interfaces.IInitialScreenView;
 import com.ua.erent.module.core.presentation.mvp.view.LoginFragment;
 import com.ua.erent.module.core.presentation.mvp.view.MainActivity;
 import com.ua.erent.module.core.util.Initializeable;
@@ -77,14 +79,34 @@ public final class LoginPresenter extends ILoginPresenter {
 
         @Override
         public void onFailure(@NotNull Initializeable initializeable, @NotNull Throwable th) {
-            subscriber.onNext(String.format(Locale.getDefault(), "Operation failed: %s", th.getMessage()));
+
+            String message;
+
+            if(TextUtils.isEmpty(th.getMessage())) {
+                message = "Operation failed";
+            } else {
+                message = String.format(Locale.getDefault(), "Operation failed: %s", th.getMessage());
+            }
+
+            getView().showToast(message);
+            subscriber.onNext(message);
             getView().hideProgressView();
             subscriber.onCompleted();
         }
 
         @Override
         public void onFailure(@NotNull Throwable th) {
-            subscriber.onNext(String.format(Locale.getDefault(), "Operation failed: %s", th.getMessage()));
+
+            String message;
+
+            if(TextUtils.isEmpty(th.getMessage())) {
+                message = "Operation failed";
+            } else {
+                message = String.format(Locale.getDefault(), "Operation failed: %s", th.getMessage());
+            }
+
+            getView().showToast(message);
+            subscriber.onNext(message);
             getView().hideProgressView();
             subscriber.onCompleted();
         }

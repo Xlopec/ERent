@@ -3,6 +3,8 @@ package com.ua.erent.module.core.di.config;
 import com.ua.erent.module.core.account.auth.di.AuthComponent;
 import com.ua.erent.module.core.app.di.AppComponent;
 import com.ua.erent.module.core.di.Injector;
+import com.ua.erent.module.core.presentation.mvp.component.CropComponent;
+import com.ua.erent.module.core.presentation.mvp.component.DaggerCropComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerInitialScreenComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerLoginComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerRegisterComponent;
@@ -11,6 +13,7 @@ import com.ua.erent.module.core.presentation.mvp.component.InitialScreenComponen
 import com.ua.erent.module.core.presentation.mvp.component.LoginComponent;
 import com.ua.erent.module.core.presentation.mvp.component.RegisterComponent;
 import com.ua.erent.module.core.presentation.mvp.component.TestComponent;
+import com.ua.erent.module.core.presentation.mvp.module.CropModule;
 import com.ua.erent.module.core.presentation.mvp.module.InitialScreenModule;
 import com.ua.erent.module.core.presentation.mvp.module.LoginModule;
 import com.ua.erent.module.core.presentation.mvp.module.RegisterModule;
@@ -114,7 +117,9 @@ public final class InjectConfigModule extends Injector.IConfigModule {
                 .registerComponentFactory(RegisterComponent.class, () -> DaggerRegisterComponent.builder().
                         authComponent(authComponent).registerModule(registerModule).build())
                 .registerComponentFactory(InitialScreenComponent.class, () -> DaggerInitialScreenComponent.builder()
-                        .authComponent(authComponent).initialScreenModule(initialScreenModule).build());
+                        .authComponent(authComponent).initialScreenModule(initialScreenModule).build())
+                .registerComponentFactory(CropComponent.class, () -> DaggerCropComponent.builder()
+                        .cropModule(new CropModule()).build());
     }
 
 }

@@ -7,7 +7,7 @@ import com.ua.erent.R;
 import com.ua.erent.module.core.presentation.mvp.component.TestComponent;
 import com.ua.erent.module.core.presentation.mvp.core.IBaseView;
 import com.ua.erent.module.core.presentation.mvp.core.InjectableActivity;
-import com.ua.erent.module.core.presentation.mvp.presenter.ITestPresenter;
+import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ITestPresenter;
 
 import org.jetbrains.annotations.NotNull;
 

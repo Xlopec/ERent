@@ -1,4 +1,4 @@
-package com.ua.erent.module.core.presentation.mvp.view;
+package com.ua.erent.module.core.presentation.mvp.view.interfaces;
 
 import com.ua.erent.module.core.presentation.mvp.core.IBaseView;
 
@@ -7,6 +7,8 @@ import com.ua.erent.module.core.presentation.mvp.core.IBaseView;
  */
 
 public interface ILoginView extends IBaseView {
+
+    void showToast(String message);
 
     void showProgressBar(String message);
 

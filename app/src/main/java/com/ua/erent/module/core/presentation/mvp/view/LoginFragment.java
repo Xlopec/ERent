@@ -22,7 +22,8 @@ import com.mobsandgeeks.saripaar.annotation.Pattern;
 import com.ua.erent.R;
 import com.ua.erent.module.core.presentation.mvp.component.LoginComponent;
 import com.ua.erent.module.core.presentation.mvp.core.InjectableV4Fragment;
-import com.ua.erent.module.core.presentation.mvp.presenter.ILoginPresenter;
+import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ILoginPresenter;
+import com.ua.erent.module.core.presentation.mvp.view.interfaces.ILoginView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -112,6 +113,11 @@ public final class LoginFragment extends InjectableV4Fragment<LoginFragment, ILo
     @Override
     public Context getApplicationContext() {
         return getActivity().getApplicationContext();
+    }
+
+    @Override
+    public void showToast(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -19,7 +19,8 @@ import android.view.inputmethod.InputMethodManager;
 import com.ua.erent.R;
 import com.ua.erent.module.core.presentation.mvp.component.InitialScreenComponent;
 import com.ua.erent.module.core.presentation.mvp.core.InjectableActivity;
-import com.ua.erent.module.core.presentation.mvp.presenter.IInitialScreenPresenter;
+import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IInitialScreenPresenter;
+import com.ua.erent.module.core.presentation.mvp.view.interfaces.IInitialScreenView;
 
 import org.jetbrains.annotations.NotNull;
 

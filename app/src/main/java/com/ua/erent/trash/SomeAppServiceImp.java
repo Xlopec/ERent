@@ -42,7 +42,7 @@ public class SomeAppServiceImp implements ISomeAppService, IAppLifecycleManager.
 
     @Override
     public Observable<Initializeable> initialize(@NotNull Session session) {
-        return Observable.timer(5000L, TimeUnit.MILLISECONDS, Schedulers.newThread()).map(l -> SomeAppServiceImp.this);//just(this);
+        return Observable.timer(1000L, TimeUnit.MILLISECONDS, Schedulers.newThread()).map(l -> SomeAppServiceImp.this);//just(this);
     }
 
     @Override

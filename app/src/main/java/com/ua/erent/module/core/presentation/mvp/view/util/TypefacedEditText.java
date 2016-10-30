@@ -3,27 +3,31 @@ package com.ua.erent.module.core.presentation.mvp.view.util;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 import android.util.Log;
 
 import com.ua.erent.R;
 
-public class TypefacedTextView extends AppCompatTextView {
+/**
+ * Created by Максим on 10/29/2016.
+ */
 
-    private static final String TAG = TypefacedTextView.class.getSimpleName();
+public class TypefacedEditText extends AppCompatEditText {
 
-    public TypefacedTextView(Context context) {
+    private static final String TAG = TypefacedEditText.class.getSimpleName();
+
+    public TypefacedEditText(Context context) {
         super(context);
     }
 
-    public TypefacedTextView(Context context, AttributeSet attrs) {
+    public TypefacedEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         setCustomFont(context, attrs);
     }
 
-    public TypefacedTextView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    public TypefacedEditText(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
         setCustomFont(context, attrs);
     }
 
@@ -34,7 +38,7 @@ public class TypefacedTextView extends AppCompatTextView {
         a.recycle();
     }
 
-    public boolean setCustomFont(Context ctx, String asset) {
+    private boolean setCustomFont(Context ctx, String asset) {
         Typeface tf;
 
         try {

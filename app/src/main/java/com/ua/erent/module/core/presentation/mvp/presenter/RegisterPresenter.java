@@ -1,14 +1,19 @@
 package com.ua.erent.module.core.presentation.mvp.presenter;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.ua.erent.module.core.presentation.mvp.model.IRegisterModel;
 import com.ua.erent.module.core.presentation.mvp.model.SignUpForm;
-import com.ua.erent.module.core.presentation.mvp.view.IInitialScreenView;
+import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IRegisterPresenter;
+import com.ua.erent.module.core.presentation.mvp.view.interfaces.IInitialScreenView;
 import com.ua.erent.module.core.presentation.mvp.view.RegisterFragment;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import rx.Observable;
 
 /**
  * Created by Максим on 10/27/2016.
@@ -16,8 +21,10 @@ import org.jetbrains.annotations.Nullable;
 
 public final class RegisterPresenter extends IRegisterPresenter {
 
-    private IInitialScreenView.NavigationListener callback;
+    private final String ARG_AVATAR_URI_STATE = "argAvatarUriState";
 
+    private Uri avatarUri;
+    private IInitialScreenView.NavigationListener callback;
     private final IRegisterModel model;
 
     public RegisterPresenter(IRegisterModel model) {
@@ -35,6 +42,24 @@ public final class RegisterPresenter extends IRegisterPresenter {
                             IInitialScreenView.NavigationListener.class.getSimpleName()));
         }
 
+        if(savedState != null) {
+            restoreState(savedState);
+        }
+    }
+
+    private void restoreState(Bundle state) {
+
+        avatarUri = state.getParcelable(ARG_AVATAR_URI_STATE);
+
+        if(avatarUri != null) {
+            getView().setAvatarUri(avatarUri);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NotNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(ARG_AVATAR_URI_STATE, avatarUri);
     }
 
     @Override
@@ -61,5 +86,11 @@ public final class RegisterPresenter extends IRegisterPresenter {
                     getView().hideProgress();
                 }
         );
+    }
+
+    @Override
+    public Observable<Bitmap> resizeAvatarBitmap(@NotNull Uri uri, @NotNull Bitmap original, int h, int w) {
+        avatarUri = uri;
+        return model.resizeBitmap(original, h, w);
     }
 }

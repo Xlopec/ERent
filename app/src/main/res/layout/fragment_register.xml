@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/register_root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,6 +9,7 @@
         android:layout_height="match_parent"
         android:fillViewport="true"
         android:gravity="center"
+        android:overScrollMode="never"
         android:scrollbars="none">
 
         <LinearLayout
@@ -19,15 +21,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_weight="0.5"
+                android:gravity="center"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:layout_gravity="center"
+                <com.ua.erent.module.core.presentation.mvp.view.util.MyCircleImageView
+                    android:id="@+id/user_avatar_select"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
-                    app:srcCompat="@drawable/ic_add_user_avatar" />
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    app:civ_border_color="#FFFFFF"
+                    app:civ_border_width="2dp" />
 
             </LinearLayout>
 
@@ -44,25 +49,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <android.support.v7.widget.AppCompatEditText
+                    <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedEditText
                         android:id="@+id/email_fld"
                         style="@style/input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/wr_ic_account_circle_default_24dp"
                         android:drawablePadding="@dimen/draw_pad_inp"
-                        android:drawableStart="@drawable/wr_ic_account_circle_default_24dp"
+                        android:drawableStart="@drawable/wr_ic_email_default_24dp"
                         android:hint="Email"
-                        android:inputType="textEmailAddress" />
+                        android:inputType="textEmailAddress"
+                        app:customFont="Roboto-Thin" />
 
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/usernameWrapper"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                    <android.support.v7.widget.AppCompatEditText
+                    <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedEditText
                         android:id="@+id/username_fld"
                         style="@style/input"
                         android:layout_width="match_parent"
@@ -71,52 +78,61 @@
                         android:drawablePadding="@dimen/draw_pad_inp"
                         android:drawableStart="@drawable/wr_ic_account_circle_default_24dp"
                         android:hint="Username"
-                        android:inputType="textEmailAddress" />
+                        android:inputType="textEmailAddress"
+                        app:customFont="Roboto-Thin" />
 
                 </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/passwordWrapper"
+                <android.support.v7.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    app:passwordToggleEnabled="false">
+                    android:layout_marginTop="10dp">
 
-                    <android.support.v7.widget.AppCompatEditText
-                        android:id="@+id/password_fld"
-                        style="@style/input"
-                        android:layout_width="match_parent"
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/passwordWrapper"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/wr_lock_default_24dp"
-                        android:drawablePadding="@dimen/draw_pad_inp"
-                        android:drawableStart="@drawable/wr_lock_default_24dp"
-                        android:hint="Password"
-                        android:inputType="textPassword"
-                        android:textColor="@color/primaryTextW" />
+                        android:layout_weight="1"
+                        app:passwordToggleEnabled="false">
 
-                </android.support.design.widget.TextInputLayout>
+                        <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedEditText
+                            android:id="@+id/password_fld"
+                            style="@style/input"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/wr_lock_default_24dp"
+                            android:drawablePadding="@dimen/draw_pad_inp"
+                            android:drawableStart="@drawable/wr_lock_default_24dp"
+                            android:hint="Password"
+                            android:inputType="textPassword"
+                            android:textColor="@color/primaryTextW"
+                            app:customFont="Roboto-Thin" />
 
+                    </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/confPasswordWrapper"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    app:passwordToggleEnabled="false">
-
-                    <android.support.v7.widget.AppCompatEditText
-                        android:id="@+id/conf_password_fld"
-                        style="@style/input"
-                        android:layout_width="match_parent"
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/confPasswordWrapper"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/wr_lock_default_24dp"
-                        android:drawablePadding="@dimen/draw_pad_inp"
-                        android:drawableStart="@drawable/wr_lock_default_24dp"
-                        android:hint="Confirm password"
-                        android:inputType="textPassword"
-                        android:textColor="@color/primaryTextW" />
+                        android:layout_weight="1"
+                        app:passwordToggleEnabled="false">
 
-                </android.support.design.widget.TextInputLayout>
+                        <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedEditText
+                            android:id="@+id/conf_password_fld"
+                            style="@style/input"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/wr_ic_done_default_24dp"
+                            android:drawablePadding="@dimen/draw_pad_inp"
+                            android:drawableStart="@drawable/wr_ic_done_default_24dp"
+                            android:hint="Repeat"
+                            android:inputType="textPassword"
+                            android:textColor="@color/primaryTextW"
+                            app:customFont="Roboto-Thin" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                </android.support.v7.widget.LinearLayoutCompat>
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/register_btn"

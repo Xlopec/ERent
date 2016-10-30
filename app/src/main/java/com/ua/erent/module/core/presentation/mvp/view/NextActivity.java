@@ -11,7 +11,7 @@ import com.ua.erent.module.core.presentation.mvp.core.IBaseView;
 
 import org.jetbrains.annotations.NotNull;
 
-public class NextActivity extends AppCompatActivity implements IBaseView {
+public final class NextActivity extends AppCompatActivity implements IBaseView {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

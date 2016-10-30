@@ -3,7 +3,7 @@ package com.ua.erent.module.core.presentation.mvp.module;
 import android.app.Application;
 
 import com.ua.erent.module.core.di.scopes.ActivityScope;
-import com.ua.erent.module.core.presentation.mvp.presenter.ITestPresenter;
+import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ITestPresenter;
 import com.ua.erent.module.core.presentation.mvp.presenter.TestPresenter;
 import com.ua.erent.trash.ITestService;
 import com.ua.erent.trash.TestService;

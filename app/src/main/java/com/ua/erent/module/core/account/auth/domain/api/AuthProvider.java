@@ -37,7 +37,7 @@ public final class AuthProvider implements IAuthProvider {
          * @param requestBody authorization request json
          * @return rx observable to monitor request status
          */
-        @POST("api/signIn")
+        @POST("api/login")
         Observable<SignInResponse> fetchToken(@Body SignInRequest requestBody);
 
         /**

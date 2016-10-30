@@ -1,4 +1,4 @@
-package com.ua.erent.module.core.presentation.mvp.view;
+package com.ua.erent.module.core.presentation.mvp.view.interfaces;
 
 import com.ua.erent.module.core.presentation.mvp.core.IBaseView;
 

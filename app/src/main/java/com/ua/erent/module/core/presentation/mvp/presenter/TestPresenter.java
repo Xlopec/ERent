@@ -2,7 +2,7 @@ package com.ua.erent.module.core.presentation.mvp.presenter;
 
 import android.os.Bundle;
 
-import com.ua.erent.module.core.presentation.mvp.presenter.ITestPresenter;
+import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ITestPresenter;
 import com.ua.erent.module.core.presentation.mvp.view.MainActivity;
 
 import org.jetbrains.annotations.NotNull;
