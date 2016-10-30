@@ -8,6 +8,7 @@ import com.ua.erent.module.core.util.Initializeable;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import dagger.internal.Preconditions;
@@ -30,15 +31,22 @@ public final class InitializationManagerImp implements InitializationManager {
         Preconditions.checkNotNull(initializeables);
         Preconditions.checkNotNull(callback);
 
-        if (initializeables.isEmpty()) {
+        final Collection<Initializeable> filtered = new ArrayList<>(initializeables.size());
+
+        for (final Initializeable initializeable : initializeables) {
+            if (!initializeable.isInitialized()) {
+                filtered.add(initializeable);
+            }
+        }
+
+        if (filtered.isEmpty()) {
             callback.onInitialized();
             return;
         }
-
         // delegate all work to a special handler
-        final AbstractInitDelegate delegate = InitDelegates.createDelegate(callback, initializeables);
+        final AbstractInitDelegate delegate = InitDelegates.createDelegate(callback, filtered);
 
-        for (final Initializeable initializeable : initializeables) {
+        for (final Initializeable initializeable : filtered) {
             // run initialization process
             initializeable.initialize(session)
                     .observeOn(AndroidSchedulers.mainThread())

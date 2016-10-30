@@ -101,6 +101,16 @@ public final class LoginFragment extends InjectableV4Fragment<LoginFragment, ILo
     }
 
     @Override
+    public void bindToProgressView(@NotNull Observable<String> observable) {
+        observable.subscribe(this::setProgressInfo);
+    }
+
+    @Override
+    public void setLogin(@Nullable String login) {
+        loginEditText.setText(login);
+    }
+
+    @Override
     public void showToast(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }

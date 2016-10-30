@@ -19,7 +19,7 @@ public interface Initializeable {
      * Runs component initialization. Classes which implement
      * this interface, should provide their own behaviour
      *
-     * @param session  session to provide access to server api (if needed)
+     * @param session session to provide access to server api (if needed)
      */
     Observable<Initializeable> initialize(@NotNull Session session);
 
@@ -35,5 +35,12 @@ public interface Initializeable {
      * @return flag which defines exception handling strategy
      */
     boolean failOnException();
+
+    /**
+     * Checks whether this instance is already initialized or not
+     *
+     * @return true if instance is already initialized or false in another case
+     */
+    boolean isInitialized();
 
 }

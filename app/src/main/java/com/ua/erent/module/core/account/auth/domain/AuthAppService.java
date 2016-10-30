@@ -46,6 +46,11 @@ public final class AuthAppService implements IAuthAppService {
     }
 
     @Override
+    public void login(@NotNull ILoginCallback callback) {
+        domain.signIn(callback);
+    }
+
+    @Override
     public void logout() {
         domain.logout();
     }
@@ -58,6 +63,12 @@ public final class AuthAppService implements IAuthAppService {
     @Override
     public Observable<Session> getSessionObs() {
         return sessionManager.getSessionObs();
+    }
+
+    @Override
+    public boolean isSessionAlive() {
+        final Session session = getSession();
+        return session != null && !session.isExpired();
     }
 
     @Override

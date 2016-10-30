@@ -129,6 +129,20 @@ public final class AuthDomain implements IAuthDomain {
     }
 
     @Override
+    public void signIn(@NotNull ILoginCallback callback) {
+
+        final Session session = sessionManager.getSession();
+
+        if(session == null || session.isExpired())
+            throw new IllegalStateException("Session is not valid anymore");
+
+        callback.onPreExecute();
+
+        initializationManager.
+                initialize(session, initializeables, new LoginCallbackWrapper(callback, session));
+    }
+
+    @Override
     public Observable<Void> signUp(@NotNull SignUpCredentials credentials) {
         return provider.signUp(credentials).map(session -> null);
     }

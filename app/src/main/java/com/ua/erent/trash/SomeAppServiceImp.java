@@ -31,8 +31,9 @@ public class SomeAppServiceImp implements ISomeAppService, IAppLifecycleManager.
     public SomeAppServiceImp(Context context, IAppLifecycleManager lifecycleManager) {
         this.context = context;
         lifecycleManager.registerCallback(ComponentKind.APP_SERVICE, this);
+        Log.i("init", "created");
       //  Toast.makeText(context, String.format("%d !!!", i), Toast.LENGTH_SHORT).show();
-        i++;
+      //  i++;
     }
 
     @Override
@@ -42,6 +43,7 @@ public class SomeAppServiceImp implements ISomeAppService, IAppLifecycleManager.
 
     @Override
     public Observable<Initializeable> initialize(@NotNull Session session) {
+        i++;
         return Observable.timer(1000L, TimeUnit.MILLISECONDS, Schedulers.newThread()).map(l -> SomeAppServiceImp.this);//just(this);
     }
 
@@ -53,6 +55,12 @@ public class SomeAppServiceImp implements ISomeAppService, IAppLifecycleManager.
     @Override
     public boolean failOnException() {
         return false;
+    }
+
+    @Override
+    public boolean isInitialized() {
+        Log.i("init", "is init? " + (i >= 1));
+        return i >= 1;
     }
 
     @Override

@@ -8,10 +8,12 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
+import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.dao.CloseableIterator;
+import com.j256.ormlite.dao.ReferenceObjectCache;
 import com.j256.ormlite.table.TableUtils;
 import com.ua.erent.module.core.account.auth.bo.Session;
-import com.ua.erent.module.core.account.auth.domain.api.db.SessionDao;
+import com.ua.erent.module.core.account.auth.domain.api.db.DatabaseHelper;
 import com.ua.erent.module.core.account.auth.domain.api.db.SessionMapper;
 import com.ua.erent.module.core.account.auth.domain.api.db.SessionPO;
 import com.ua.erent.module.core.app.Constant;
@@ -22,25 +24,24 @@ import java.sql.SQLException;
 
 import javax.inject.Inject;
 
-import dagger.internal.Preconditions;
 import rx.subjects.PublishSubject;
 
 public final class SessionStorage implements ISessionStorage {
 
     private static final String TAG = SessionStorage.class.getSimpleName();
 
-    private final Context context;
-    private final SessionDao dao;
     private final AccountManager accountManager;
+    private final DatabaseHelper helper;
     private final PublishSubject<Session> sessionObservable;
     private Session currentSession;
 
     @Inject
-    public SessionStorage(Context context, SessionDao dao) {
+    public SessionStorage(Context context, DatabaseHelper helper) {
 
-        this.dao = Preconditions.checkNotNull(dao, "session dao was null");
-        this.context = context;
-        final CloseableIterator<SessionPO> it = this.dao.iterator();
+        this.helper = helper;
+
+        final BaseDaoImpl<SessionPO, Integer> dao = createDao();
+        final CloseableIterator<SessionPO> it = dao.iterator();
 
         sessionObservable = PublishSubject.create();
         accountManager = AccountManager.get(context.getApplicationContext());
@@ -61,16 +62,16 @@ public final class SessionStorage implements ISessionStorage {
                 } else {
                     // session token is invalid, clear table and continue
                     try {
-                        TableUtils.clearTable(dao.getConnectionSource(), SessionPO.class);
+                        TableUtils.clearTable(helper.getConnectionSource(), SessionPO.class);
                     } catch (final SQLException e) {
                         Log.e(TAG, "exception while clearing table", e);
+                        helper.close();
                         throw new RuntimeException(e);
                     }
                     break;
                 }
             }
         } while (po != null && it.hasNext());
-
         it.closeQuietly();
     }
 
@@ -88,9 +89,10 @@ public final class SessionStorage implements ISessionStorage {
             }
 
             try {
-                dao.createOrUpdate(SessionMapper.toPersistenceObject(session));
+                createDao().createOrUpdate(SessionMapper.toPersistenceObject(session));
             } catch (final SQLException e) {
                 Log.e(TAG, "exception while updating session table", e);
+                helper.close();
                 throw new RuntimeException(e);
             }
             // reset auth token for a given account
@@ -109,9 +111,10 @@ public final class SessionStorage implements ISessionStorage {
             accountManager.invalidateAuthToken(Constant.ACCOUNT_TYPE, session.getToken());
 
             try {
-                TableUtils.clearTable(dao.getConnectionSource(), SessionPO.class);
+                TableUtils.clearTable(helper.getConnectionSource(), SessionPO.class);
             } catch (final SQLException e) {
                 Log.e(TAG, "exception while clearing table", e);
+                helper.close();
                 throw new RuntimeException(e);
             }
         }
@@ -132,11 +135,25 @@ public final class SessionStorage implements ISessionStorage {
         return sessionObservable.asObservable();
     }
 
+    private BaseDaoImpl<SessionPO, Integer> createDao() {
+
+        try {
+            final BaseDaoImpl<SessionPO, Integer> dao = helper.getDao(SessionPO.class);//new SessionDao(helper.getConnectionSource(), SessionPO.class);
+            dao.setObjectCache(true);
+            dao.setObjectCache(ReferenceObjectCache.makeSoftCache());
+            return dao;
+        } catch (final SQLException e) {
+            Log.e(TAG, "Exception while creating session dao", e);
+            helper.close();
+            throw new RuntimeException(e);
+        }
+    }
+
     private Account getAccountByName(@NotNull String name) {
 
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.GET_ACCOUNTS)
+       /* if (ActivityCompat.checkSelfPermission(context, Manifest.permission.GET_ACCOUNTS)
                 != PackageManager.PERMISSION_GRANTED)
-            throw new RuntimeException("Permission to get accounts not granted");
+            throw new RuntimeException("Permission to get accounts not granted");*/
 
         final Account[] accounts = accountManager.getAccountsByType(Constant.ACCOUNT_TYPE);
 

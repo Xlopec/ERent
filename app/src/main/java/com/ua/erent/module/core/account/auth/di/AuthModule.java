@@ -9,7 +9,7 @@ import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
 import com.ua.erent.module.core.account.auth.domain.IAuthDomain;
 import com.ua.erent.module.core.account.auth.domain.api.AuthProvider;
 import com.ua.erent.module.core.account.auth.domain.api.IAuthProvider;
-import com.ua.erent.module.core.account.auth.domain.api.db.SessionDao;
+import com.ua.erent.module.core.account.auth.domain.api.db.DatabaseHelper;
 import com.ua.erent.module.core.account.auth.domain.init.InitializationManager;
 import com.ua.erent.module.core.account.auth.domain.session.ISessionManager;
 import com.ua.erent.module.core.account.auth.domain.session.ISessionStorage;
@@ -48,8 +48,8 @@ public final class AuthModule {
 
     @Provides
     @Singleton
-    ISessionStorage provideSessionStorage(Application app, SessionDao dao) {
-        return new SessionStorage(app, dao);
+    ISessionStorage provideSessionStorage(Application app, DatabaseHelper helper) {
+        return new SessionStorage(app, helper);
     }
 
     @Provides

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +19,6 @@ import com.ua.erent.module.core.presentation.mvp.component.InitialScreenComponen
 import com.ua.erent.module.core.presentation.mvp.core.InjectableActivity;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IInitialScreenPresenter;
 import com.ua.erent.module.core.presentation.mvp.view.interfaces.IInitialScreenView;
-import com.ua.erent.module.core.presentation.mvp.view.util.ViewPagerAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -39,8 +39,6 @@ public final class InitialScreenActivity extends InjectableActivity<InitialScree
     protected TabLayout tabLayout;
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
-
-    private ViewPagerAdapter pagerAdapter;
 
     public InitialScreenActivity() {
         super(R.layout.activity_initial, InitialScreenComponent.class);
@@ -65,27 +63,12 @@ public final class InitialScreenActivity extends InjectableActivity<InitialScree
             actionBar.setDisplayHomeAsUpEnabled(false);
             actionBar.setDisplayShowHomeEnabled(false);
         }
-
         tabLayout.setupWithViewPager(viewPager);
-
-        pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        pagerAdapter.addFragment(new LoginFragment());
-        pagerAdapter.addFragment(new RegisterFragment());
-
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-
-                hideKeyboard();
-
-                if (tab.getPosition() != 0) {
-                    actionBar.setDisplayHomeAsUpEnabled(true);
-                    actionBar.setDisplayShowHomeEnabled(true);
-                } else {
-                    actionBar.setDisplayHomeAsUpEnabled(false);
-                    actionBar.setDisplayShowHomeEnabled(false);
-                }
+                presenter.onTabSelected(tab);
             }
 
             @Override
@@ -94,8 +77,6 @@ public final class InitialScreenActivity extends InjectableActivity<InitialScree
             @Override
             public void onTabReselected(TabLayout.Tab tab) {}
         });
-
-        viewPager.setAdapter(pagerAdapter);
     }
 
     @Override
@@ -135,7 +116,8 @@ public final class InitialScreenActivity extends InjectableActivity<InitialScree
         viewPager.setCurrentItem(0, true);
     }
 
-    private void hideKeyboard() {
+    @Override
+    public void hideKeyboard() {
 
         final View view = getCurrentFocus();
 
@@ -147,4 +129,19 @@ public final class InitialScreenActivity extends InjectableActivity<InitialScree
         }
     }
 
+    @Override
+    public void setViewPagerAdapter(@NotNull PagerAdapter adapter) {
+        viewPager.setAdapter(adapter);
+    }
+
+    @Override
+    public void setHomeButtonEnabled(boolean enabled) {
+
+        final ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(enabled);
+            actionBar.setDisplayShowHomeEnabled(enabled);
+        }
+    }
 }

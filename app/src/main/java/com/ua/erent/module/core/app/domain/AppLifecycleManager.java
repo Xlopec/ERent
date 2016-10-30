@@ -29,6 +29,7 @@ public final class AppLifecycleManager implements IAppLifecycleManager {
 
     private final Map<ComponentKind, Collection<IStateCallback>> kindToCallbacks;
     private final AppLifecycle appLifecycle;
+    private boolean isInit;
 
     private static final class AppLifecycle implements Application.ActivityLifecycleCallbacks {
 
@@ -46,7 +47,7 @@ public final class AppLifecycleManager implements IAppLifecycleManager {
 
             activities.add(activity.getLocalClassName());
 
-            if(savedInstanceState != null) {
+            if (savedInstanceState != null) {
                 updateObservable();
             } else {
                 isForeground = true;
@@ -60,10 +61,12 @@ public final class AppLifecycleManager implements IAppLifecycleManager {
         }
 
         @Override
-        public void onActivityResumed(Activity activity) {}
+        public void onActivityResumed(Activity activity) {
+        }
 
         @Override
-        public void onActivityPaused(Activity activity) {}
+        public void onActivityPaused(Activity activity) {
+        }
 
         @Override
         public void onActivityStopped(Activity activity) {
@@ -76,11 +79,12 @@ public final class AppLifecycleManager implements IAppLifecycleManager {
         }
 
         @Override
-        public void onActivityDestroyed(Activity activity) {}
+        public void onActivityDestroyed(Activity activity) {
+        }
 
         private void updateObservable() {
 
-            if(isAppForeground() != isForeground) {
+            if (isAppForeground() != isForeground) {
                 isForeground = isAppForeground();
                 foregroundObs.onNext(isForeground);
             }
@@ -106,7 +110,11 @@ public final class AppLifecycleManager implements IAppLifecycleManager {
         Preconditions.checkNotNull(application);
         appLifecycle = new AppLifecycle();
         kindToCallbacks = new EnumMap<>(ComponentKind.class);
-        appLifecycle.getForegroundObs().subscribe(this::fireCallbacks);
+        appLifecycle.getForegroundObs().filter(foreground -> !isInit || !foreground)
+                .subscribe(foreground -> {
+                    isInit = true;
+                    fireCallbacks(foreground);
+                });
         application.registerActivityLifecycleCallbacks(appLifecycle);
     }
 
@@ -120,11 +128,11 @@ public final class AppLifecycleManager implements IAppLifecycleManager {
 
             Collection<IStateCallback> callbacks = kindToCallbacks.get(kind);
 
-            if(callbacks == null) {
+            if (callbacks == null) {
                 callbacks = new ArrayList<>(1);
             }
 
-            if(callbacks.add(callback)) {
+            if (callbacks.add(callback)) {
                 kindToCallbacks.put(kind, callbacks);
             }
         }
@@ -135,8 +143,8 @@ public final class AppLifecycleManager implements IAppLifecycleManager {
 
         synchronized (kindToCallbacks) {
 
-            for(final ComponentKind kind : kindToCallbacks.keySet()) {
-                if(kindToCallbacks.get(kind).remove(callback)) return;
+            for (final ComponentKind kind : kindToCallbacks.keySet()) {
+                if (kindToCallbacks.get(kind).remove(callback)) return;
             }
         }
     }
@@ -151,7 +159,7 @@ public final class AppLifecycleManager implements IAppLifecycleManager {
         return !appLifecycle.isAppForeground();
     }
 
-    private void fireCallbacks(boolean isForeground) {
+    private void fireCallbacks(boolean restoreState) {
 
         synchronized (kindToCallbacks) {
 
@@ -159,10 +167,10 @@ public final class AppLifecycleManager implements IAppLifecycleManager {
 
                 final Collection<IStateCallback> callbacks = kindToCallbacks.get(kind);
 
-                if(callbacks != null) {
-                    for(final IStateCallback callback : callbacks) {
+                if (callbacks != null) {
+                    for (final IStateCallback callback : callbacks) {
 
-                        if(isForeground) {
+                        if (restoreState) {
                             callback.onRestoreState();
                         } else {
                             callback.onSaveState();

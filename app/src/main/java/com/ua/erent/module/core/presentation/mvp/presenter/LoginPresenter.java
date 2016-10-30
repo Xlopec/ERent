@@ -146,6 +146,14 @@ public final class LoginPresenter extends ILoginPresenter {
                     String.format("%s should implement %s interface!", view.getContext().toString(),
                             IInitialScreenView.NavigationListener.class.getSimpleName()));
         }
+
+        view.setLogin(model.getLastLogin());
+
+        if(model.isSessionAlive()) {
+            view.bindToProgressView(Observable.create(subscriber -> {
+                model.login(new LoginCallbackImp(subscriber));
+            }));
+        }
     }
 
     @Override

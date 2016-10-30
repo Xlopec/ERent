@@ -24,6 +24,15 @@ public interface IAuthDomain {
     void signIn(@NotNull SignInCredentials credentials, @NotNull ILoginCallback callback);
 
     /**
+     * Processes sign in action. Note, that in order to use this method session
+     * should be is still valid in other cases
+     * {@linkplain IllegalStateException} exception will be raised
+     *
+     * @param callback callback to handle signIn process
+     */
+    void signIn(@NotNull ILoginCallback callback);
+
+    /**
      * Completes signIn procedure
      *
      * @param credentials credentials to signIn with

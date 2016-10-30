@@ -12,7 +12,6 @@ import javax.inject.Inject;
 
 import retrofit2.Retrofit;
 import retrofit2.http.Body;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -48,16 +47,6 @@ public final class AuthProvider implements IAuthProvider {
          */
         @POST("api/register")
         Observable<SignUpResponse> signUp(@Body SignUpRequest requestBody);
-
-        /**
-         * Checks whether specified authorization token is valid
-         *
-         * @param requestBody authorization request json
-         * @return rx observable to monitor request status
-         */
-        @Headers("Content-Type: application/json")
-        @POST("api/login_check")
-        Observable<SignInResponse> checkToken(@Body SignInRequest requestBody);
 
     }
 

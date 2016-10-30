@@ -28,6 +28,16 @@ public interface IAuthAppService {
     void login(@NotNull SignInCredentials credentials, @NotNull ILoginCallback callback);
 
     /**
+     * Processes sign in action. Note, that in order to use this method session
+     * should be is still valid. To check its state you can call {@link #getSession()}
+     * and check it yourself or use {@link #isSessionAlive()}, in other cases
+     * {@linkplain IllegalStateException} exception will be raised
+     *
+     * @param callback callback to handle signIn process
+     */
+    void login(@NotNull ILoginCallback callback);
+
+    /**
      * Processes logout action. This action involves destroying of current session,
      * stopping all running services and opening signIn activity
      */
@@ -36,6 +46,8 @@ public interface IAuthAppService {
     Observable<Void> signUp(@NotNull SignUpCredentials credentials);
 
     Observable<Session> getSessionObs();
+
+    boolean isSessionAlive();
 
     Session getSession();
 
