@@ -22,7 +22,12 @@
         <activity
             android:name=".module.core.presentation.mvp.view.MainActivity"
             android:alwaysRetainTaskState="true"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask" >
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+            </activity>
         <activity
             android:name=".module.core.presentation.mvp.view.InitialScreenActivity"
             android:alwaysRetainTaskState="true"

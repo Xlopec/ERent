@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@android:drawable/dialog_holo_light_frame"
     android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/good_photo_wrapper"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/good_photo"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
             android:background="#60000000"
-            android:src="@drawable/bike_test"
-            android:scaleType="centerCrop" />
+            android:maxHeight="72dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bike_test" />
 
         <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
             android:id="@+id/good_title"
@@ -29,31 +31,10 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:padding="5dp"
-            android:text="sdfsdfsd"
+            android:text="My Bike"
             android:textColor="#FFF"
             app:customFont="Roboto-Thin" />
 
     </FrameLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/good_photo_wrapper"
-        android:layout_margin="7dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
-            android:id="@+id/good_details"
-            style="@style/TextAppearance.AppCompat.Body2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center_vertical"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="Lorem ipsum dgffgfdolot amen loefd"
-            app:customFont="Roboto-Thin" />
-    </RelativeLayout>
 
 </RelativeLayout>

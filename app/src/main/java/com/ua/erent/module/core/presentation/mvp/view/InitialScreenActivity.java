@@ -5,9 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -21,10 +18,9 @@ import com.ua.erent.module.core.presentation.mvp.component.InitialScreenComponen
 import com.ua.erent.module.core.presentation.mvp.core.InjectableActivity;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IInitialScreenPresenter;
 import com.ua.erent.module.core.presentation.mvp.view.interfaces.IInitialScreenView;
+import com.ua.erent.module.core.presentation.mvp.view.util.ViewPagerAdapter;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 
@@ -45,38 +41,6 @@ public final class InitialScreenActivity extends InjectableActivity<InitialScree
     protected Toolbar toolbar;
 
     private ViewPagerAdapter pagerAdapter;
-
-    /**
-     * Custom fragment adapter
-     */
-    private static final class ViewPagerAdapter extends FragmentPagerAdapter {
-
-        private final ArrayList<Fragment> fragmentList;
-
-        ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
-            fragmentList = new ArrayList<>();
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return fragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return fragmentList.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return null;
-        }
-
-        void addFragment(Fragment fragment) {
-            fragmentList.add(fragment);
-        }
-    }
 
     public InitialScreenActivity() {
         super(R.layout.activity_initial, InitialScreenComponent.class);
