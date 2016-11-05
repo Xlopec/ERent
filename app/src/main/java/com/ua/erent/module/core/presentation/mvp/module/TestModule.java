@@ -1,12 +1,9 @@
 package com.ua.erent.module.core.presentation.mvp.module;
 
-import android.app.Application;
-
+import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
 import com.ua.erent.module.core.di.scopes.ActivityScope;
-import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ITestPresenter;
 import com.ua.erent.module.core.presentation.mvp.presenter.TestPresenter;
-import com.ua.erent.trash.ITestService;
-import com.ua.erent.trash.TestService;
+import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ITestPresenter;
 
 import dagger.Module;
 import dagger.Provides;
@@ -19,14 +16,8 @@ public final class TestModule {
 
     @Provides
     @ActivityScope
-    ITestService provideTestService(Application app) {
-        return new TestService(app);
-    }
-
-    @Provides
-    @ActivityScope
-    ITestPresenter provideTestPresenter() {
-        return new TestPresenter();
+    ITestPresenter provideTestPresenter(IAuthAppService authAppService) {
+        return new TestPresenter(authAppService);
     }
 
 }

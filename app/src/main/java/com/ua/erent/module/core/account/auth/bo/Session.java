@@ -30,9 +30,6 @@ public final class Session implements Parcelable {
         if (TextUtils.isEmpty(tokenType))
             throw new IllegalArgumentException(String.format("illegal token type, was %s", tokenType));
 
-        if (TextUtils.isEmpty(token))
-            throw new IllegalArgumentException(String.format("illegal token, was %s", token));
-
         this.token = String.format("Bearer %s", token);
         this.tokenType = tokenType;
         this.userId = Preconditions.checkNotNull(userId);

@@ -11,15 +11,11 @@ import com.ua.erent.module.core.account.auth.domain.IAuthDomain;
 import com.ua.erent.module.core.account.auth.domain.api.auth.AuthProvider;
 import com.ua.erent.module.core.account.auth.domain.api.auth.IAuthProvider;
 import com.ua.erent.module.core.account.auth.domain.session.SessionStorage;
-import com.ua.erent.module.core.app.di.AppModule;
 import com.ua.erent.module.core.init.InitializationManager;
-import com.ua.erent.module.core.networking.module.NetworkingModule;
+import com.ua.erent.module.core.init.InitializationManagerImp;
 import com.ua.erent.module.core.networking.service.IPacketInterceptService;
 import com.ua.erent.module.core.storage.DatabaseHelper;
 import com.ua.erent.module.core.storage.ISingleItemStorage;
-import com.ua.erent.module.core.util.Initializeable;
-
-import java.util.Collection;
 
 import javax.inject.Singleton;
 
@@ -31,7 +27,7 @@ import retrofit2.Retrofit;
 /**
  * Created by Максим on 10/15/2016.
  */
-@Module(includes = {AppModule.class, NetworkingModule.class, InitModule.class})
+@Module
 public final class AuthModule {
 
     private final Class<? extends Activity> loginActivity;
@@ -43,6 +39,11 @@ public final class AuthModule {
     @Provides
     Class<? extends Activity> provideLoginActivity() {
         return loginActivity;
+    }
+
+    @Provides
+    InitializationManager provideInitManager() {
+        return new InitializationManagerImp();
     }
 
     @Provides
@@ -61,9 +62,8 @@ public final class AuthModule {
     @Singleton
     IAuthDomain provideAuthDomain(Class<? extends Activity> loginActivity, Application app,
                                   ISingleItemStorage<Session> sessionStorage,
-                                  IAuthProvider provider, InitializationManager initializationManager,
-                                  Collection<? extends Initializeable> initializeables) {
-        return new AuthDomain(loginActivity, app, sessionStorage, provider, initializationManager, initializeables);
+                                  IAuthProvider provider, InitializationManager initializationManager) {
+        return new AuthDomain(loginActivity, app, sessionStorage, provider, initializationManager);
     }
 
     @Provides

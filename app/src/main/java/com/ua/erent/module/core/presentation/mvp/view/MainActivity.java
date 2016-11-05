@@ -1,6 +1,7 @@
 package com.ua.erent.module.core.presentation.mvp.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -58,6 +59,13 @@ public final class MainActivity extends InjectableActivity<MainActivity, ITestPr
         pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(new RecentGoodsFragment());
         viewPager.setAdapter(pagerAdapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        presenter.onLogout();
+        startActivity(new Intent(this, InitialScreenActivity.class));
+        finish();
     }
 
     @NotNull

@@ -13,6 +13,7 @@ import com.ua.erent.module.core.util.Initializeable;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -20,8 +21,8 @@ import rx.subjects.PublishSubject;
 /**
  * Created by Максим on 11/5/2016.
  */
-
-public final class UserDomain implements IUserDomain, Initializeable, IAppLifecycleManager.IStateCallback {
+@Singleton
+public final class UserDomain implements IUserDomain, IAppLifecycleManager.IStateCallback {
 
     private final IUserProvider userProvider;
     private final IAuthAppService authService;
@@ -84,7 +85,7 @@ public final class UserDomain implements IUserDomain, Initializeable, IAppLifecy
 
     @Override
     public boolean isInitialized() {
-        return storage.hasItem();
+        return false;
     }
 
     @Override
@@ -99,7 +100,7 @@ public final class UserDomain implements IUserDomain, Initializeable, IAppLifecy
 
     private Observable<User> fetchUserProfile(UserID id, Session session) {
 
-        return userProvider.fetchUserProfile(id)
+        return userProvider.fetchUserProfile(session, id)
                 .flatMap(user -> {
                     // user which was logged in and loading profile
                     // are same ones

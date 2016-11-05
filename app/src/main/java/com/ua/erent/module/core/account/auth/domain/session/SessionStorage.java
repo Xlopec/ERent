@@ -72,14 +72,8 @@ public final class SessionStorage implements ISingleItemStorage<Session> {
         if (session != null) {
 
             accountManager.invalidateAuthToken(Constant.ACCOUNT_TYPE, session.getToken());
-
-            try {
-                TableUtils.clearTable(helper.getConnectionSource(), SessionPO.class);
-            } catch (final SQLException e) {
-                Log.e(TAG, "exception while clearing table", e);
-                helper.close();
-                throw new RuntimeException(e);
-            }
+            cachedSession = null;
+            helper.clear(SessionPO.class);
         }
         cleaned = true;
     }

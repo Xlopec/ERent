@@ -3,11 +3,11 @@ package com.ua.erent.module.core.presentation.mvp.module;
 import android.app.Application;
 
 import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
-import com.ua.erent.module.core.di.scopes.ActivityScope;
-import com.ua.erent.module.core.presentation.mvp.model.interfaces.IRegisterModel;
+import com.ua.erent.module.core.di.scopes.FragmentScope;
 import com.ua.erent.module.core.presentation.mvp.model.RegisterModel;
-import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IRegisterPresenter;
+import com.ua.erent.module.core.presentation.mvp.model.interfaces.IRegisterModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.RegisterPresenter;
+import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IRegisterPresenter;
 
 import dagger.Module;
 import dagger.Provides;
@@ -25,13 +25,13 @@ public final class RegisterModule {
     }
 
     @Provides
-    @ActivityScope
+    @FragmentScope
     IRegisterModel provideRegisterModel(IAuthAppService authAppService) {
         return new RegisterModel(application, authAppService);
     }
 
     @Provides
-    @ActivityScope
+    @FragmentScope
     IRegisterPresenter provideRegisterPresenter(IRegisterModel model) {
         return new RegisterPresenter(model);
     }

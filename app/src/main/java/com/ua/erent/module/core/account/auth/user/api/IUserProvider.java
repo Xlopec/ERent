@@ -1,5 +1,6 @@
 package com.ua.erent.module.core.account.auth.user.api;
 
+import com.ua.erent.module.core.account.auth.bo.Session;
 import com.ua.erent.module.core.account.auth.user.domain.User;
 import com.ua.erent.module.core.account.auth.vo.UserID;
 
@@ -16,6 +17,6 @@ import rx.Observable;
 
 public interface IUserProvider {
 
-    Observable<User> fetchUserProfile(@NotNull UserID id);
+    Observable<User> fetchUserProfile(@NotNull Session session, @NotNull UserID id);
 
 }

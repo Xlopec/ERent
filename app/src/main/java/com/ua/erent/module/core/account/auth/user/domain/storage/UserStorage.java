@@ -48,6 +48,7 @@ public final class UserStorage implements ISingleItemStorage<User> {
 
     @Override
     public void clear() {
+        cachedUser = null;
         helper.clear(UserPO.class);
         cleared = true;
     }

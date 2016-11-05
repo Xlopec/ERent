@@ -2,7 +2,6 @@ package com.ua.erent.module.core.account.auth.user.api;
 
 import com.ua.erent.module.core.account.auth.bo.Session;
 import com.ua.erent.module.core.account.auth.user.domain.User;
-import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
 import com.ua.erent.module.core.account.auth.vo.ContactInfo;
 import com.ua.erent.module.core.account.auth.vo.FullName;
 import com.ua.erent.module.core.account.auth.vo.UserID;
@@ -38,23 +37,20 @@ public final class UserProvider implements IUserProvider {
     }
 
     private final UserAPI api;
-    private final IAuthAppService authService;
 
     @Inject
-    public UserProvider(Retrofit retrofit, IAuthAppService authService) {
+    public UserProvider(Retrofit retrofit) {
         this.api = retrofit.create(UserAPI.class);
-        this.authService = authService;
     }
 
     @Override
-    public Observable<User> fetchUserProfile(@NotNull UserID id) {
+    public Observable<User> fetchUserProfile(@NotNull Session session, @NotNull UserID id) {
 
+        Preconditions.checkNotNull(session, "session == null");
         Preconditions.checkNotNull(id, "id == null");
 
-        if (!authService.isSessionAlive())
-            throw new IllegalStateException("session was expired");
-
-        final Session session = authService.getSession();
+        if (session.isExpired())
+            throw new IllegalStateException(String.format("%s session was expired", getClass().getSimpleName()));
 
         return api.fetchUserProfile(session.getToken(), id.getId())
                 .observeOn(AndroidSchedulers.mainThread())

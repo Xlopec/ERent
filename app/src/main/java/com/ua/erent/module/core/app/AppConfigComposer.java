@@ -7,7 +7,6 @@ import com.ua.erent.module.core.account.auth.di.AuthComponent;
 import com.ua.erent.module.core.account.auth.di.AuthModule;
 import com.ua.erent.module.core.account.auth.di.DaggerAuthComponent;
 import com.ua.erent.module.core.account.auth.di.DaggerUserComponent;
-import com.ua.erent.module.core.account.auth.di.InitModule;
 import com.ua.erent.module.core.account.auth.di.UserComponent;
 import com.ua.erent.module.core.account.auth.di.UserModule;
 import com.ua.erent.module.core.app.di.AppComponent;
@@ -27,8 +26,6 @@ import com.ua.erent.module.core.presentation.mvp.view.InitialScreenActivity;
 import com.ua.erent.module.core.util.IBuilder;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Collections;
 
 import dagger.internal.Preconditions;
 import retrofit2.Retrofit;
@@ -99,21 +96,27 @@ final class AppConfigComposer extends AbstractConfigComposer {
         final RegisterModule registerModule = new RegisterModule(application);
         final AppComponent appComponent = DaggerAppComponent.builder().appModule(appModule).build();
 
-        final InitModule initModule = new InitModule(
-                Collections.singletonList(appComponent.getSomeAppService())
-        );
+        ///final InitModule initModule = new InitModule();
+
+        /*final InitComponent initComponent = DaggerInitComponent.builder().appModule(appModule)
+                .initModule(initModule).appModule(appModule).authModule(authModule)
+                .baseNetworkingModule(baseNetworkingModule).networkingModule(networkingModule).userModule(userModule).build();*/
 
         final AuthComponent authComponent = DaggerAuthComponent.builder().authModule(authModule).
-                appModule(appModule).networkingModule(networkingModule).initModule(initModule).build();
+                appModule(appModule).networkingModule(networkingModule).build();
         final UserComponent userComponent = DaggerUserComponent.builder().userModule(userModule)
                 .appModule(appModule).authModule(authModule).baseNetworkingModule(baseNetworkingModule)
-                .networkingModule(networkingModule).initModule(initModule).build();
+                .networkingModule(networkingModule).build();
+
+        authComponent.getAuthAppService();
+        userComponent.getAppService();
 
         // signUp target dependency inject modules
         final IBuilder<InjectConfigModule> injectModuleBuilder = new InjectConfigModule.Builder()
                 .setLoginModule(loginModule).setAppComponent(appComponent)
                 .setAuthComponent(authComponent).setRegisterModule(registerModule)
-                .setInitialScreenModule(initialScreenModule);
+                .setInitialScreenModule(initialScreenModule).setUserComponent(userComponent);
+               // .setInitComponent(initComponent);
 
         Injector.initialize(BuildConfig.DEBUG).addConfig(injectModuleBuilder.build());
     }

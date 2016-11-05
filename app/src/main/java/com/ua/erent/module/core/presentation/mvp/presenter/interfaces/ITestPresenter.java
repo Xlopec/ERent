@@ -9,4 +9,6 @@ import com.ua.erent.module.core.presentation.mvp.core.IBasePresenter;
 
 public abstract class ITestPresenter extends IBasePresenter<MainActivity> {
 
+    public abstract void onLogout();
+
 }

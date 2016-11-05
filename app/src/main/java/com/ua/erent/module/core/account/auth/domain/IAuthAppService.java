@@ -4,6 +4,7 @@ import com.ua.erent.module.core.account.auth.bo.Session;
 import com.ua.erent.module.core.account.auth.vo.SignInCredentials;
 import com.ua.erent.module.core.account.auth.vo.SignUpCredentials;
 import com.ua.erent.module.core.init.IInitCallback;
+import com.ua.erent.module.core.util.Initializeable;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -51,5 +52,7 @@ public interface IAuthAppService {
     boolean isSessionAlive();
 
     Session getSession();
+
+    void registerInitializeable(@NotNull Initializeable initializeable);
 
 }

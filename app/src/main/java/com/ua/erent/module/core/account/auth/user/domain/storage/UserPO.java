@@ -17,10 +17,10 @@ public final class UserPO {
     @DatabaseField(id = true, index = true, columnName = ID_COLUMN, dataType = DataType.LONG)
     private long id;
 
-    @DatabaseField(columnName = USERNAME_COLUMN, dataType = DataType.STRING, canBeNull = false, throwIfNull = true)
+    @DatabaseField(columnName = USERNAME_COLUMN, dataType = DataType.STRING, canBeNull = false)
     private String username;
 
-    @DatabaseField(columnName = EMAIL_COLUMN, dataType = DataType.STRING, canBeNull = false, throwIfNull = true)
+    @DatabaseField(columnName = EMAIL_COLUMN, dataType = DataType.STRING, canBeNull = false)
     private String email;
 
     public UserPO() {

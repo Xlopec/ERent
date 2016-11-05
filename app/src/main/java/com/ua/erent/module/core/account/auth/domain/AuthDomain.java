@@ -17,9 +17,9 @@ import com.ua.erent.module.core.util.Initializeable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.Collections;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -28,7 +28,7 @@ import rx.subjects.PublishSubject;
 /**
  * Created by Максим on 10/15/2016.
  */
-
+@Singleton
 public final class AuthDomain implements IAuthDomain {
 
     private final Application application;
@@ -36,7 +36,6 @@ public final class AuthDomain implements IAuthDomain {
     private final IAuthProvider provider;
     private final InitializationManager initializationManager;
     private final Class<? extends Activity> loginActivity;
-    private final Collection<? extends Initializeable> initializeables;
     private final PublishSubject<Session> sessionPublishSubject;
 
     private final class InitCallbackWrapper implements IInitCallback {
@@ -86,20 +85,20 @@ public final class AuthDomain implements IAuthDomain {
     public AuthDomain(Class<? extends Activity> loginActivity, Application application,
                       ISingleItemStorage<Session> sessionStorage,
                       IAuthProvider provider,
-                      InitializationManager initializationManager,
-                      Collection<? extends Initializeable> initializeables) {
+                      InitializationManager initializationManager) {
 
         this.loginActivity = loginActivity;
         this.application = application;
         this.sessionStorage = sessionStorage;
         this.provider = provider;
         this.initializationManager = initializationManager;
-        this.initializeables = Collections.unmodifiableCollection(initializeables);
         this.sessionPublishSubject = PublishSubject.create();
     }
 
     @Override
-    public void signIn(@NotNull SignInCredentials credentials, @NotNull IInitCallback callback) {
+    public void signIn(@NotNull SignInCredentials credentials,
+                       @NotNull Collection<Initializeable> initializeables,
+                       @NotNull IInitCallback callback) {
 
         callback.onPreExecute();
 
@@ -135,7 +134,8 @@ public final class AuthDomain implements IAuthDomain {
     }
 
     @Override
-    public void signIn(@NotNull IInitCallback callback) {
+    public void signIn(@NotNull Collection<Initializeable> initializeables,
+                       @NotNull IInitCallback callback) {
 
         final Session session = sessionStorage.getItem();
 
@@ -163,6 +163,7 @@ public final class AuthDomain implements IAuthDomain {
         intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, session.getUsername());
 
         sessionStorage.clear();
+        sessionPublishSubject.onNext(new Session(session.getUserId(), null, session.getUsername(), session.getTokenType()));
         application.startActivity(intent);
     }
 

@@ -9,9 +9,7 @@ import com.ua.erent.module.core.account.auth.user.domain.User;
 import com.ua.erent.module.core.account.auth.user.domain.UserAppService;
 import com.ua.erent.module.core.account.auth.user.domain.UserDomain;
 import com.ua.erent.module.core.account.auth.user.domain.storage.UserStorage;
-import com.ua.erent.module.core.app.di.AppModule;
 import com.ua.erent.module.core.app.domain.interfaces.IAppLifecycleManager;
-import com.ua.erent.module.core.networking.module.NetworkingModule;
 import com.ua.erent.module.core.storage.DatabaseHelper;
 import com.ua.erent.module.core.storage.ISingleItemStorage;
 
@@ -24,15 +22,13 @@ import retrofit2.Retrofit;
 /**
  * Created by Максим on 11/4/2016.
  */
-@Module(includes = {
-        AppModule.class, NetworkingModule.class, AuthModule.class, InitModule.class
-})
+@Module
 public final class UserModule {
 
     @Provides
     @Singleton
-    IUserProvider providerUserProvider(Retrofit retrofit, IAuthAppService authAppService) {
-        return new UserProvider(retrofit, authAppService);
+    IUserProvider providerUserProvider(Retrofit retrofit) {
+        return new UserProvider(retrofit);
     }
 
     @Provides

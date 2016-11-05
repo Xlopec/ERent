@@ -3,11 +3,11 @@ package com.ua.erent.module.core.presentation.mvp.module;
 import android.app.Application;
 
 import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
-import com.ua.erent.module.core.di.scopes.ActivityScope;
-import com.ua.erent.module.core.presentation.mvp.model.interfaces.ILoginModel;
+import com.ua.erent.module.core.di.scopes.FragmentScope;
 import com.ua.erent.module.core.presentation.mvp.model.LoginModel;
-import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ILoginPresenter;
+import com.ua.erent.module.core.presentation.mvp.model.interfaces.ILoginModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.LoginPresenter;
+import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ILoginPresenter;
 
 import dagger.Module;
 import dagger.Provides;
@@ -25,13 +25,13 @@ public final class LoginModule {
     }
 
     @Provides
-    @ActivityScope
+    @FragmentScope
     ILoginModel provideLoginModel(IAuthAppService handler) {
         return new LoginModel(handler);
     }
 
     @Provides
-    @ActivityScope
+    @FragmentScope
     ILoginPresenter provideLoginPresenter(ILoginModel model) {
         return new LoginPresenter(application, model);
     }

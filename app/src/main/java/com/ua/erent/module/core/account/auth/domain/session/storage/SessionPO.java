@@ -18,13 +18,13 @@ public final class SessionPO {
     @DatabaseField(id = true, index = true, columnName = ID_COLUMN, dataType = DataType.LONG)
     private long id;
 
-    @DatabaseField(columnName = LOGIN_COLUMN, dataType = DataType.STRING, canBeNull = false, throwIfNull = true)
+    @DatabaseField(columnName = LOGIN_COLUMN, dataType = DataType.STRING, canBeNull = false)
     private String login;
 
-    @DatabaseField(columnName = TOKEN_COLUMN, dataType = DataType.STRING, canBeNull = false, throwIfNull = true)
+    @DatabaseField(columnName = TOKEN_COLUMN, dataType = DataType.STRING, canBeNull = false)
     private String token;
 
-    @DatabaseField(columnName = TOKEN_TYPE, dataType = DataType.STRING, canBeNull = false, throwIfNull = true)
+    @DatabaseField(columnName = TOKEN_TYPE, dataType = DataType.STRING, canBeNull = false)
     private String tokenType;
 
     public SessionPO() {
