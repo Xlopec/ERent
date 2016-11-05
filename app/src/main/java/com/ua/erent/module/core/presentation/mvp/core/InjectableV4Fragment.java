@@ -56,9 +56,7 @@ public abstract class InjectableV4Fragment<View extends IBaseView, Presenter ext
 
         try {
             super.onCreate(savedInstanceState);
-
-            final IMVPComponent<View, Presenter> component = injector().getComponent(getActivity(), cl);
-
+            final IMVPComponent<View, Presenter> component = injector().getComponent(this, cl);
             component.inject(view);
         } catch (final Exception exc) {
             Log.e(TAG, "exception in #onCreate", exc);

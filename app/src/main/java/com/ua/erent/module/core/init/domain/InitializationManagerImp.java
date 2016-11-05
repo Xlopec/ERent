@@ -1,13 +1,13 @@
-package com.ua.erent.module.core.init;
+package com.ua.erent.module.core.init.domain;
 
-import com.ua.erent.module.core.account.auth.bo.Session;
-import com.ua.erent.module.core.init.delegate.AbstractInitDelegate;
-import com.ua.erent.module.core.init.delegate.InitDelegates;
+import com.ua.erent.module.core.account.auth.domain.bo.Session;
+import com.ua.erent.module.core.init.IInitCallback;
+import com.ua.erent.module.core.init.domain.delegate.AbstractInitDelegate;
+import com.ua.erent.module.core.init.domain.delegate.InitDelegates;
 import com.ua.erent.module.core.util.Initializeable;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import dagger.internal.Preconditions;
@@ -30,22 +30,14 @@ public final class InitializationManagerImp implements InitializationManager {
         Preconditions.checkNotNull(initializeables);
         Preconditions.checkNotNull(callback);
 
-        final Collection<Initializeable> filtered = new ArrayList<>(initializeables.size());
-
-        for (final Initializeable initializeable : initializeables) {
-            if (!initializeable.isInitialized()) {
-                filtered.add(initializeable);
-            }
-        }
-
-        if (filtered.isEmpty()) {
+        if (initializeables.isEmpty()) {
             callback.onInitialized();
             return;
         }
         // delegate all work to a special handler
-        final AbstractInitDelegate delegate = InitDelegates.createDelegate(callback, filtered);
+        final AbstractInitDelegate delegate = InitDelegates.createDelegate(callback, initializeables);
 
-        for (final Initializeable initializeable : filtered) {
+        for (final Initializeable initializeable : initializeables) {
             // run initialization process
             initializeable.initialize(session)
                     .observeOn(AndroidSchedulers.mainThread())

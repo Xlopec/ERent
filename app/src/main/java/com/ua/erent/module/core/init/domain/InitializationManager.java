@@ -1,6 +1,7 @@
-package com.ua.erent.module.core.init;
+package com.ua.erent.module.core.init.domain;
 
-import com.ua.erent.module.core.account.auth.bo.Session;
+import com.ua.erent.module.core.account.auth.domain.bo.Session;
+import com.ua.erent.module.core.init.IInitCallback;
 import com.ua.erent.module.core.util.Initializeable;
 
 import org.jetbrains.annotations.NotNull;

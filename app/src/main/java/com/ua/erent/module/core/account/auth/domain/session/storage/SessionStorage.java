@@ -1,4 +1,4 @@
-package com.ua.erent.module.core.account.auth.domain.session;
+package com.ua.erent.module.core.account.auth.domain.session.storage;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -9,10 +9,8 @@ import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.ReferenceObjectCache;
 import com.j256.ormlite.table.TableUtils;
-import com.ua.erent.module.core.account.auth.bo.Session;
+import com.ua.erent.module.core.account.auth.domain.bo.Session;
 import com.ua.erent.module.core.storage.DatabaseHelper;
-import com.ua.erent.module.core.account.auth.domain.session.storage.SessionMapper;
-import com.ua.erent.module.core.account.auth.domain.session.storage.SessionPO;
 import com.ua.erent.module.core.app.Constant;
 import com.ua.erent.module.core.storage.ISingleItemStorage;
 
@@ -96,7 +94,7 @@ public final class SessionStorage implements ISingleItemStorage<Session> {
     private BaseDaoImpl<SessionPO, Integer> createDao() {
 
         try {
-            final BaseDaoImpl<SessionPO, Integer> dao = helper.getDao(SessionPO.class);//new SessionDao(helper.getConnectionSource(), SessionPO.class);
+            final BaseDaoImpl<SessionPO, Integer> dao = helper.getDao(SessionPO.class);
             dao.setObjectCache(true);
             dao.setObjectCache(ReferenceObjectCache.makeSoftCache());
             return dao;

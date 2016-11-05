@@ -1,10 +1,10 @@
-package com.ua.erent.module.core.account.auth.bo;
+package com.ua.erent.module.core.account.auth.domain.bo;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
-import com.ua.erent.module.core.account.auth.vo.UserID;
+import com.ua.erent.module.core.account.auth.domain.vo.UserID;
 
 import dagger.internal.Preconditions;
 
@@ -30,7 +30,7 @@ public final class Session implements Parcelable {
         if (TextUtils.isEmpty(tokenType))
             throw new IllegalArgumentException(String.format("illegal token type, was %s", tokenType));
 
-        this.token = String.format("Bearer %s", token);
+        this.token = token;
         this.tokenType = tokenType;
         this.userId = Preconditions.checkNotNull(userId);
         this.username = username;
@@ -68,8 +68,12 @@ public final class Session implements Parcelable {
         }
     };
 
-    public String getToken() {
+    public String getRawToken() {
         return token;
+    }
+
+    public String getToken() {
+        return String.format("Bearer %s", getRawToken());
     }
 
     public String getTokenType() {

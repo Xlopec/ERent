@@ -1,7 +1,5 @@
 package com.ua.erent.module.core.di;
 
-import android.content.Context;
-
 import com.ua.erent.module.core.di.util.ComponentFactory;
 
 import org.jetbrains.annotations.NotNull;
@@ -64,7 +62,7 @@ public final class Injector {
     }
 
     private final boolean isDebugMode;
-    private final Map<Context, Collection<?>> contextToComponent = new WeakHashMap<>();
+    private final Map<Object, Collection<?>> contextToComponent = new WeakHashMap<>();
     private final Map<Class<?>, ComponentFactory<?>> providerMap = new HashMap<>(10);
 
     /**
@@ -139,20 +137,20 @@ public final class Injector {
      * lifecycle of given context.
      * </p>
      * <p>
-     * Component should be released by invocation of {@link #destroyComponent(Context)}
+     * Component should be released by invocation of {@link #destroyComponent(Object)}
      * </p>
      *
-     * @param context   context for which component should be retrieved
+     * @param obj       context for which component should be retrieved
      * @param component component's class
      * @param <T>       component's type
      * @return component instance which is attached to a specified context
      */
     @SuppressWarnings("unchecked")
-    public <T> T getComponent(@NotNull Context context, @NotNull Class<T> component) {
+    public <T> T getComponent(@NotNull Object obj, @NotNull Class<T> component) {
 
         synchronized (contextToComponent) {
 
-            Collection components = contextToComponent.get(context);
+            Collection components = contextToComponent.get(obj);
 
             if (components == null) {
 
@@ -160,7 +158,7 @@ public final class Injector {
 
                 components = new ArrayList<>(1);
                 components.add(mComponent);
-                contextToComponent.put(context, components);
+                contextToComponent.put(obj, components);
                 return mComponent;
             }
 
@@ -173,7 +171,7 @@ public final class Injector {
             final T mComponent = getComponent(component);
 
             components.add(component);
-            contextToComponent.put(context, components);
+            contextToComponent.put(obj, components);
             return mComponent;
         }
     }
@@ -183,12 +181,12 @@ public final class Injector {
      * Detaches component from specified context, so that can be garbage collected
      * </p>
      *
-     * @param context context for which components should be released
+     * @param obj context for which components should be released
      */
-    public void destroyComponent(@NotNull Context context) {
+    public void destroyComponent(@NotNull Object obj) {
 
         synchronized (contextToComponent) {
-            contextToComponent.remove(context);
+            contextToComponent.remove(obj);
         }
     }
 

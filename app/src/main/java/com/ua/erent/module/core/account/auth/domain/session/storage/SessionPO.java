@@ -10,10 +10,10 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "Session")
 public final class SessionPO {
 
-    public static final String ID_COLUMN = "id";
-    public static final String LOGIN_COLUMN = "login";
-    public static final String TOKEN_COLUMN = "token";
-    public static final String TOKEN_TYPE = "tokenType";
+    private static final String ID_COLUMN = "id";
+    private static final String LOGIN_COLUMN = "login";
+    private static final String TOKEN_COLUMN = "token";
+    private static final String TOKEN_TYPE = "tokenType";
 
     @DatabaseField(id = true, index = true, columnName = ID_COLUMN, dataType = DataType.LONG)
     private long id;
@@ -30,7 +30,7 @@ public final class SessionPO {
     public SessionPO() {
     }
 
-    public SessionPO(long id, String login, String token, String tokenType) {
+    SessionPO(long id, String login, String token, String tokenType) {
         this.id = id;
         this.login = login;
         this.token = token;

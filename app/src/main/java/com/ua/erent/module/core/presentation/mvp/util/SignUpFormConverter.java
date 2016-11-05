@@ -2,7 +2,7 @@ package com.ua.erent.module.core.presentation.mvp.util;
 
 import android.content.Context;
 
-import com.ua.erent.module.core.account.auth.vo.SignUpCredentials;
+import com.ua.erent.module.core.account.auth.domain.vo.SignUpCredentials;
 import com.ua.erent.module.core.presentation.mvp.model.SignUpForm;
 
 import org.jetbrains.annotations.NotNull;

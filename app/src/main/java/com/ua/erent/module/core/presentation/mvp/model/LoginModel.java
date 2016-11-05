@@ -1,9 +1,9 @@
 package com.ua.erent.module.core.presentation.mvp.model;
 
-import com.ua.erent.module.core.account.auth.bo.Session;
+import com.ua.erent.module.core.account.auth.domain.bo.Session;
 import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
 import com.ua.erent.module.core.init.IInitCallback;
-import com.ua.erent.module.core.account.auth.vo.SignInCredentials;
+import com.ua.erent.module.core.account.auth.domain.vo.SignInCredentials;
 import com.ua.erent.module.core.presentation.mvp.model.interfaces.ILoginModel;
 
 import org.jetbrains.annotations.NotNull;

@@ -5,7 +5,7 @@ import android.util.Log;
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.ReferenceObjectCache;
-import com.ua.erent.module.core.account.auth.user.domain.User;
+import com.ua.erent.module.core.account.auth.user.domain.bo.User;
 import com.ua.erent.module.core.storage.DatabaseHelper;
 import com.ua.erent.module.core.storage.ISingleItemStorage;
 

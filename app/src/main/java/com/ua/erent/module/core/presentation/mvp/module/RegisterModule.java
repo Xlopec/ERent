@@ -18,15 +18,9 @@ import dagger.Provides;
 @Module
 public final class RegisterModule {
 
-    private final Application application;
-
-    public RegisterModule(Application application) {
-        this.application = application;
-    }
-
     @Provides
     @FragmentScope
-    IRegisterModel provideRegisterModel(IAuthAppService authAppService) {
+    IRegisterModel provideRegisterModel(Application application, IAuthAppService authAppService) {
         return new RegisterModel(application, authAppService);
     }
 

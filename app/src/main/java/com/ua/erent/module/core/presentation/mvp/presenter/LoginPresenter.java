@@ -3,16 +3,14 @@ package com.ua.erent.module.core.presentation.mvp.presenter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 
 import com.ua.erent.module.core.init.IInitCallback;
 import com.ua.erent.module.core.presentation.mvp.model.interfaces.ILoginModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ILoginPresenter;
-import com.ua.erent.module.core.presentation.mvp.view.interfaces.IInitialScreenView;
 import com.ua.erent.module.core.presentation.mvp.view.LoginFragment;
 import com.ua.erent.module.core.presentation.mvp.view.MainActivity;
+import com.ua.erent.module.core.presentation.mvp.view.interfaces.IInitialScreenView;
 import com.ua.erent.module.core.util.Initializeable;
 
 import org.jetbrains.annotations.NotNull;
@@ -52,20 +50,14 @@ public final class LoginPresenter extends ILoginPresenter {
         @Override
         public void onInitialized() {
             subscriber.onNext("Loaded...");
-            new Handler(Looper.getMainLooper()).postDelayed(() -> {
 
-                final Intent intent = new Intent(getView().getActivity(), MainActivity.class);
+            final Intent intent = new Intent(getView().getActivity(), MainActivity.class);
 
-               // intent.setAction(Intent.ACTION_MAIN);
-               // intent.addCategory(Intent.CATEGORY_LAUNCHER);
-               // intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                       | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                getView().hideProgressView();
-                getView().startActivity(intent);
-                getView().getActivity().finish();
-            }, 2000L);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            getView().hideProgressView();
+            getView().startActivity(intent);
+            getView().getActivity().finish();
         }
 
         @Override
@@ -86,7 +78,7 @@ public final class LoginPresenter extends ILoginPresenter {
 
             String message;
 
-            if(TextUtils.isEmpty(th.getMessage())) {
+            if (TextUtils.isEmpty(th.getMessage())) {
                 message = "Operation failed";
             } else {
                 message = String.format(Locale.getDefault(), "Operation failed: %s", th.getMessage());
@@ -103,7 +95,7 @@ public final class LoginPresenter extends ILoginPresenter {
 
             String message;
 
-            if(TextUtils.isEmpty(th.getMessage())) {
+            if (TextUtils.isEmpty(th.getMessage())) {
                 message = "Operation failed";
             } else {
                 message = String.format(Locale.getDefault(), "Operation failed: %s", th.getMessage());
@@ -153,7 +145,7 @@ public final class LoginPresenter extends ILoginPresenter {
 
         view.setLogin(model.getLastLogin());
 
-        if(model.isSessionAlive()) {
+        if (model.isSessionAlive()) {
             view.bindToProgressView(Observable.create(subscriber -> {
                 model.login(new InitCallbackImp(subscriber));
             }));

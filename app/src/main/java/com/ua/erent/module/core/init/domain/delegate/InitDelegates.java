@@ -1,4 +1,4 @@
-package com.ua.erent.module.core.init.delegate;
+package com.ua.erent.module.core.init.domain.delegate;
 
 import com.ua.erent.module.core.init.IInitCallback;
 import com.ua.erent.module.core.util.Initializeable;

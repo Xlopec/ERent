@@ -10,9 +10,9 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "User")
 public final class UserPO {
 
-    public static final String ID_COLUMN = "id";
-    public static final String USERNAME_COLUMN = "username";
-    public static final String EMAIL_COLUMN = "email";
+    private static final String ID_COLUMN = "id";
+    private static final String USERNAME_COLUMN = "username";
+    private static final String EMAIL_COLUMN = "email";
 
     @DatabaseField(id = true, index = true, columnName = ID_COLUMN, dataType = DataType.LONG)
     private long id;
@@ -23,7 +23,7 @@ public final class UserPO {
     @DatabaseField(columnName = EMAIL_COLUMN, dataType = DataType.STRING, canBeNull = false)
     private String email;
 
-    public UserPO() {
+    UserPO() {
     }
 
     public String getEmail() {

@@ -1,6 +1,6 @@
 package com.ua.erent.module.core.util;
 
-import com.ua.erent.module.core.account.auth.bo.Session;
+import com.ua.erent.module.core.account.auth.domain.bo.Session;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -35,12 +35,5 @@ public interface Initializeable {
      * @return flag which defines exception handling strategy
      */
     boolean failOnException();
-
-    /**
-     * Checks whether this instance is already initialized or not
-     *
-     * @return true if instance is already initialized or false in another case
-     */
-    boolean isInitialized();
 
 }

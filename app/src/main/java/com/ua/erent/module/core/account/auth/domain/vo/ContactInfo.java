@@ -1,4 +1,4 @@
-package com.ua.erent.module.core.account.auth.vo;
+package com.ua.erent.module.core.account.auth.domain.vo;
 
 import org.apache.commons.validator.routines.EmailValidator;
 import org.jetbrains.annotations.NotNull;

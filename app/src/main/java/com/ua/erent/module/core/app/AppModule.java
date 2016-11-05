@@ -1,17 +1,16 @@
-package com.ua.erent.module.core.app.di;
+package com.ua.erent.module.core.app;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.ua.erent.module.core.storage.DatabaseHelper;
 import com.ua.erent.module.core.app.domain.AppInitManager;
 import com.ua.erent.module.core.app.domain.AppLifecycleManager;
 import com.ua.erent.module.core.app.domain.AppService;
 import com.ua.erent.module.core.app.domain.interfaces.IAppInitManager;
 import com.ua.erent.module.core.app.domain.interfaces.IAppLifecycleManager;
 import com.ua.erent.module.core.app.domain.interfaces.IAppService;
-import com.ua.erent.trash.ISomeAppService;
-import com.ua.erent.trash.SomeAppServiceImp;
+import com.ua.erent.module.core.storage.DatabaseHelper;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -29,14 +28,10 @@ import dagger.Provides;
 @Module
 public final class AppModule {
 
-    private static final String TAG = AppModule.class.getSimpleName();
-
     private final Application app;
-  //  private final DatabaseHelper databaseHelper;
 
     public AppModule(@NotNull Application application) {
         app = application;
-   //     databaseHelper = OpenHelperManager.getHelper(application, DatabaseHelper.class);
     }
 
     @Provides
@@ -47,8 +42,8 @@ public final class AppModule {
 
     @Provides
     @Singleton
-    ISomeAppService provideSomeAppService(IAppLifecycleManager lifecycleManager) {
-        return new SomeAppServiceImp(app, lifecycleManager);
+    Context provideAppContext() {
+        return app;
     }
 
     @Provides

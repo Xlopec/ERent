@@ -5,7 +5,7 @@ import com.ua.erent.module.core.account.auth.user.api.IUserProvider;
 import com.ua.erent.module.core.account.auth.user.api.UserProvider;
 import com.ua.erent.module.core.account.auth.user.domain.IUserAppService;
 import com.ua.erent.module.core.account.auth.user.domain.IUserDomain;
-import com.ua.erent.module.core.account.auth.user.domain.User;
+import com.ua.erent.module.core.account.auth.user.domain.bo.User;
 import com.ua.erent.module.core.account.auth.user.domain.UserAppService;
 import com.ua.erent.module.core.account.auth.user.domain.UserDomain;
 import com.ua.erent.module.core.account.auth.user.domain.storage.UserStorage;

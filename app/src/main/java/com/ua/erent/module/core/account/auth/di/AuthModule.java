@@ -3,16 +3,15 @@ package com.ua.erent.module.core.account.auth.di;
 import android.app.Activity;
 import android.app.Application;
 
-import com.ua.erent.module.core.account.auth.bo.Session;
 import com.ua.erent.module.core.account.auth.domain.AuthAppService;
 import com.ua.erent.module.core.account.auth.domain.AuthDomain;
 import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
 import com.ua.erent.module.core.account.auth.domain.IAuthDomain;
 import com.ua.erent.module.core.account.auth.domain.api.auth.AuthProvider;
 import com.ua.erent.module.core.account.auth.domain.api.auth.IAuthProvider;
-import com.ua.erent.module.core.account.auth.domain.session.SessionStorage;
-import com.ua.erent.module.core.init.InitializationManager;
-import com.ua.erent.module.core.init.InitializationManagerImp;
+import com.ua.erent.module.core.account.auth.domain.bo.Session;
+import com.ua.erent.module.core.account.auth.domain.session.storage.SessionStorage;
+import com.ua.erent.module.core.init.domain.IInitAppService;
 import com.ua.erent.module.core.networking.service.IPacketInterceptService;
 import com.ua.erent.module.core.storage.DatabaseHelper;
 import com.ua.erent.module.core.storage.ISingleItemStorage;
@@ -42,11 +41,6 @@ public final class AuthModule {
     }
 
     @Provides
-    InitializationManager provideInitManager() {
-        return new InitializationManagerImp();
-    }
-
-    @Provides
     @Singleton
     ISingleItemStorage<Session> provideSessionStorage(Application app, DatabaseHelper helper) {
         return new SessionStorage(app, helper);
@@ -62,8 +56,8 @@ public final class AuthModule {
     @Singleton
     IAuthDomain provideAuthDomain(Class<? extends Activity> loginActivity, Application app,
                                   ISingleItemStorage<Session> sessionStorage,
-                                  IAuthProvider provider, InitializationManager initializationManager) {
-        return new AuthDomain(loginActivity, app, sessionStorage, provider, initializationManager);
+                                  IAuthProvider provider, IInitAppService initAppService) {
+        return new AuthDomain(loginActivity, app, sessionStorage, provider, initAppService);
     }
 
     @Provides

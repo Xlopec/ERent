@@ -1,4 +1,4 @@
-package com.ua.erent.module.core.init.delegate;
+package com.ua.erent.module.core.init.domain.delegate;
 
 import android.support.annotation.MainThread;
 

@@ -1,10 +1,11 @@
 package com.ua.erent.module.core.account.auth.user.domain;
 
-import com.ua.erent.module.core.account.auth.bo.Session;
+import com.ua.erent.module.core.account.auth.domain.bo.Session;
 import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
 import com.ua.erent.module.core.account.auth.user.api.IUserProvider;
-import com.ua.erent.module.core.account.auth.vo.Profile;
-import com.ua.erent.module.core.account.auth.vo.UserID;
+import com.ua.erent.module.core.account.auth.domain.vo.Profile;
+import com.ua.erent.module.core.account.auth.domain.vo.UserID;
+import com.ua.erent.module.core.account.auth.user.domain.bo.User;
 import com.ua.erent.module.core.app.domain.ComponentKind;
 import com.ua.erent.module.core.app.domain.interfaces.IAppLifecycleManager;
 import com.ua.erent.module.core.storage.ISingleItemStorage;
@@ -27,7 +28,6 @@ public final class UserDomain implements IUserDomain, IAppLifecycleManager.IStat
     private final IUserProvider userProvider;
     private final IAuthAppService authService;
     private final ISingleItemStorage<User> storage;
-
     private final PublishSubject<User> userChangedPublisher;
 
     @Inject
@@ -81,11 +81,6 @@ public final class UserDomain implements IUserDomain, IAppLifecycleManager.IStat
     @Override
     public boolean failOnException() {
         return true;
-    }
-
-    @Override
-    public boolean isInitialized() {
-        return false;
     }
 
     @Override

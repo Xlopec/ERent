@@ -1,18 +1,14 @@
 package com.ua.erent.module.core.account.auth.domain;
 
-import com.ua.erent.module.core.account.auth.bo.Session;
-import com.ua.erent.module.core.account.auth.vo.SignInCredentials;
-import com.ua.erent.module.core.account.auth.vo.SignUpCredentials;
+import com.ua.erent.module.core.account.auth.domain.bo.Session;
+import com.ua.erent.module.core.account.auth.domain.vo.SignInCredentials;
+import com.ua.erent.module.core.account.auth.domain.vo.SignUpCredentials;
 import com.ua.erent.module.core.init.IInitCallback;
 import com.ua.erent.module.core.networking.service.IPacketInterceptService;
 import com.ua.erent.module.core.networking.util.HTTP_CODE;
 import com.ua.erent.module.core.storage.ISingleItemStorage;
-import com.ua.erent.module.core.util.Initializeable;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -27,20 +23,13 @@ public final class AuthAppService implements IAuthAppService {
 
     private final IAuthDomain domain;
     private final ISingleItemStorage<Session> storage;
-    private final Collection<Initializeable> initializeables;
-
-    static int i = 0;
 
     @Inject
     public AuthAppService(IPacketInterceptService interceptService, ISingleItemStorage<Session> storage,
                           IAuthDomain domain) {
 
-        if(i != 0)
-            throw new RuntimeException();
-        i++;
         this.storage = storage;
         this.domain = domain;
-        this.initializeables = new ArrayList<>();
 
         interceptService.addResponseObserver(response -> {
 
@@ -55,12 +44,12 @@ public final class AuthAppService implements IAuthAppService {
 
     @Override
     public void login(@NotNull SignInCredentials credentials, @NotNull IInitCallback callback) {
-        domain.signIn(credentials, initializeables, callback);
+        domain.signIn(credentials, callback);
     }
 
     @Override
     public void login(@NotNull IInitCallback callback) {
-        domain.signIn(initializeables, callback);
+        domain.signIn(callback);
     }
 
     @Override
@@ -87,11 +76,6 @@ public final class AuthAppService implements IAuthAppService {
     @Override
     public Session getSession() {
         return storage.getItem();
-    }
-
-    @Override
-    public void registerInitializeable(@NotNull Initializeable initializeable) {
-        initializeables.add(initializeable);
     }
 
 }

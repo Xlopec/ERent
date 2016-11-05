@@ -18,12 +18,6 @@ import dagger.Provides;
 @Module
 public final class LoginModule {
 
-    private final Application application;
-
-    public LoginModule(Application application) {
-        this.application = application;
-    }
-
     @Provides
     @FragmentScope
     ILoginModel provideLoginModel(IAuthAppService handler) {
@@ -32,7 +26,7 @@ public final class LoginModule {
 
     @Provides
     @FragmentScope
-    ILoginPresenter provideLoginPresenter(ILoginModel model) {
+    ILoginPresenter provideLoginPresenter(Application application, ILoginModel model) {
         return new LoginPresenter(application, model);
     }
 

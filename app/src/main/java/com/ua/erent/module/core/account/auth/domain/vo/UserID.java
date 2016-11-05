@@ -1,4 +1,4 @@
-package com.ua.erent.module.core.account.auth.vo;
+package com.ua.erent.module.core.account.auth.domain.vo;
 
 import android.os.Parcel;
 import android.os.Parcelable;

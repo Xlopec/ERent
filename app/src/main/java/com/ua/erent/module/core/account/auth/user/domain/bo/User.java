@@ -1,8 +1,8 @@
-package com.ua.erent.module.core.account.auth.user.domain;
+package com.ua.erent.module.core.account.auth.user.domain.bo;
 
-import com.ua.erent.module.core.account.auth.vo.ContactInfo;
-import com.ua.erent.module.core.account.auth.vo.FullName;
-import com.ua.erent.module.core.account.auth.vo.UserID;
+import com.ua.erent.module.core.account.auth.domain.vo.ContactInfo;
+import com.ua.erent.module.core.account.auth.domain.vo.FullName;
+import com.ua.erent.module.core.account.auth.domain.vo.UserID;
 import com.ua.erent.module.core.util.IBuilder;
 
 import org.jetbrains.annotations.NotNull;

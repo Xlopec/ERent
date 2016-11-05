@@ -1,6 +1,6 @@
 package com.ua.erent.module.core.presentation.mvp.component;
 
-import com.ua.erent.module.core.account.auth.di.AuthComponent;
+import com.ua.erent.module.core.app.AppComponent;
 import com.ua.erent.module.core.di.scopes.FragmentScope;
 import com.ua.erent.module.core.presentation.mvp.core.IMVPComponent;
 import com.ua.erent.module.core.presentation.mvp.module.RegisterModule;
@@ -12,7 +12,7 @@ import dagger.Component;
 /**
  * Created by Максим on 10/27/2016.
  */
-@Component(dependencies = AuthComponent.class, modules = RegisterModule.class)
+@Component(dependencies = AppComponent.class, modules = RegisterModule.class)
 @FragmentScope
 public interface RegisterComponent extends IMVPComponent<RegisterFragment, IRegisterPresenter> {
 }

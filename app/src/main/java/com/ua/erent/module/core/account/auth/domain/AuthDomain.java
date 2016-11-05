@@ -5,18 +5,16 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 
-import com.ua.erent.module.core.account.auth.bo.Session;
 import com.ua.erent.module.core.account.auth.domain.api.auth.IAuthProvider;
-import com.ua.erent.module.core.account.auth.vo.SignInCredentials;
-import com.ua.erent.module.core.account.auth.vo.SignUpCredentials;
+import com.ua.erent.module.core.account.auth.domain.bo.Session;
+import com.ua.erent.module.core.account.auth.domain.vo.SignInCredentials;
+import com.ua.erent.module.core.account.auth.domain.vo.SignUpCredentials;
 import com.ua.erent.module.core.init.IInitCallback;
-import com.ua.erent.module.core.init.InitializationManager;
+import com.ua.erent.module.core.init.domain.IInitAppService;
 import com.ua.erent.module.core.storage.ISingleItemStorage;
 import com.ua.erent.module.core.util.Initializeable;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Collection;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -34,7 +32,7 @@ public final class AuthDomain implements IAuthDomain {
     private final Application application;
     private final ISingleItemStorage<Session> sessionStorage;
     private final IAuthProvider provider;
-    private final InitializationManager initializationManager;
+    private final IInitAppService initAppService;
     private final Class<? extends Activity> loginActivity;
     private final PublishSubject<Session> sessionPublishSubject;
 
@@ -85,19 +83,18 @@ public final class AuthDomain implements IAuthDomain {
     public AuthDomain(Class<? extends Activity> loginActivity, Application application,
                       ISingleItemStorage<Session> sessionStorage,
                       IAuthProvider provider,
-                      InitializationManager initializationManager) {
+                      IInitAppService initAppService) {
 
         this.loginActivity = loginActivity;
         this.application = application;
         this.sessionStorage = sessionStorage;
         this.provider = provider;
-        this.initializationManager = initializationManager;
+        this.initAppService = initAppService;
         this.sessionPublishSubject = PublishSubject.create();
     }
 
     @Override
     public void signIn(@NotNull SignInCredentials credentials,
-                       @NotNull Collection<Initializeable> initializeables,
                        @NotNull IInitCallback callback) {
 
         callback.onPreExecute();
@@ -108,7 +105,7 @@ public final class AuthDomain implements IAuthDomain {
          * After this operations session can be finally set
          */
         /*final Session session = new Session(credentials.getLogin(), credentials.getPassword(), Constant.ACCOUNT_TOKEN_TYPE);
-        initializationManager.
+        initAppService.
                 initialize(session,
                         initializeables, new LoginCallbackWrapper(callback, session));*/
         provider.signIn(credentials).subscribe(new Subscriber<Session>() {
@@ -127,15 +124,14 @@ public final class AuthDomain implements IAuthDomain {
             @Override
             public void onNext(Session session) {
                 unsubscribe();
-                initializationManager.
-                        initialize(session, initializeables, new InitCallbackWrapper(callback, session));
+                initAppService.
+                        initialize(session, new InitCallbackWrapper(callback, session));
             }
         });
     }
 
     @Override
-    public void signIn(@NotNull Collection<Initializeable> initializeables,
-                       @NotNull IInitCallback callback) {
+    public void signIn(@NotNull IInitCallback callback) {
 
         final Session session = sessionStorage.getItem();
 
@@ -144,8 +140,8 @@ public final class AuthDomain implements IAuthDomain {
 
         callback.onPreExecute();
 
-        initializationManager.
-                initialize(session, initializeables, new InitCallbackWrapper(callback, session));
+        initAppService.
+                initialize(session, new InitCallbackWrapper(callback, session));
     }
 
     @Override

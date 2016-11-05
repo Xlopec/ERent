@@ -1,6 +1,6 @@
 package com.ua.erent.module.core.presentation.mvp.component;
 
-import com.ua.erent.module.core.account.auth.di.AuthComponent;
+import com.ua.erent.module.core.app.AppComponent;
 import com.ua.erent.module.core.di.scopes.ActivityScope;
 import com.ua.erent.module.core.presentation.mvp.core.IMVPComponent;
 import com.ua.erent.module.core.presentation.mvp.module.TestModule;
@@ -15,7 +15,7 @@ import dagger.Component;
  * </p>
  * Created by Максим on 10/11/2016.
  */
-@Component(dependencies = {AuthComponent.class}, modules = {TestModule.class})
+@Component(dependencies = {AppComponent.class}, modules = {TestModule.class})
 @ActivityScope
 public interface TestComponent extends IMVPComponent<MainActivity, ITestPresenter> {
 

@@ -1,8 +1,8 @@
 package com.ua.erent.module.core.account.auth.domain.api.auth;
 
-import com.ua.erent.module.core.account.auth.bo.Session;
-import com.ua.erent.module.core.account.auth.vo.SignInCredentials;
-import com.ua.erent.module.core.account.auth.vo.SignUpCredentials;
+import com.ua.erent.module.core.account.auth.domain.bo.Session;
+import com.ua.erent.module.core.account.auth.domain.vo.SignInCredentials;
+import com.ua.erent.module.core.account.auth.domain.vo.SignUpCredentials;
 
 import org.jetbrains.annotations.NotNull;
 
