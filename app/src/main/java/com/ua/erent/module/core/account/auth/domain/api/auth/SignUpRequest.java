@@ -1,4 +1,4 @@
-package com.ua.erent.module.core.account.auth.domain.api;
+package com.ua.erent.module.core.account.auth.domain.api.auth;
 
 import com.google.gson.annotations.SerializedName;
 

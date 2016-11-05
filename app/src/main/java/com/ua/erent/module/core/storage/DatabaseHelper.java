@@ -1,4 +1,4 @@
-package com.ua.erent.module.core.account.auth.domain.api.db;
+package com.ua.erent.module.core.storage;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -7,6 +7,7 @@ import android.util.Log;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import com.ua.erent.module.core.account.auth.domain.session.storage.SessionPO;
 
 import java.sql.SQLException;
 
@@ -14,7 +15,7 @@ import java.sql.SQLException;
  * Created by Максим on 10/30/2016.
  */
 
-public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
+public final class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String TAG = DatabaseHelper.class.getSimpleName();
 
@@ -50,6 +51,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void close() {
         super.close();
+    }
+
+    public void clear(Class<?> cl) {
+
+        try {
+            TableUtils.clearTable(getConnectionSource(), cl);
+        } catch (final SQLException e) {
+            Log.e(TAG, "exception while clearing table", e);
+            close();
+            throw new RuntimeException(e);
+        }
     }
 
 }

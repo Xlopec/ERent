@@ -2,7 +2,7 @@ package com.ua.erent.module.core.presentation.mvp.model;
 
 import com.ua.erent.module.core.account.auth.bo.Session;
 import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
-import com.ua.erent.module.core.account.auth.domain.ILoginCallback;
+import com.ua.erent.module.core.init.IInitCallback;
 import com.ua.erent.module.core.account.auth.vo.SignInCredentials;
 import com.ua.erent.module.core.presentation.mvp.model.interfaces.ILoginModel;
 
@@ -31,16 +31,16 @@ public final class LoginModel implements ILoginModel {
     @Override
     public String getLastLogin() {
         final Session session = authHandler.getSession();
-        return session == null ? null : session.getLogin();
+        return session == null ? null : session.getUsername();
     }
 
     @Override
-    public void login(@NotNull ILoginCallback callback) {
+    public void login(@NotNull IInitCallback callback) {
         authHandler.login(callback);
     }
 
     @Override
-    public void login(String login, String password, ILoginCallback callback) {
+    public void login(String login, String password, IInitCallback callback) {
         authHandler.login(new SignInCredentials(login, password), callback);
     }
 

@@ -1,7 +1,7 @@
 package com.ua.erent.module.core.account.auth.di;
 
-import com.ua.erent.module.core.account.auth.domain.init.InitializationManager;
-import com.ua.erent.module.core.account.auth.domain.init.InitializationManagerImp;
+import com.ua.erent.module.core.init.InitializationManager;
+import com.ua.erent.module.core.init.InitializationManagerImp;
 import com.ua.erent.module.core.util.Initializeable;
 
 import java.util.Collection;

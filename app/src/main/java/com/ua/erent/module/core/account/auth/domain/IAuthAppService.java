@@ -3,6 +3,7 @@ package com.ua.erent.module.core.account.auth.domain;
 import com.ua.erent.module.core.account.auth.bo.Session;
 import com.ua.erent.module.core.account.auth.vo.SignInCredentials;
 import com.ua.erent.module.core.account.auth.vo.SignUpCredentials;
+import com.ua.erent.module.core.init.IInitCallback;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +26,7 @@ public interface IAuthAppService {
      * @param credentials credentials to log with
      * @param callback    callback to handle signIn process
      */
-    void login(@NotNull SignInCredentials credentials, @NotNull ILoginCallback callback);
+    void login(@NotNull SignInCredentials credentials, @NotNull IInitCallback callback);
 
     /**
      * Processes sign in action. Note, that in order to use this method session
@@ -35,7 +36,7 @@ public interface IAuthAppService {
      *
      * @param callback callback to handle signIn process
      */
-    void login(@NotNull ILoginCallback callback);
+    void login(@NotNull IInitCallback callback);
 
     /**
      * Processes logout action. This action involves destroying of current session,

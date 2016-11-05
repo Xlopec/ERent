@@ -4,10 +4,6 @@
 
     <string name="err_app_crash">E-Rent has crashed, please, send error report</string>
 
-    <!-- Validation -->
-    <string name="regex_username">"^([_A-Za-z0-9-\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,}))|(\\w{5,20})$"</string>
-    <string name="regex_password">"^\\w{5,20}$"</string>
-
     <!-- Fonts -->
     <string name="font_name_fontawesome">fontawesome</string>
     <string name="font_name_source_sans_pro">SourceSansPro</string>

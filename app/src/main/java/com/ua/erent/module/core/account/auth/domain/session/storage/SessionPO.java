@@ -1,4 +1,4 @@
-package com.ua.erent.module.core.account.auth.domain.api.db;
+package com.ua.erent.module.core.account.auth.domain.session.storage;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
@@ -15,29 +15,29 @@ public final class SessionPO {
     public static final String TOKEN_COLUMN = "token";
     public static final String TOKEN_TYPE = "tokenType";
 
-    @DatabaseField(id = true, index = true, columnName = ID_COLUMN, dataType = DataType.INTEGER, canBeNull = false)
-    private int id;
+    @DatabaseField(id = true, index = true, columnName = ID_COLUMN, dataType = DataType.LONG)
+    private long id;
 
-    @DatabaseField(columnName = LOGIN_COLUMN, dataType = DataType.STRING, canBeNull = false)
+    @DatabaseField(columnName = LOGIN_COLUMN, dataType = DataType.STRING, canBeNull = false, throwIfNull = true)
     private String login;
 
-    @DatabaseField(columnName = TOKEN_COLUMN, dataType = DataType.STRING, canBeNull = false)
+    @DatabaseField(columnName = TOKEN_COLUMN, dataType = DataType.STRING, canBeNull = false, throwIfNull = true)
     private String token;
 
-    @DatabaseField(columnName = TOKEN_TYPE, dataType = DataType.STRING, canBeNull = false)
+    @DatabaseField(columnName = TOKEN_TYPE, dataType = DataType.STRING, canBeNull = false, throwIfNull = true)
     private String tokenType;
 
     public SessionPO() {
     }
 
-    public SessionPO(int id, String login, String token, String tokenType) {
+    public SessionPO(long id, String login, String token, String tokenType) {
         this.id = id;
         this.login = login;
         this.token = token;
         this.tokenType = tokenType;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

@@ -4,55 +4,54 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
-import java.util.Locale;
+import com.ua.erent.module.core.account.auth.vo.UserID;
+
+import dagger.internal.Preconditions;
 
 /**
  * <p>
- *     Business-object, describing app session
+ * Business-object, describing app session
  * </p>
  * Created by Максим on 10/14/2016.
  */
 
 public final class Session implements Parcelable {
 
-    private final String login;
-    private final int userId;
+    private final UserID userId;
+    private final String username;
     private final String token;
     private final String tokenType;
 
-    public Session(String login, String token, String tokenType, int userId) {
+    public Session(UserID userId, String token, String username, String tokenType) {
 
-        if(TextUtils.isEmpty(login))
-            throw new IllegalArgumentException(String.format("illegal signIn, was %s", login));
+        if(TextUtils.isEmpty(username))
+            throw new IllegalArgumentException(String.format("illegal username, was %s", username));
 
-        if(TextUtils.isEmpty(tokenType))
+        if (TextUtils.isEmpty(tokenType))
             throw new IllegalArgumentException(String.format("illegal token type, was %s", tokenType));
 
-        if(TextUtils.isEmpty(token))
+        if (TextUtils.isEmpty(token))
             throw new IllegalArgumentException(String.format("illegal token, was %s", token));
 
-        if(userId < 1)
-            throw new IllegalArgumentException(String.format(Locale.getDefault(), "illegal user id %d", userId));
-
-        this.login = login;
-        this.token = token;
+        this.token = String.format("Bearer %s", token);
         this.tokenType = tokenType;
-        this.userId = userId;
+        this.userId = Preconditions.checkNotNull(userId);
+        this.username = username;
     }
 
     private Session(Parcel in) {
-        login = in.readString();
         token = in.readString();
         tokenType = in.readString();
-        userId = in.readInt();
+        userId = in.readParcelable(UserID.class.getClassLoader());
+        username = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(login);
         dest.writeString(token);
         dest.writeString(tokenType);
-        dest.writeInt(userId);
+        dest.writeParcelable(userId, flags);
+        dest.writeString(username);
     }
 
     @Override
@@ -72,10 +71,6 @@ public final class Session implements Parcelable {
         }
     };
 
-    public String getLogin() {
-        return login;
-    }
-
     public String getToken() {
         return token;
     }
@@ -88,8 +83,12 @@ public final class Session implements Parcelable {
         return TextUtils.isEmpty(getToken());
     }
 
-    public int getUserId() {
+    public UserID getUserId() {
         return userId;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     @Override
@@ -99,8 +98,8 @@ public final class Session implements Parcelable {
 
         Session session = (Session) o;
 
-        if (userId != session.userId) return false;
-        if (!login.equals(session.login)) return false;
+        if (!userId.equals(session.userId)) return false;
+        if (!username.equals(session.username)) return false;
         if (!token.equals(session.token)) return false;
         return tokenType.equals(session.tokenType);
 
@@ -108,8 +107,8 @@ public final class Session implements Parcelable {
 
     @Override
     public int hashCode() {
-        int result = login.hashCode();
-        result = 31 * result + userId;
+        int result = userId.hashCode();
+        result = 31 * result + username.hashCode();
         result = 31 * result + token.hashCode();
         result = 31 * result + tokenType.hashCode();
         return result;
@@ -118,8 +117,8 @@ public final class Session implements Parcelable {
     @Override
     public String toString() {
         return "Session{" +
-                "login='" + login + '\'' +
-                ", userId=" + userId +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
                 ", token='" + token + '\'' +
                 ", tokenType='" + tokenType + '\'' +
                 '}';

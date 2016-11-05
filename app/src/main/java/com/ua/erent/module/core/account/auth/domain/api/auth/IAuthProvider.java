@@ -1,4 +1,4 @@
-package com.ua.erent.module.core.account.auth.domain.api;
+package com.ua.erent.module.core.account.auth.domain.api.auth;
 
 import com.ua.erent.module.core.account.auth.bo.Session;
 import com.ua.erent.module.core.account.auth.vo.SignInCredentials;

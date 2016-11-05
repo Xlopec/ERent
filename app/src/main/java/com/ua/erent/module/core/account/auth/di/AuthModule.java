@@ -3,21 +3,20 @@ package com.ua.erent.module.core.account.auth.di;
 import android.app.Activity;
 import android.app.Application;
 
+import com.ua.erent.module.core.account.auth.bo.Session;
 import com.ua.erent.module.core.account.auth.domain.AuthAppService;
 import com.ua.erent.module.core.account.auth.domain.AuthDomain;
 import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
 import com.ua.erent.module.core.account.auth.domain.IAuthDomain;
-import com.ua.erent.module.core.account.auth.domain.api.AuthProvider;
-import com.ua.erent.module.core.account.auth.domain.api.IAuthProvider;
-import com.ua.erent.module.core.account.auth.domain.api.db.DatabaseHelper;
-import com.ua.erent.module.core.account.auth.domain.init.InitializationManager;
-import com.ua.erent.module.core.account.auth.domain.session.ISessionManager;
-import com.ua.erent.module.core.account.auth.domain.session.ISessionStorage;
-import com.ua.erent.module.core.account.auth.domain.session.SessionManager;
+import com.ua.erent.module.core.account.auth.domain.api.auth.AuthProvider;
+import com.ua.erent.module.core.account.auth.domain.api.auth.IAuthProvider;
 import com.ua.erent.module.core.account.auth.domain.session.SessionStorage;
 import com.ua.erent.module.core.app.di.AppModule;
+import com.ua.erent.module.core.init.InitializationManager;
 import com.ua.erent.module.core.networking.module.NetworkingModule;
 import com.ua.erent.module.core.networking.service.IPacketInterceptService;
+import com.ua.erent.module.core.storage.DatabaseHelper;
+import com.ua.erent.module.core.storage.ISingleItemStorage;
 import com.ua.erent.module.core.util.Initializeable;
 
 import java.util.Collection;
@@ -48,35 +47,31 @@ public final class AuthModule {
 
     @Provides
     @Singleton
-    ISessionStorage provideSessionStorage(Application app, DatabaseHelper helper) {
+    ISingleItemStorage<Session> provideSessionStorage(Application app, DatabaseHelper helper) {
         return new SessionStorage(app, helper);
     }
 
     @Provides
     @Singleton
-    ISessionManager provideSessionManager(ISessionStorage sessionStorage) {
-        return new SessionManager(sessionStorage);
-    }
-
-    @Provides
-    @Singleton
-    IAuthProvider provideSessionProvider(Retrofit retrofit) {
+    IAuthProvider provideAuthProvider(Retrofit retrofit) {
         return new AuthProvider(retrofit);
     }
 
     @Provides
     @Singleton
-    IAuthDomain provideAuthDomain(Class<? extends Activity> loginActivity, Application app, ISessionManager sessionManager,
+    IAuthDomain provideAuthDomain(Class<? extends Activity> loginActivity, Application app,
+                                  ISingleItemStorage<Session> sessionStorage,
                                   IAuthProvider provider, InitializationManager initializationManager,
                                   Collection<? extends Initializeable> initializeables) {
-        return new AuthDomain(loginActivity, app, sessionManager, provider, initializationManager, initializeables);
+        return new AuthDomain(loginActivity, app, sessionStorage, provider, initializationManager, initializeables);
     }
 
     @Provides
     @Singleton
-    IAuthAppService provideAuthHandler(IPacketInterceptService interceptService, ISessionManager sessionManager,
+    IAuthAppService provideAuthHandler(IPacketInterceptService interceptService,
+                                       ISingleItemStorage<Session> storage,
                                        IAuthDomain domain) {
-        return new AuthAppService(interceptService, sessionManager, domain);
+        return new AuthAppService(interceptService, storage, domain);
     }
 
 }

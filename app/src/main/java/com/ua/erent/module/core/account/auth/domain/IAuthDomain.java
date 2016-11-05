@@ -1,7 +1,9 @@
 package com.ua.erent.module.core.account.auth.domain;
 
+import com.ua.erent.module.core.account.auth.bo.Session;
 import com.ua.erent.module.core.account.auth.vo.SignInCredentials;
 import com.ua.erent.module.core.account.auth.vo.SignUpCredentials;
+import com.ua.erent.module.core.init.IInitCallback;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +23,7 @@ public interface IAuthDomain {
      * @param credentials credentials to signIn with
      * @param callback    callback to observe result
      */
-    void signIn(@NotNull SignInCredentials credentials, @NotNull ILoginCallback callback);
+    void signIn(@NotNull SignInCredentials credentials, @NotNull IInitCallback callback);
 
     /**
      * Processes sign in action. Note, that in order to use this method session
@@ -30,7 +32,7 @@ public interface IAuthDomain {
      *
      * @param callback callback to handle signIn process
      */
-    void signIn(@NotNull ILoginCallback callback);
+    void signIn(@NotNull IInitCallback callback);
 
     /**
      * Completes signIn procedure
@@ -45,5 +47,7 @@ public interface IAuthDomain {
      * a signIn screen will be open
      */
     void logout();
+
+    Observable<Session> getSessionChangedObservable();
 
 }

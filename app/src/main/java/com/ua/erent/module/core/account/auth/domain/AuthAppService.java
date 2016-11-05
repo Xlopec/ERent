@@ -1,11 +1,12 @@
 package com.ua.erent.module.core.account.auth.domain;
 
 import com.ua.erent.module.core.account.auth.bo.Session;
-import com.ua.erent.module.core.account.auth.domain.session.ISessionManager;
 import com.ua.erent.module.core.account.auth.vo.SignInCredentials;
 import com.ua.erent.module.core.account.auth.vo.SignUpCredentials;
+import com.ua.erent.module.core.init.IInitCallback;
 import com.ua.erent.module.core.networking.service.IPacketInterceptService;
 import com.ua.erent.module.core.networking.util.HTTP_CODE;
+import com.ua.erent.module.core.storage.ISingleItemStorage;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -20,13 +21,13 @@ import rx.Observable;
 public final class AuthAppService implements IAuthAppService {
 
     private final IAuthDomain domain;
-    private final ISessionManager sessionManager;
+    private final ISingleItemStorage<Session> storage;
 
     @Inject
-    public AuthAppService(IPacketInterceptService interceptService, ISessionManager sessionManager,
+    public AuthAppService(IPacketInterceptService interceptService, ISingleItemStorage<Session> storage,
                           IAuthDomain domain) {
 
-        this.sessionManager = sessionManager;
+        this.storage = storage;
         this.domain = domain;
 
         interceptService.addResponseObserver(response -> {
@@ -41,12 +42,12 @@ public final class AuthAppService implements IAuthAppService {
     }
 
     @Override
-    public void login(@NotNull SignInCredentials credentials, @NotNull ILoginCallback callback) {
+    public void login(@NotNull SignInCredentials credentials, @NotNull IInitCallback callback) {
         domain.signIn(credentials, callback);
     }
 
     @Override
-    public void login(@NotNull ILoginCallback callback) {
+    public void login(@NotNull IInitCallback callback) {
         domain.signIn(callback);
     }
 
@@ -62,7 +63,7 @@ public final class AuthAppService implements IAuthAppService {
 
     @Override
     public Observable<Session> getSessionObs() {
-        return sessionManager.getSessionObs();
+        return domain.getSessionChangedObservable();
     }
 
     @Override
@@ -73,7 +74,7 @@ public final class AuthAppService implements IAuthAppService {
 
     @Override
     public Session getSession() {
-        return sessionManager.getSession();
+        return storage.getItem();
     }
 
 }

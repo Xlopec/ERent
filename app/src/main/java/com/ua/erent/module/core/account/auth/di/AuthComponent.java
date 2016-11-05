@@ -1,11 +1,11 @@
 package com.ua.erent.module.core.account.auth.di;
 
-import com.ua.erent.module.core.account.auth.domain.IAuthDomain;
+import com.ua.erent.module.core.account.auth.bo.Session;
 import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
-import com.ua.erent.module.core.account.auth.domain.api.IAuthProvider;
-import com.ua.erent.module.core.account.auth.domain.session.ISessionManager;
-import com.ua.erent.module.core.account.auth.domain.session.ISessionStorage;
+import com.ua.erent.module.core.account.auth.domain.IAuthDomain;
+import com.ua.erent.module.core.account.auth.domain.api.auth.IAuthProvider;
 import com.ua.erent.module.core.networking.service.IPacketInterceptService;
+import com.ua.erent.module.core.storage.ISingleItemStorage;
 
 import javax.inject.Singleton;
 
@@ -20,9 +20,7 @@ public interface AuthComponent {
 
     IPacketInterceptService getInterceptService();
 
-    ISessionStorage getSessionStorage();
-
-    ISessionManager getSessionManager();
+    ISingleItemStorage<Session> getSessionStorage();
 
     IAuthProvider getSessionProvider();
 

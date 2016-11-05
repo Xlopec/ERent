@@ -14,24 +14,20 @@
     <application
         android:name=".module.core.app.AndroidApplication"
         android:allowBackup="true"
+        android:alwaysRetainTaskState="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:launchMode="singleInstance"
         android:supportsRtl="true"
         android:theme="@style/MyTheme">
         <activity android:name=".module.core.presentation.mvp.view.NextActivity" />
-        <activity
-            android:name=".module.core.presentation.mvp.view.MainActivity"
-            android:alwaysRetainTaskState="true"
-            android:launchMode="singleTask" >
+        <activity android:name=".module.core.presentation.mvp.view.MainActivity">
             <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>-->
-            </activity>
-        <activity
-            android:name=".module.core.presentation.mvp.view.InitialScreenActivity"
-            android:alwaysRetainTaskState="true"
-            android:launchMode="singleTask">
+        </activity>
+        <activity android:name=".module.core.presentation.mvp.view.InitialScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

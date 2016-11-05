@@ -19,7 +19,7 @@ public final class SignInCredentials {
         this.password = Preconditions.checkNotNull(password);
     }
 
-    public String getLogin() {
+    public String getUsername() {
         return login;
     }
 

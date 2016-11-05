@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
-import com.ua.erent.module.core.account.auth.domain.ILoginCallback;
+import com.ua.erent.module.core.init.IInitCallback;
 import com.ua.erent.module.core.presentation.mvp.model.interfaces.ILoginModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ILoginPresenter;
 import com.ua.erent.module.core.presentation.mvp.view.interfaces.IInitialScreenView;
@@ -35,11 +35,11 @@ public final class LoginPresenter extends ILoginPresenter {
     private IInitialScreenView.NavigationListener callback;
     private final Context context;
 
-    private class LoginCallbackImp implements ILoginCallback {
+    private class InitCallbackImp implements IInitCallback {
 
         private final Subscriber<? super String> subscriber;
 
-        public LoginCallbackImp(Subscriber<? super String> subscriber) {
+        public InitCallbackImp(Subscriber<? super String> subscriber) {
             this.subscriber = subscriber;
         }
 
@@ -56,8 +56,12 @@ public final class LoginPresenter extends ILoginPresenter {
 
                 final Intent intent = new Intent(getView().getActivity(), MainActivity.class);
 
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+               // intent.setAction(Intent.ACTION_MAIN);
+               // intent.addCategory(Intent.CATEGORY_LAUNCHER);
+               // intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                       | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 getView().hideProgressView();
                 getView().startActivity(intent);
                 getView().getActivity().finish();
@@ -126,7 +130,7 @@ public final class LoginPresenter extends ILoginPresenter {
 
             @Override
             public void call(Subscriber<? super String> subscriber) {
-                model.login(login, password, new LoginCallbackImp(subscriber));
+                model.login(login, password, new InitCallbackImp(subscriber));
             }
         });
     }
@@ -151,7 +155,7 @@ public final class LoginPresenter extends ILoginPresenter {
 
         if(model.isSessionAlive()) {
             view.bindToProgressView(Observable.create(subscriber -> {
-                model.login(new LoginCallbackImp(subscriber));
+                model.login(new InitCallbackImp(subscriber));
             }));
         }
     }

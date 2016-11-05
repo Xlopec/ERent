@@ -6,7 +6,10 @@ import com.ua.erent.BuildConfig;
 import com.ua.erent.module.core.account.auth.di.AuthComponent;
 import com.ua.erent.module.core.account.auth.di.AuthModule;
 import com.ua.erent.module.core.account.auth.di.DaggerAuthComponent;
+import com.ua.erent.module.core.account.auth.di.DaggerUserComponent;
 import com.ua.erent.module.core.account.auth.di.InitModule;
+import com.ua.erent.module.core.account.auth.di.UserComponent;
+import com.ua.erent.module.core.account.auth.di.UserModule;
 import com.ua.erent.module.core.app.di.AppComponent;
 import com.ua.erent.module.core.app.di.AppModule;
 import com.ua.erent.module.core.app.di.DaggerAppComponent;
@@ -85,6 +88,7 @@ final class AppConfigComposer extends AbstractConfigComposer {
         final AuthModule authModule = new AuthModule(InitialScreenActivity.class);
         final LoginModule loginModule = new LoginModule(application);
         final InitialScreenModule initialScreenModule = new InitialScreenModule();
+        final UserModule userModule = new UserModule();
 
         final RetrofitConfigModule.Builder retrofitBuilder = new RetrofitConfigModule.Builder();
         final Retrofit retrofit = retrofitBuilder.setInterceptService(DaggerBaseNetworkingComponent.builder().
@@ -101,6 +105,9 @@ final class AppConfigComposer extends AbstractConfigComposer {
 
         final AuthComponent authComponent = DaggerAuthComponent.builder().authModule(authModule).
                 appModule(appModule).networkingModule(networkingModule).initModule(initModule).build();
+        final UserComponent userComponent = DaggerUserComponent.builder().userModule(userModule)
+                .appModule(appModule).authModule(authModule).baseNetworkingModule(baseNetworkingModule)
+                .networkingModule(networkingModule).initModule(initModule).build();
 
         // signUp target dependency inject modules
         final IBuilder<InjectConfigModule> injectModuleBuilder = new InjectConfigModule.Builder()

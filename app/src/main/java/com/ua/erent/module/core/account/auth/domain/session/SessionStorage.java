@@ -1,11 +1,8 @@
 package com.ua.erent.module.core.account.auth.domain.session;
 
-import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
@@ -13,10 +10,11 @@ import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.ReferenceObjectCache;
 import com.j256.ormlite.table.TableUtils;
 import com.ua.erent.module.core.account.auth.bo.Session;
-import com.ua.erent.module.core.account.auth.domain.api.db.DatabaseHelper;
-import com.ua.erent.module.core.account.auth.domain.api.db.SessionMapper;
-import com.ua.erent.module.core.account.auth.domain.api.db.SessionPO;
+import com.ua.erent.module.core.storage.DatabaseHelper;
+import com.ua.erent.module.core.account.auth.domain.session.storage.SessionMapper;
+import com.ua.erent.module.core.account.auth.domain.session.storage.SessionPO;
 import com.ua.erent.module.core.app.Constant;
+import com.ua.erent.module.core.storage.ISingleItemStorage;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -24,55 +22,19 @@ import java.sql.SQLException;
 
 import javax.inject.Inject;
 
-import rx.subjects.PublishSubject;
-
-public final class SessionStorage implements ISessionStorage {
+public final class SessionStorage implements ISingleItemStorage<Session> {
 
     private static final String TAG = SessionStorage.class.getSimpleName();
 
     private final AccountManager accountManager;
     private final DatabaseHelper helper;
-    private final PublishSubject<Session> sessionObservable;
-    private Session currentSession;
+    private Session cachedSession;
+    private boolean cleaned;
 
     @Inject
     public SessionStorage(Context context, DatabaseHelper helper) {
-
         this.helper = helper;
-
-        final BaseDaoImpl<SessionPO, Integer> dao = createDao();
-        final CloseableIterator<SessionPO> it = dao.iterator();
-
-        sessionObservable = PublishSubject.create();
-        accountManager = AccountManager.get(context.getApplicationContext());
-        SessionPO po = null;
-
-        do {
-            // while database has stored session po, move cursor
-            if (it.hasNext()) {
-
-                po = it.next();
-
-                final String token = accountManager
-                        .peekAuthToken(getAccountByName(po.getLogin()), Constant.ACCOUNT_TOKEN_TYPE);
-                // peek auth token, that was cached by account manager
-                if (token != null) {
-                    // token is still valid, session can be set
-                    currentSession = SessionMapper.toSession(po);
-                } else {
-                    // session token is invalid, clear table and continue
-                    try {
-                        TableUtils.clearTable(helper.getConnectionSource(), SessionPO.class);
-                    } catch (final SQLException e) {
-                        Log.e(TAG, "exception while clearing table", e);
-                        helper.close();
-                        throw new RuntimeException(e);
-                    }
-                    break;
-                }
-            }
-        } while (po != null && it.hasNext());
-        it.closeQuietly();
+        this.accountManager = AccountManager.get(context.getApplicationContext());
     }
 
     @Override
@@ -82,14 +44,16 @@ public final class SessionStorage implements ISessionStorage {
 
         synchronized (this) {
 
-            if ((account = getAccountByName(session.getLogin())) == null) {
+            if ((account = getAccountByName(session.getUsername())) == null) {
                 // account doesn't exist, create a new one
-                account = new Account(session.getLogin(), Constant.ACCOUNT_TYPE);
+                account = new Account(session.getUsername(), Constant.ACCOUNT_TYPE);
                 accountManager.addAccountExplicitly(account, null, null);
             }
 
             try {
                 createDao().createOrUpdate(SessionMapper.toPersistenceObject(session));
+                cachedSession = session;
+                cleaned = false;
             } catch (final SQLException e) {
                 Log.e(TAG, "exception while updating session table", e);
                 helper.close();
@@ -97,14 +61,13 @@ public final class SessionStorage implements ISessionStorage {
             }
             // reset auth token for a given account
             accountManager.setAuthToken(account, Constant.ACCOUNT_TOKEN_TYPE, session.getToken());
-            sessionObservable.onNext(session);
         }
     }
 
     @Override
     public void clear() {
 
-        final Session session = getSession();
+        final Session session = getItem();
 
         if (session != null) {
 
@@ -118,21 +81,22 @@ public final class SessionStorage implements ISessionStorage {
                 throw new RuntimeException(e);
             }
         }
+        cleaned = true;
     }
 
     @Override
-    public boolean hasSession() {
-        return getSession() != null;
+    public Session getItem() {
+
+        if(cachedSession == null && !cleaned) {
+            cachedSession = getSession();
+        }
+
+        return cachedSession;
     }
 
     @Override
-    public Session getSession() {
-        return currentSession;
-    }
-
-    @Override
-    public rx.Observable<Session> getSessionObs() {
-        return sessionObservable.asObservable();
+    public boolean hasItem() {
+        return getItem() != null;
     }
 
     private BaseDaoImpl<SessionPO, Integer> createDao() {
@@ -147,6 +111,44 @@ public final class SessionStorage implements ISessionStorage {
             helper.close();
             throw new RuntimeException(e);
         }
+    }
+
+    private Session getSession() {
+
+        final BaseDaoImpl<SessionPO, Integer> dao = createDao();
+        final CloseableIterator<SessionPO> it = dao.iterator();
+
+        SessionPO po = null;
+        Session session = null;
+
+        do {
+            // while database has stored session po, move cursor
+            if (it.hasNext()) {
+
+                po = it.next();
+
+                final String token = accountManager
+                        .peekAuthToken(getAccountByName(po.getLogin()), Constant.ACCOUNT_TOKEN_TYPE);
+                // peek auth token, that was cached by account manager
+                if (token != null) {
+                    // token is still valid, session can be set
+                    session = SessionMapper.toSession(po);
+                } else {
+                    // session token is invalid, clear table and continue
+                    try {
+                        TableUtils.clearTable(helper.getConnectionSource(), SessionPO.class);
+                    } catch (final SQLException e) {
+                        Log.e(TAG, "exception while clearing table", e);
+                        helper.close();
+                        throw new RuntimeException(e);
+                    }
+                    break;
+                }
+            }
+        } while (po != null && it.hasNext());
+
+        it.closeQuietly();
+        return session;
     }
 
     private Account getAccountByName(@NotNull String name) {

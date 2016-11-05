@@ -35,4 +35,8 @@ public final class ApiUtils {
         return createReqBody(APP_JSON, t);
     }
 
+    public static String toApiToken(@NotNull String token) {
+        return String.format("Bearer %s", Preconditions.checkNotNull(token));
+    }
+
 }

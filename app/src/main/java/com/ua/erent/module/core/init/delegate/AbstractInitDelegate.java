@@ -1,8 +1,8 @@
-package com.ua.erent.module.core.account.auth.domain.init.delegate;
+package com.ua.erent.module.core.init.delegate;
 
 import android.support.annotation.MainThread;
 
-import com.ua.erent.module.core.account.auth.domain.ILoginCallback;
+import com.ua.erent.module.core.init.IInitCallback;
 import com.ua.erent.module.core.util.Initializeable;
 
 import org.jetbrains.annotations.NotNull;
@@ -22,9 +22,9 @@ import dagger.internal.Preconditions;
 public abstract class AbstractInitDelegate {
 
     protected final Collection<? extends Initializeable> initializeables;
-    protected final ILoginCallback loginCallback;
+    protected final IInitCallback loginCallback;
 
-    AbstractInitDelegate(@NotNull ILoginCallback loginCallback, @NotNull Collection<? extends Initializeable> initializeables) {
+    AbstractInitDelegate(@NotNull IInitCallback loginCallback, @NotNull Collection<? extends Initializeable> initializeables) {
         this.loginCallback = Preconditions.checkNotNull(loginCallback);
         this.initializeables = Collections.unmodifiableCollection(initializeables);
     }

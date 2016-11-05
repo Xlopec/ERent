@@ -1,7 +1,6 @@
-package com.ua.erent.module.core.account.auth.domain.init;
+package com.ua.erent.module.core.init;
 
 import com.ua.erent.module.core.account.auth.bo.Session;
-import com.ua.erent.module.core.account.auth.domain.ILoginCallback;
 import com.ua.erent.module.core.util.Initializeable;
 
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +22,6 @@ public interface InitializationManager {
      *                 initialization progress
      */
     void initialize(@NotNull Session session, @NotNull Collection<? extends Initializeable> initializeables,
-                    @NotNull ILoginCallback callback);
+                    @NotNull IInitCallback callback);
 
 }

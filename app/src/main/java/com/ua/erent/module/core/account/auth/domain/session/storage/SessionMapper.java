@@ -1,6 +1,7 @@
-package com.ua.erent.module.core.account.auth.domain.api.db;
+package com.ua.erent.module.core.account.auth.domain.session.storage;
 
 import com.ua.erent.module.core.account.auth.bo.Session;
+import com.ua.erent.module.core.account.auth.vo.UserID;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -18,12 +19,12 @@ public final class SessionMapper {
 
     public static Session toSession(@NotNull SessionPO po) {
         Preconditions.checkNotNull(po);
-        return new Session(po.getLogin(), po.getToken(), po.getTokenType(), po.getId());
+        return new Session(new UserID(po.getId()), po.getToken(), po.getLogin(), po.getTokenType());
     }
 
     public static SessionPO toPersistenceObject(@NotNull Session session) {
         Preconditions.checkNotNull(session);
-        return new SessionPO(session.getUserId(), session.getLogin(), session.getToken(), session.getTokenType());
+        return new SessionPO(session.getUserId().getId(), session.getUsername(), session.getToken(), session.getTokenType());
     }
 
 }

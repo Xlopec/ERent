@@ -1,6 +1,6 @@
 package com.ua.erent.module.core.presentation.mvp.model.interfaces;
 
-import com.ua.erent.module.core.account.auth.domain.ILoginCallback;
+import com.ua.erent.module.core.init.IInitCallback;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -14,8 +14,8 @@ public interface ILoginModel {
 
     String getLastLogin();
 
-    void login(@NotNull ILoginCallback callback);
+    void login(@NotNull IInitCallback callback);
 
-    void login(String login, String password, ILoginCallback callback);
+    void login(String login, String password, IInitCallback callback);
 
 }

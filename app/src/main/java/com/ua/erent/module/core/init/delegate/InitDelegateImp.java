@@ -1,6 +1,6 @@
-package com.ua.erent.module.core.account.auth.domain.init.delegate;
+package com.ua.erent.module.core.init.delegate;
 
-import com.ua.erent.module.core.account.auth.domain.ILoginCallback;
+import com.ua.erent.module.core.init.IInitCallback;
 import com.ua.erent.module.core.util.Initializeable;
 
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +16,7 @@ final class InitDelegateImp extends AbstractInitDelegate {
     private int counter;
     private boolean failed;
 
-    InitDelegateImp(@NotNull ILoginCallback loginCallback, @NotNull Collection<? extends Initializeable> initializeables) {
+    InitDelegateImp(@NotNull IInitCallback loginCallback, @NotNull Collection<? extends Initializeable> initializeables) {
         super(loginCallback, initializeables);
         counter = 0;
         failed = false;

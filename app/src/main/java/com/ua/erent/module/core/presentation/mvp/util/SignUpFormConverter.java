@@ -25,7 +25,7 @@ public final class SignUpFormConverter {
         Preconditions.checkNotNull(form);
 
         final File avatarFile = form.getAvatarUri() == null ? null : new File(form.getAvatarUri().getPath());
-        return new SignUpCredentials.Builder(context)
+        return new SignUpCredentials.Builder()
                 .setAvatarImage(avatarFile)
                 .setEmail(form.getEmail())
                 .setUsername(form.getUsername())

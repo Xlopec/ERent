@@ -6,11 +6,12 @@ import android.app.Application;
 import android.content.Intent;
 
 import com.ua.erent.module.core.account.auth.bo.Session;
-import com.ua.erent.module.core.account.auth.domain.api.IAuthProvider;
-import com.ua.erent.module.core.account.auth.domain.init.InitializationManager;
-import com.ua.erent.module.core.account.auth.domain.session.ISessionManager;
+import com.ua.erent.module.core.account.auth.domain.api.auth.IAuthProvider;
 import com.ua.erent.module.core.account.auth.vo.SignInCredentials;
 import com.ua.erent.module.core.account.auth.vo.SignUpCredentials;
+import com.ua.erent.module.core.init.IInitCallback;
+import com.ua.erent.module.core.init.InitializationManager;
+import com.ua.erent.module.core.storage.ISingleItemStorage;
 import com.ua.erent.module.core.util.Initializeable;
 
 import org.jetbrains.annotations.NotNull;
@@ -22,6 +23,7 @@ import javax.inject.Inject;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by Максим on 10/15/2016.
@@ -30,18 +32,19 @@ import rx.Subscriber;
 public final class AuthDomain implements IAuthDomain {
 
     private final Application application;
-    private final ISessionManager sessionManager;
+    private final ISingleItemStorage<Session> sessionStorage;
     private final IAuthProvider provider;
     private final InitializationManager initializationManager;
     private final Class<? extends Activity> loginActivity;
     private final Collection<? extends Initializeable> initializeables;
+    private final PublishSubject<Session> sessionPublishSubject;
 
-    private final class LoginCallbackWrapper implements ILoginCallback {
+    private final class InitCallbackWrapper implements IInitCallback {
 
-        private final ILoginCallback original;
+        private final IInitCallback original;
         private final Session session;
 
-        LoginCallbackWrapper(ILoginCallback original, Session session) {
+        InitCallbackWrapper(IInitCallback original, Session session) {
             this.original = original;
             this.session = session;
         }
@@ -53,7 +56,8 @@ public final class AuthDomain implements IAuthDomain {
 
         @Override
         public void onInitialized() {
-            sessionManager.setSession(session);
+            sessionStorage.store(session);
+            sessionPublishSubject.onNext(session);
             original.onInitialized();
         }
 
@@ -80,20 +84,22 @@ public final class AuthDomain implements IAuthDomain {
 
     @Inject
     public AuthDomain(Class<? extends Activity> loginActivity, Application application,
-                      ISessionManager sessionManager, IAuthProvider provider,
+                      ISingleItemStorage<Session> sessionStorage,
+                      IAuthProvider provider,
                       InitializationManager initializationManager,
                       Collection<? extends Initializeable> initializeables) {
 
         this.loginActivity = loginActivity;
         this.application = application;
-        this.sessionManager = sessionManager;
+        this.sessionStorage = sessionStorage;
         this.provider = provider;
         this.initializationManager = initializationManager;
         this.initializeables = Collections.unmodifiableCollection(initializeables);
+        this.sessionPublishSubject = PublishSubject.create();
     }
 
     @Override
-    public void signIn(@NotNull SignInCredentials credentials, @NotNull ILoginCallback callback) {
+    public void signIn(@NotNull SignInCredentials credentials, @NotNull IInitCallback callback) {
 
         callback.onPreExecute();
 
@@ -123,15 +129,15 @@ public final class AuthDomain implements IAuthDomain {
             public void onNext(Session session) {
                 unsubscribe();
                 initializationManager.
-                        initialize(session, initializeables, new LoginCallbackWrapper(callback, session));
+                        initialize(session, initializeables, new InitCallbackWrapper(callback, session));
             }
         });
     }
 
     @Override
-    public void signIn(@NotNull ILoginCallback callback) {
+    public void signIn(@NotNull IInitCallback callback) {
 
-        final Session session = sessionManager.getSession();
+        final Session session = sessionStorage.getItem();
 
         if(session == null || session.isExpired())
             throw new IllegalStateException("Session is not valid anymore");
@@ -139,7 +145,7 @@ public final class AuthDomain implements IAuthDomain {
         callback.onPreExecute();
 
         initializationManager.
-                initialize(session, initializeables, new LoginCallbackWrapper(callback, session));
+                initialize(session, initializeables, new InitCallbackWrapper(callback, session));
     }
 
     @Override
@@ -150,14 +156,19 @@ public final class AuthDomain implements IAuthDomain {
     @Override
     public void logout() {
         // destroy session, activities and tasks and open signIn activity
-        final Session session = sessionManager.getSession();
+        final Session session = sessionStorage.getItem();
         final Intent intent = new Intent(application, loginActivity);
 
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, session.getLogin());
+        intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, session.getUsername());
 
-        sessionManager.destroySession();
+        sessionStorage.clear();
         application.startActivity(intent);
+    }
+
+    @Override
+    public Observable<Session> getSessionChangedObservable() {
+        return sessionPublishSubject.asObservable();
     }
 
 }

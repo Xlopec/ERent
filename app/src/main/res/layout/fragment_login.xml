@@ -135,6 +135,7 @@
                     android:layout_marginBottom="10dp"
                     android:layout_marginTop="35dp"
                     android:background="@drawable/login_button"
+                    android:elevation="8dp"
                     android:text="Login"
                     android:textColor="#FFF" />
 
@@ -144,6 +145,7 @@
                     android:layout_height="60dp"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/login_button_vk"
+                    android:elevation="8dp"
                     android:text="Login with VK"
                     android:textColor="#FFF"
                     android:visibility="gone" />

@@ -1,6 +1,6 @@
-package com.ua.erent.module.core.account.auth.domain.init.delegate;
+package com.ua.erent.module.core.init.delegate;
 
-import com.ua.erent.module.core.account.auth.domain.ILoginCallback;
+import com.ua.erent.module.core.init.IInitCallback;
 import com.ua.erent.module.core.util.Initializeable;
 
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +22,7 @@ public final class InitDelegates {
      * @param loginCallback
      * @param initializeables @return
      */
-    public static AbstractInitDelegate createDelegate(@NotNull ILoginCallback loginCallback, @NotNull Collection<? extends Initializeable> initializeables) {
+    public static AbstractInitDelegate createDelegate(@NotNull IInitCallback loginCallback, @NotNull Collection<? extends Initializeable> initializeables) {
         return new InitDelegateImp(loginCallback, initializeables);
     }
 

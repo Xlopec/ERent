@@ -3,7 +3,7 @@ package com.ua.erent.module.core.app.di;
 import android.app.Application;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.ua.erent.module.core.account.auth.domain.api.db.DatabaseHelper;
+import com.ua.erent.module.core.storage.DatabaseHelper;
 import com.ua.erent.module.core.app.domain.AppInitManager;
 import com.ua.erent.module.core.app.domain.AppLifecycleManager;
 import com.ua.erent.module.core.app.domain.AppService;

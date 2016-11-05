@@ -1,15 +1,13 @@
 package com.ua.erent.module.core.account.auth.vo;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.ua.erent.R;
 import com.ua.erent.module.core.util.IBuilder;
+import com.ua.erent.module.core.util.validation.Regexes;
 
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.RegexValidator;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
@@ -29,19 +27,13 @@ public final class SignUpCredentials implements Parcelable {
 
     public static final class Builder implements IBuilder<SignUpCredentials> {
 
-        private final Context context;
         private String email;
         private String username;
         private String password;
         private String confPassword;
         private File avatarImage;
 
-        public Builder(@NotNull Context context) {
-            this.context = Preconditions.checkNotNull(context);
-        }
-
-        public Context getContext() {
-            return context;
+        public Builder() {
         }
 
         public File getAvatarImage() {
@@ -98,11 +90,9 @@ public final class SignUpCredentials implements Parcelable {
     private SignUpCredentials(Builder builder) {
         Preconditions.checkNotNull(builder);
 
-        final RegexValidator usernameValid =
-                new RegexValidator(builder.getContext().getString(R.string.regex_username), true);
+        final RegexValidator usernameValid = new RegexValidator(Regexes.SIGN_IN_USERNAME, true);
         final EmailValidator emailValidator = EmailValidator.getInstance();
-        final RegexValidator passwordValidator =
-                new RegexValidator(builder.getContext().getString(R.string.regex_password), true);
+        final RegexValidator passwordValidator = new RegexValidator(Regexes.PASSWORD, true);
 
         if (!usernameValid.isValid(builder.getUsername()))
             throw new IllegalArgumentException(String.format("Username %s is malformed", builder.getUsername()));

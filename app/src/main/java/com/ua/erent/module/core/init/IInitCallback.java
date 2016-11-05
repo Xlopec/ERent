@@ -1,4 +1,4 @@
-package com.ua.erent.module.core.account.auth.domain;
+package com.ua.erent.module.core.init;
 
 import com.ua.erent.module.core.util.Initializeable;
 
@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Created by Максим on 10/22/2016.
  */
-public interface ILoginCallback {
+public interface IInitCallback {
 
     /**
      * Called before initialization execution

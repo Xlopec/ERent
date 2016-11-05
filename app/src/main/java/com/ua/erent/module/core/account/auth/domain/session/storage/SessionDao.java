@@ -1,4 +1,4 @@
-package com.ua.erent.module.core.account.auth.domain.api.db;
+package com.ua.erent.module.core.account.auth.domain.session.storage;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.support.ConnectionSource;
