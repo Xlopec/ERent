@@ -1,7 +1,7 @@
 package com.ua.erent.module.core.account.auth.domain.session.storage;
 
 import com.ua.erent.module.core.account.auth.domain.bo.Session;
-import com.ua.erent.module.core.account.auth.domain.vo.UserID;
+import com.ua.erent.module.core.account.auth.user.domain.vo.UserID;
 
 import org.jetbrains.annotations.NotNull;
 

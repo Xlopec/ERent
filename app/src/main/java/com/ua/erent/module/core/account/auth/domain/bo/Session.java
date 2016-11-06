@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
-import com.ua.erent.module.core.account.auth.domain.vo.UserID;
+import com.ua.erent.module.core.account.auth.user.domain.vo.UserID;
 
 import dagger.internal.Preconditions;
 

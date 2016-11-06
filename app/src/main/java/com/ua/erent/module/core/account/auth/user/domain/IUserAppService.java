@@ -1,7 +1,7 @@
 package com.ua.erent.module.core.account.auth.user.domain;
 
-import com.ua.erent.module.core.account.auth.domain.vo.Profile;
-import com.ua.erent.module.core.account.auth.domain.vo.UserID;
+import com.ua.erent.module.core.account.auth.user.domain.vo.PasswordForm;
+import com.ua.erent.module.core.account.auth.user.domain.vo.UserForm;
 import com.ua.erent.module.core.account.auth.user.domain.bo.User;
 
 import org.jetbrains.annotations.NotNull;
@@ -14,9 +14,11 @@ import rx.Observable;
 
 public interface IUserAppService {
 
-    Observable<User> fetchUserProfile(@NotNull UserID id);
+    Observable<User> fetchUserProfile();
 
-    Observable<User> updateUserProfile(@NotNull Profile userProfile);
+    Observable<User> updateUserProfile(@NotNull UserForm userUserForm);
+
+    Observable<Void> changePassword(@NotNull PasswordForm form);
 
     User getCachedProfile();
 

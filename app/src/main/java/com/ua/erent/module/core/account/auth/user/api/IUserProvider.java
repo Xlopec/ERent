@@ -1,8 +1,9 @@
 package com.ua.erent.module.core.account.auth.user.api;
 
 import com.ua.erent.module.core.account.auth.domain.bo.Session;
+import com.ua.erent.module.core.account.auth.user.domain.vo.PasswordForm;
+import com.ua.erent.module.core.account.auth.user.domain.vo.UserForm;
 import com.ua.erent.module.core.account.auth.user.domain.bo.User;
-import com.ua.erent.module.core.account.auth.domain.vo.UserID;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -17,6 +18,10 @@ import rx.Observable;
 
 public interface IUserProvider {
 
-    Observable<User> fetchUserProfile(@NotNull Session session, @NotNull UserID id);
+    Observable<User> fetchUserProfile(@NotNull Session session);
+
+    Observable<Void> updateUserProfile(@NotNull Session session, @NotNull UserForm userForm);
+
+    Observable<Void> changePassword(@NotNull Session session, @NotNull PasswordForm form);
 
 }

@@ -4,7 +4,7 @@ import com.ua.erent.BuildConfig;
 import com.ua.erent.module.core.account.auth.domain.bo.Session;
 import com.ua.erent.module.core.account.auth.domain.vo.SignInCredentials;
 import com.ua.erent.module.core.account.auth.domain.vo.SignUpCredentials;
-import com.ua.erent.module.core.account.auth.domain.vo.UserID;
+import com.ua.erent.module.core.account.auth.user.domain.vo.UserID;
 import com.ua.erent.module.core.app.Constant;
 
 import org.jetbrains.annotations.NotNull;

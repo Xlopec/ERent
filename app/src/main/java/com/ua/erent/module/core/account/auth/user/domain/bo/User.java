@@ -1,8 +1,8 @@
 package com.ua.erent.module.core.account.auth.user.domain.bo;
 
-import com.ua.erent.module.core.account.auth.domain.vo.ContactInfo;
-import com.ua.erent.module.core.account.auth.domain.vo.FullName;
-import com.ua.erent.module.core.account.auth.domain.vo.UserID;
+import com.ua.erent.module.core.account.auth.user.domain.vo.ContactInfo;
+import com.ua.erent.module.core.account.auth.user.domain.vo.FullName;
+import com.ua.erent.module.core.account.auth.user.domain.vo.UserID;
 import com.ua.erent.module.core.util.IBuilder;
 
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +29,12 @@ public final class User {
         private ContactInfo contactInfo;
 
         public Builder() {
+        }
+
+        public Builder(@NotNull User user) {
+            setId(user.getId())
+                    .setFullName(user.getFullName())
+                    .setContactInfo(user.getContactInfo());
         }
 
         public final UserID getId() {

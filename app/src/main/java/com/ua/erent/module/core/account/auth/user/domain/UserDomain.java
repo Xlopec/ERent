@@ -1,11 +1,13 @@
 package com.ua.erent.module.core.account.auth.user.domain;
 
-import com.ua.erent.module.core.account.auth.domain.bo.Session;
 import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
+import com.ua.erent.module.core.account.auth.domain.bo.Session;
 import com.ua.erent.module.core.account.auth.user.api.IUserProvider;
-import com.ua.erent.module.core.account.auth.domain.vo.Profile;
-import com.ua.erent.module.core.account.auth.domain.vo.UserID;
 import com.ua.erent.module.core.account.auth.user.domain.bo.User;
+import com.ua.erent.module.core.account.auth.user.domain.vo.ContactInfo;
+import com.ua.erent.module.core.account.auth.user.domain.vo.FullName;
+import com.ua.erent.module.core.account.auth.user.domain.vo.PasswordForm;
+import com.ua.erent.module.core.account.auth.user.domain.vo.UserForm;
 import com.ua.erent.module.core.app.domain.ComponentKind;
 import com.ua.erent.module.core.app.domain.interfaces.IAppLifecycleManager;
 import com.ua.erent.module.core.storage.ISingleItemStorage;
@@ -16,7 +18,9 @@ import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.internal.Preconditions;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -42,17 +46,42 @@ public final class UserDomain implements IUserDomain, IAppLifecycleManager.IStat
     }
 
     @Override
-    public Observable<User> fetchUserProfile(@NotNull UserID id) {
+    public Observable<User> fetchUserProfile() {
 
         if (!authService.isSessionAlive())
-            throw new IllegalStateException("session expired");
+            throw new IllegalStateException(String.format("%s session expired", getClass()));
 
-        return fetchUserProfile(id, authService.getSession());
+        return fetchUserProfile(authService.getSession());
     }
 
     @Override
-    public Observable<User> updateUserProfile(@NotNull Profile userProfile) {
-        return null;
+    public Observable<User> updateUserProfile(@NotNull UserForm userForm) {
+
+        Preconditions.checkNotNull(userForm, "update form == null");
+
+        if (!authService.isSessionAlive())
+            throw new IllegalStateException(String.format("%s session expired", getClass()));
+
+        return userProvider.updateUserProfile(authService.getSession(), userForm)
+                .flatMap(v -> {
+
+                    final User user = storage.getItem();
+                    User updated = null;
+
+                    if (user != null) {
+                        // updates user by applying update form
+                        updated = new User.Builder(user)
+                                .setContactInfo(new ContactInfo(userForm.getEmail()))
+                                .setFullName(new FullName(userForm.getUsername()))
+                                .build();
+
+                        if (!user.equals(updated)) {
+                            storage.store(updated);
+                            userChangedPublisher.onNext(updated);
+                        }
+                    }
+                    return Observable.just(updated);
+                }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -66,10 +95,19 @@ public final class UserDomain implements IUserDomain, IAppLifecycleManager.IStat
     }
 
     @Override
+    public Observable<Void> changePassword(@NotNull PasswordForm form) {
+
+        if (!authService.isSessionAlive())
+            throw new IllegalStateException(String.format("%s session expired", getClass()));
+
+        Preconditions.checkNotNull(form);
+        return userProvider.changePassword(authService.getSession(), form);
+    }
+
+    @Override
     public Observable<Initializeable> initialize(@NotNull Session session) {
         // load user profile
-        return fetchUserProfile(session.getUserId(), session)
-                .flatMap(val -> Observable.just(UserDomain.this));
+        return fetchUserProfile(session).flatMap(val -> Observable.just(UserDomain.this));
     }
 
     @Override
@@ -93,26 +131,30 @@ public final class UserDomain implements IUserDomain, IAppLifecycleManager.IStat
         // nothing
     }
 
-    private Observable<User> fetchUserProfile(UserID id, Session session) {
+    private Observable<User> fetchUserProfile(Session session) {
 
-        return userProvider.fetchUserProfile(session, id)
+        return userProvider.fetchUserProfile(session)
+                .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(user -> {
-                    // user which was logged in and loading profile
-                    // are same ones
-                    if (user.getId().equals(session.getUserId())) {
 
-                        User currentUser = null;
+                    if (!user.getId().equals(session.getUserId()))
+                        // user which was logged and which loading profile
+                        // should have be same ids
+                        throw new IllegalArgumentException(
+                                String.format("invalid user id, session user id %s, actual %s",
+                                        user.getId(), session.getUserId()));
 
-                        if (storage.hasItem()) {
-                            currentUser = storage.getItem();
-                        }
+                    User currentUser = null;
 
-                        if (currentUser == null || !currentUser.equals(user)) {
-                            // user data was updated or not set
-                            // update storage
-                            storage.store(user);
-                            userChangedPublisher.onNext(currentUser);
-                        }
+                    if (storage.hasItem()) {
+                        currentUser = storage.getItem();
+                    }
+
+                    if (currentUser == null || !currentUser.equals(user)) {
+                        // user data was updated or not set
+                        // update storage
+                        storage.store(user);
+                        userChangedPublisher.onNext(currentUser);
                     }
                     return Observable.just(user);
                 });

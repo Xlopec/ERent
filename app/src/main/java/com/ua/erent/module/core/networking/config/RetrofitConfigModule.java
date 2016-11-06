@@ -5,6 +5,8 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ua.erent.BuildConfig;
+import com.ua.erent.module.core.account.auth.user.domain.vo.UserForm;
+import com.ua.erent.module.core.account.auth.user.api.UserSerializer;
 import com.ua.erent.module.core.config.IConfigModule;
 import com.ua.erent.module.core.networking.service.IPacketInterceptService;
 import com.ua.erent.module.core.util.IBuilder;
@@ -65,7 +67,9 @@ public final class RetrofitConfigModule extends IConfigModule<Retrofit> {
         if (retrofit != null) return retrofit;
 
         final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        final Gson gson = new GsonBuilder().create();
+        final Gson gson = new GsonBuilder()
+                .registerTypeAdapter(UserForm.class, new UserSerializer())
+                .create();
         final HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         // http request/response logging
         logging.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY

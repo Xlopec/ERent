@@ -1,7 +1,7 @@
 package com.ua.erent.module.core.account.auth.user.domain;
 
-import com.ua.erent.module.core.account.auth.domain.vo.Profile;
-import com.ua.erent.module.core.account.auth.domain.vo.UserID;
+import com.ua.erent.module.core.account.auth.user.domain.vo.PasswordForm;
+import com.ua.erent.module.core.account.auth.user.domain.vo.UserForm;
 import com.ua.erent.module.core.account.auth.user.domain.bo.User;
 
 import org.jetbrains.annotations.NotNull;
@@ -24,13 +24,18 @@ public final class UserAppService implements IUserAppService {
     }
 
     @Override
-    public Observable<User> fetchUserProfile(@NotNull UserID id) {
-        return domain.fetchUserProfile(id);
+    public Observable<User> fetchUserProfile() {
+        return domain.fetchUserProfile();
     }
 
     @Override
-    public Observable<User> updateUserProfile(@NotNull Profile userProfile) {
-        return domain.updateUserProfile(userProfile);
+    public Observable<User> updateUserProfile(@NotNull UserForm userUserForm) {
+        return domain.updateUserProfile(userUserForm);
+    }
+
+    @Override
+    public Observable<Void> changePassword(@NotNull PasswordForm form) {
+        return domain.changePassword(form);
     }
 
     @Override

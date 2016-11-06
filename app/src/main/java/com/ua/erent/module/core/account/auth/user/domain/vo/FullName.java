@@ -1,4 +1,4 @@
-package com.ua.erent.module.core.account.auth.domain.vo;
+package com.ua.erent.module.core.account.auth.user.domain.vo;
 
 import com.ua.erent.module.core.util.validation.Regexes;
 
