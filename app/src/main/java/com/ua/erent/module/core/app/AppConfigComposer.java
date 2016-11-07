@@ -9,6 +9,9 @@ import com.ua.erent.module.core.config.AbstractConfigComposer;
 import com.ua.erent.module.core.di.Injector;
 import com.ua.erent.module.core.di.config.InjectConfigModule;
 import com.ua.erent.module.core.init.InitModule;
+import com.ua.erent.module.core.item.di.DaggerSyncServiceComponent;
+import com.ua.erent.module.core.item.di.ItemModule;
+import com.ua.erent.module.core.item.di.SyncServiceComponent;
 import com.ua.erent.module.core.networking.component.DaggerBaseNetworkingComponent;
 import com.ua.erent.module.core.networking.config.RetrofitConfigModule;
 import com.ua.erent.module.core.networking.module.BaseNetworkingModule;
@@ -84,12 +87,16 @@ final class AppConfigComposer extends AbstractConfigComposer {
                 .baseNetworkingModule(baseNetworkingModule)
                 .networkingModule(networkingModule)
                 .userModule(new UserModule())
+                .itemModule(new ItemModule())
                 .build();
+
+        final SyncServiceComponent syncServiceComponent = DaggerSyncServiceComponent.builder()
+                .networkingModule(networkingModule).build();
 
         appComponent.getInitService().registerInitializeable(appComponent.getInitTargets());
         // signUp target dependency inject modules
         final IBuilder<InjectConfigModule> injectModuleBuilder = new InjectConfigModule.Builder()
-                .setAppComponent(appComponent);
+                .setAppComponent(appComponent).setSyncServiceComponent(syncServiceComponent);
 
         Injector.initialize(BuildConfig.DEBUG).addConfig(injectModuleBuilder.build());
     }

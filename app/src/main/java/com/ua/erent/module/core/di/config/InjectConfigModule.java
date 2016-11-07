@@ -2,6 +2,7 @@ package com.ua.erent.module.core.di.config;
 
 import com.ua.erent.module.core.app.AppComponent;
 import com.ua.erent.module.core.di.Injector;
+import com.ua.erent.module.core.item.di.SyncServiceComponent;
 import com.ua.erent.module.core.presentation.mvp.component.CropComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerCropComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerInitialScreenComponent;
@@ -29,12 +30,23 @@ import dagger.internal.Preconditions;
 public final class InjectConfigModule extends Injector.IConfigModule {
 
     private final AppComponent appComponent;
+    private final SyncServiceComponent syncServiceComponent;
 
     public static class Builder implements IBuilder<InjectConfigModule> {
 
         private AppComponent appComponent;
+        private SyncServiceComponent syncServiceComponent;
 
         public Builder() {
+        }
+
+        public SyncServiceComponent getSyncServiceComponent() {
+            return syncServiceComponent;
+        }
+
+        public Builder setSyncServiceComponent(SyncServiceComponent syncServiceComponent) {
+            this.syncServiceComponent = syncServiceComponent;
+            return this;
         }
 
         public AppComponent getAppComponent() {
@@ -54,6 +66,7 @@ public final class InjectConfigModule extends Injector.IConfigModule {
 
     private InjectConfigModule(Builder builder) {
         this.appComponent = Preconditions.checkNotNull(builder.getAppComponent());
+        this.syncServiceComponent = Preconditions.checkNotNull(builder.getSyncServiceComponent());
     }
 
     @Override
@@ -71,7 +84,8 @@ public final class InjectConfigModule extends Injector.IConfigModule {
                 .registerComponentFactory(InitialScreenComponent.class, () -> DaggerInitialScreenComponent.builder()
                         .appComponent(appComponent).initialScreenModule(new InitialScreenModule()).build())
                 .registerComponentFactory(CropComponent.class, () -> DaggerCropComponent.builder()
-                        .cropModule(new CropModule()).build());
+                        .cropModule(new CropModule()).build())
+                .registerComponentFactory(SyncServiceComponent.class, () -> syncServiceComponent);
     }
 
 }

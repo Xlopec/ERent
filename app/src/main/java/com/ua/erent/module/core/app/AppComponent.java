@@ -10,6 +10,7 @@ import com.ua.erent.module.core.account.auth.user.domain.IUserAppService;
 import com.ua.erent.module.core.app.domain.interfaces.IAppLifecycleManager;
 import com.ua.erent.module.core.init.InitModule;
 import com.ua.erent.module.core.init.domain.IInitAppService;
+import com.ua.erent.module.core.item.di.ItemModule;
 import com.ua.erent.module.core.networking.module.BaseNetworkingModule;
 import com.ua.erent.module.core.networking.module.NetworkingModule;
 import com.ua.erent.module.core.util.Initializeable;
@@ -30,7 +31,7 @@ import dagger.Component;
 @Singleton
 @Component(modules = {
         AppModule.class, AuthModule.class, UserModule.class, NetworkingModule.class,
-        BaseNetworkingModule.class, InitModule.class
+        BaseNetworkingModule.class, InitModule.class, ItemModule.class
 })
 public abstract class AppComponent {
 

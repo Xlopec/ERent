@@ -9,7 +9,7 @@ import retrofit2.Retrofit;
 /**
  * Created by Максим on 10/13/2016.
  */
-@Module(includes = BaseNetworkingModule.class)
+@Module
 public final class NetworkingModule {
 
     private final Retrofit retrofit;

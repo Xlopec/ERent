@@ -1,5 +1,8 @@
 package com.ua.erent.module.core.presentation.mvp.view;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.WindowManager;
 
 import com.ua.erent.R;
+import com.ua.erent.module.core.app.Constant;
 import com.ua.erent.module.core.presentation.mvp.component.TestComponent;
 import com.ua.erent.module.core.presentation.mvp.core.IBaseView;
 import com.ua.erent.module.core.presentation.mvp.core.InjectableActivity;
@@ -19,6 +23,8 @@ import com.ua.erent.module.core.presentation.mvp.view.util.ViewPagerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import butterknife.BindView;
+
+import static android.R.attr.name;
 
 public final class MainActivity extends InjectableActivity<MainActivity, ITestPresenter>
         implements IBaseView {
@@ -59,6 +65,23 @@ public final class MainActivity extends InjectableActivity<MainActivity, ITestPr
         pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(new RecentGoodsFragment());
         viewPager.setAdapter(pagerAdapter);
+
+        AccountManager accountManager = AccountManager.get(getApplicationContext());
+
+        final Account[] accounts = accountManager.getAccountsByType(Constant.ACCOUNT_TYPE);
+        Account account = null;
+
+        for (final Account tmp : accounts) {
+            if (tmp.name.equals("peter")) {
+                account = tmp;
+                break;
+            }
+        }
+
+        final String authority = "com.ua.erent.module.core.item.sync.provider";
+        ContentResolver.setIsSyncable(account, authority, 1);
+        ContentResolver.setSyncAutomatically(account, authority, true);
+        ContentResolver.addPeriodicSync(account, authority, Bundle.EMPTY, 10);
     }
 
     @Override
