@@ -1,43 +1,55 @@
-package com.ua.erent.module.core.presentation.mvp.core;
+package com.ua.erent.module.core.di.target;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
+
+import com.ua.erent.module.core.presentation.mvp.core.IBasePresenter;
+import com.ua.erent.module.core.presentation.mvp.core.IBaseView;
+import com.ua.erent.module.core.presentation.mvp.core.IMVPComponent;
 
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import dagger.internal.Preconditions;
 
 import static com.ua.erent.module.core.di.Injector.injector;
 
 /**
  * <p>
- * Base class for injectable fragments which derives from {@linkplain Fragment}.
- * This class handles basic view-presenter
+ * Base class for all injectable activities. This class handles basic view-presenter
  * interaction and provides injection in the constructor for all non-view components which
  * were registered in specified Dagger component.
  * </p>
  * <p>
- * All view components are bound in {@link #onViewCreated(android.view.View, Bundle)} and available after this method returns
+ * All view components are bound in {@link #onCreate(Bundle)} and available after this method returns
  * </p>
- * Created by Максим on 10/28/2016.
+ * Created by Максим on 10/14/2016.
  */
-
-public abstract class InjectableV4Fragment<View extends IBaseView, Presenter extends IBasePresenter<View>>
-        extends Fragment {
+public class InjectableActivity<View extends IBaseView, Presenter extends IBasePresenter<View>>
+        extends AppCompatActivity {
 
     private static final String TAG = InjectableActivity.class.getSimpleName();
+
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
+
+    /**
+     * Subclass of {@linkplain IBaseView} which represents view
+     */
+    private final View view;
     /**
      * Presenter which handles this view
      */
-    @Inject
-    protected Presenter presenter;
-    private final View view;
-    private Class<? extends IMVPComponent<View, Presenter>> cl;
+    @Inject protected Presenter presenter;
+    /**
+     * View layout resource id
+     * */
+    private final int layoutResId;
 
     /**
      * Constructs a new instance of injectable activity. To specify which component
@@ -45,40 +57,32 @@ public abstract class InjectableV4Fragment<View extends IBaseView, Presenter ext
      *
      * @param cl component class to inject. Such component should be subtype of {@linkplain IMVPComponent}
      */
-    public <Component extends IMVPComponent<View, Presenter>> InjectableV4Fragment(@NotNull Class<Component> cl) {
-        this.cl = Preconditions.checkNotNull(cl);
+    public <Component extends IMVPComponent<View, Presenter>> InjectableActivity(final int layoutResId, @NotNull Class<Component> cl) {
+
+        final Component component = injector().getComponent(this, cl);
         // fields injection
         view = (View) this;
+        this.layoutResId = layoutResId;
+        component.inject(view);
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
 
         try {
             super.onCreate(savedInstanceState);
-            final IMVPComponent<View, Presenter> component = injector().getComponent(this, cl);
-            component.inject(view);
+            // setup layout view
+            setContentView(layoutResId);
+            // bind view fields
+            ButterKnife.bind(this);
+            presenter.attachView(view, getIntent().getExtras(), savedInstanceState);
         } catch (final Exception exc) {
             Log.e(TAG, "exception in #onCreate", exc);
         }
     }
 
     @Override
-    public void onViewCreated(android.view.View view, @Nullable Bundle savedInstanceState) {
-        ButterKnife.bind(this, view);
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        // view component hierarchy has been fully instantiated
-        // and can be managed by presenter
-        presenter.attachView(view, getArguments(), savedInstanceState);
-    }
-
-    @Override
-    public void onResume() {
+    protected void onResume() {
 
         try {
             super.onResume();
@@ -89,7 +93,7 @@ public abstract class InjectableV4Fragment<View extends IBaseView, Presenter ext
     }
 
     @Override
-    public void onPause() {
+    protected void onPause() {
 
         try {
             super.onPause();
@@ -100,20 +104,20 @@ public abstract class InjectableV4Fragment<View extends IBaseView, Presenter ext
     }
 
     @Override
-    public void onDestroy() {
+    protected void onDestroy() {
 
         try {
             presenter.onDestroy();
         } catch (final Exception exc) {
             Log.e(TAG, "exception in #onSaveState", exc);
         } finally {
-            injector().destroyComponent(getContext());
+            injector().destroyComponent(this);
             super.onDestroy();
         }
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(Bundle outState) {
 
         try {
             presenter.onSaveInstanceState(outState);

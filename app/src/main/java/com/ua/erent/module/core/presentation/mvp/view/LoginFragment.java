@@ -19,7 +19,7 @@ import com.mobsandgeeks.saripaar.annotation.Password;
 import com.mobsandgeeks.saripaar.annotation.Pattern;
 import com.ua.erent.R;
 import com.ua.erent.module.core.presentation.mvp.component.LoginComponent;
-import com.ua.erent.module.core.presentation.mvp.core.InjectableV4Fragment;
+import com.ua.erent.module.core.di.target.InjectableV4Fragment;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ILoginPresenter;
 import com.ua.erent.module.core.presentation.mvp.view.interfaces.ILoginView;
 

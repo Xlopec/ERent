@@ -31,7 +31,7 @@
             android:syncable="true" />
 
         <service
-            android:name=".module.core.item.sync.ItemSyncService"
+            android:name=".module.core.item.sync.SyncService"
             android:exported="true"
             android:process=":sync">
             <intent-filter>

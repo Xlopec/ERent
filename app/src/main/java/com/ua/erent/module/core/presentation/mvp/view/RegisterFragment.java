@@ -31,7 +31,7 @@ import com.mobsandgeeks.saripaar.annotation.Pattern;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.ua.erent.R;
 import com.ua.erent.module.core.presentation.mvp.component.RegisterComponent;
-import com.ua.erent.module.core.presentation.mvp.core.InjectableV4Fragment;
+import com.ua.erent.module.core.di.target.InjectableV4Fragment;
 import com.ua.erent.module.core.presentation.mvp.model.SignUpForm;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IRegisterPresenter;
 import com.ua.erent.module.core.presentation.mvp.view.interfaces.IRegisterView;

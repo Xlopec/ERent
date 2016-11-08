@@ -1,5 +1,7 @@
 package com.ua.erent.module.core.networking.module;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -14,7 +16,7 @@ public final class NetworkingModule {
 
     private final Retrofit retrofit;
 
-    public NetworkingModule(Retrofit retrofit) {
+    public NetworkingModule(@NotNull Retrofit retrofit) {
         this.retrofit = retrofit;
     }
 

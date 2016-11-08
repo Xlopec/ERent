@@ -1,12 +1,15 @@
 package com.ua.erent.module.core.item.domain.vo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Locale;
 
 /**
  * Created by Максим on 11/7/2016.
  */
 
-public final class ItemID {
+public final class ItemID implements Parcelable {
 
     private final long id;
 
@@ -18,6 +21,32 @@ public final class ItemID {
 
         this.id = id;
     }
+
+    private ItemID(Parcel in) {
+        id = in.readLong();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<ItemID> CREATOR = new Creator<ItemID>() {
+        @Override
+        public ItemID createFromParcel(Parcel in) {
+            return new ItemID(in);
+        }
+
+        @Override
+        public ItemID[] newArray(int size) {
+            return new ItemID[size];
+        }
+    };
 
     public long getId() {
         return id;

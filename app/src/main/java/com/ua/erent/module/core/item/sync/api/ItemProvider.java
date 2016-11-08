@@ -1,7 +1,7 @@
 package com.ua.erent.module.core.item.sync.api;
 
-import com.ua.erent.module.core.account.auth.domain.bo.Session;
 import com.ua.erent.module.core.item.domain.bo.Item;
+import com.ua.erent.module.core.item.domain.vo.ItemID;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -15,6 +15,8 @@ import rx.Observable;
 
 public interface ItemProvider {
 
-    Observable<Collection<Item>> fetchItems(@NotNull Session session);
+    Observable<Collection<Item>> fetchItems();
+
+    Observable<Item> fetchItem(@NotNull ItemID id);
 
 }

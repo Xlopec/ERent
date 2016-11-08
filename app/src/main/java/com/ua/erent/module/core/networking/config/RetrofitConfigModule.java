@@ -10,6 +10,9 @@ import com.ua.erent.module.core.account.auth.user.api.UserSerializer;
 import com.ua.erent.module.core.config.IConfigModule;
 import com.ua.erent.module.core.networking.service.IPacketInterceptService;
 import com.ua.erent.module.core.util.IBuilder;
+import com.ua.erent.module.core.util.JodaTimeDeserializer;
+
+import org.joda.time.DateTime;
 
 import java.io.IOException;
 
@@ -33,6 +36,7 @@ import rx.schedulers.Schedulers;
  */
 public final class RetrofitConfigModule extends IConfigModule<Retrofit> {
 
+    private static final String API_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private final IPacketInterceptService interceptService;
 
     public static final class Builder implements IBuilder<RetrofitConfigModule> {
@@ -69,6 +73,7 @@ public final class RetrofitConfigModule extends IConfigModule<Retrofit> {
         final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         final Gson gson = new GsonBuilder()
                 .registerTypeAdapter(UserForm.class, new UserSerializer())
+                .registerTypeAdapter(DateTime.class, new JodaTimeDeserializer(API_DATE_FORMAT))
                 .create();
         final HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         // http request/response logging

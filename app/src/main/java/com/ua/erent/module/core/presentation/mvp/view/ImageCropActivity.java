@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.theartofdev.edmodo.cropper.CropImageView;
 import com.ua.erent.R;
 import com.ua.erent.module.core.presentation.mvp.component.CropComponent;
-import com.ua.erent.module.core.presentation.mvp.core.InjectableActivity;
+import com.ua.erent.module.core.di.target.InjectableActivity;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ICropPresenter;
 import com.ua.erent.module.core.presentation.mvp.view.interfaces.ICropView;
 
