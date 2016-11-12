@@ -3,21 +3,23 @@ package com.ua.erent.module.core.di.config;
 import com.ua.erent.module.core.app.AppComponent;
 import com.ua.erent.module.core.di.Injector;
 import com.ua.erent.module.core.item.di.SyncServiceComponent;
+import com.ua.erent.module.core.presentation.mvp.component.CategoriesComponent;
 import com.ua.erent.module.core.presentation.mvp.component.CropComponent;
+import com.ua.erent.module.core.presentation.mvp.component.DaggerCategoriesComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerCropComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerInitialScreenComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerLoginComponent;
+import com.ua.erent.module.core.presentation.mvp.component.DaggerMainComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerRegisterComponent;
-import com.ua.erent.module.core.presentation.mvp.component.DaggerTestComponent;
 import com.ua.erent.module.core.presentation.mvp.component.InitialScreenComponent;
 import com.ua.erent.module.core.presentation.mvp.component.LoginComponent;
+import com.ua.erent.module.core.presentation.mvp.component.MainComponent;
 import com.ua.erent.module.core.presentation.mvp.component.RegisterComponent;
-import com.ua.erent.module.core.presentation.mvp.component.TestComponent;
+import com.ua.erent.module.core.presentation.mvp.module.CategoriesModule;
 import com.ua.erent.module.core.presentation.mvp.module.CropModule;
 import com.ua.erent.module.core.presentation.mvp.module.InitialScreenModule;
 import com.ua.erent.module.core.presentation.mvp.module.LoginModule;
 import com.ua.erent.module.core.presentation.mvp.module.RegisterModule;
-import com.ua.erent.module.core.presentation.mvp.module.TestModule;
 import com.ua.erent.module.core.util.IBuilder;
 
 import org.jetbrains.annotations.NotNull;
@@ -75,8 +77,8 @@ public final class InjectConfigModule extends Injector.IConfigModule {
         // register component factories to create component target
         // for further injection
         injector
-                .registerComponentFactory(TestComponent.class, () -> DaggerTestComponent.builder().
-                        testModule(new TestModule()).appComponent(appComponent).build())
+                .registerComponentFactory(MainComponent.class, () -> DaggerMainComponent.builder().
+                        categoriesModule(new CategoriesModule()).appComponent(appComponent).build())
                 .registerComponentFactory(LoginComponent.class, () -> DaggerLoginComponent.builder()
                         .appComponent(appComponent).loginModule(new LoginModule()).build())
                 .registerComponentFactory(RegisterComponent.class, () -> DaggerRegisterComponent.builder()
@@ -85,6 +87,8 @@ public final class InjectConfigModule extends Injector.IConfigModule {
                         .appComponent(appComponent).initialScreenModule(new InitialScreenModule()).build())
                 .registerComponentFactory(CropComponent.class, () -> DaggerCropComponent.builder()
                         .cropModule(new CropModule()).build())
+                .registerComponentFactory(CategoriesComponent.class, () -> DaggerCategoriesComponent.builder()
+                        .appComponent(appComponent).categoriesModule(new CategoriesModule()).build())
                 .registerComponentFactory(SyncServiceComponent.class, () -> syncServiceComponent);
     }
 

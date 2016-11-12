@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:id="@+id/main_group">
+
+        <item
+            android:id="@+id/action_profile"
+            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:title="@string/main_drawer_profile" />
+
+        <item
+            android:id="@+id/action_conversation"
+            android:icon="@drawable/ic_conversation_black_24dp"
+            android:title="@string/main_drawer_conversation" />
+
+        <item
+            android:id="@+id/action_items"
+            android:icon="@drawable/ic_item_black_24dp"
+            android:title="@string/main_drawer_items" />
+
+        <item
+            android:id="@+id/action_setting"
+            android:icon="@drawable/ic_setting_black_24dp"
+            android:title="@string/main_drawer_settings" />
+    </group>
+
+    <group android:id="@+id/action_group">
+
+        <item
+            android:id="@+id/action_logout"
+            android:icon="@drawable/ic_exit_black_24dp"
+            android:title="@string/main_drawer_logout" />
+    </group>
+
+</menu>

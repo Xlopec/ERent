@@ -9,14 +9,14 @@
         android:layout_height="wrap_content"
         android:contentDescription="@null"
         android:scaleType="centerCrop"
-        android:src="@drawable/login_activity_bg" />
+        android:src="@drawable/bg_test1" />
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:elevation="0dp"
-        android:background="#00000000">
+        android:background="#00000000"
+        app:elevation="0dp">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/bar_layout"

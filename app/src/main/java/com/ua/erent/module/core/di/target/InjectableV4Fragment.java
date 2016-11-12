@@ -64,6 +64,11 @@ public abstract class InjectableV4Fragment<View extends IBaseView, Presenter ext
             component.inject(view);
         } catch (final Exception exc) {
             Log.e(TAG, "exception in #onCreate", exc);
+        } finally {
+            Preconditions.checkNotNull(presenter,
+                    String.format("Presenter wasn't injected, check whether you've specified correct inject" +
+                                    " target type for view %s (no subclasses allowed) in component %s",
+                            getClass().getName(), cl.getName()));
         }
     }
 

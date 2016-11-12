@@ -81,7 +81,7 @@ public final class Session implements Parcelable {
     }
 
     public boolean isExpired() {
-        return TextUtils.isEmpty(getToken());
+        return TextUtils.isEmpty(token);
     }
 
     public UserID getUserId() {

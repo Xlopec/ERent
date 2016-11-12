@@ -21,7 +21,7 @@ public final class SessionPO {
     @DatabaseField(columnName = LOGIN_COLUMN, dataType = DataType.STRING, canBeNull = false)
     private String login;
 
-    @DatabaseField(columnName = TOKEN_COLUMN, dataType = DataType.STRING, canBeNull = false)
+    @DatabaseField(columnName = TOKEN_COLUMN, dataType = DataType.STRING)
     private String token;
 
     @DatabaseField(columnName = TOKEN_TYPE, dataType = DataType.STRING, canBeNull = false)

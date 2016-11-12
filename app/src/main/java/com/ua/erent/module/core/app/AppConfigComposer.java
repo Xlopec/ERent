@@ -13,6 +13,7 @@ import com.ua.erent.module.core.item.di.DaggerSyncServiceComponent;
 import com.ua.erent.module.core.item.di.ItemModule;
 import com.ua.erent.module.core.item.di.SyncModule;
 import com.ua.erent.module.core.item.di.SyncServiceComponent;
+import com.ua.erent.module.core.item.domain.di.CategoryModule;
 import com.ua.erent.module.core.networking.component.DaggerBaseNetworkingComponent;
 import com.ua.erent.module.core.networking.config.RetrofitConfigModule;
 import com.ua.erent.module.core.networking.module.BaseNetworkingModule;
@@ -89,6 +90,7 @@ final class AppConfigComposer extends AbstractConfigComposer {
                 .networkingModule(networkingModule)
                 .userModule(new UserModule())
                 .itemModule(new ItemModule())
+                .categoryModule(new CategoryModule())
                 .build();
 
         final SyncServiceComponent syncServiceComponent = DaggerSyncServiceComponent.builder()

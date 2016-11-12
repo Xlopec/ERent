@@ -8,8 +8,8 @@ import android.text.TextUtils;
 import com.ua.erent.module.core.init.IInitCallback;
 import com.ua.erent.module.core.presentation.mvp.model.interfaces.ILoginModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ILoginPresenter;
+import com.ua.erent.module.core.presentation.mvp.view.CategoriesActivity;
 import com.ua.erent.module.core.presentation.mvp.view.LoginFragment;
-import com.ua.erent.module.core.presentation.mvp.view.MainActivity;
 import com.ua.erent.module.core.presentation.mvp.view.interfaces.IInitialScreenView;
 import com.ua.erent.module.core.util.Initializeable;
 
@@ -51,7 +51,7 @@ public final class LoginPresenter extends ILoginPresenter {
         public void onInitialized() {
             subscriber.onNext("Loaded...");
 
-            final Intent intent = new Intent(getView().getActivity(), MainActivity.class);
+            final Intent intent = new Intent(getView().getActivity(), CategoriesActivity.class);
 
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
                     | Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -1,4 +1,4 @@
-package com.ua.erent.module.core.item.sync;
+package com.ua.erent.module.core.sync;
 
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
@@ -50,6 +50,7 @@ public final class ItemSyncAdapter extends AbstractThreadedSyncAdapter {
             Log.i("Tag", str);
         }, th -> {
             Log.e("Tag", "error occurred", th);
+            
         });
         getContext().sendBroadcast(new Intent());
 

@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import dagger.internal.Preconditions;
 
 import static com.ua.erent.module.core.di.Injector.injector;
 
@@ -64,6 +65,10 @@ public class InjectableActivity<View extends IBaseView, Presenter extends IBaseP
         view = (View) this;
         this.layoutResId = layoutResId;
         component.inject(view);
+        Preconditions.checkNotNull(presenter,
+                String.format("Presenter wasn't injected, check whether you've specified correct inject" +
+                        " target type for view %s (no subclasses allowed) in component %s",
+                        getClass().getName(), cl.getName()));
     }
 
     @Override

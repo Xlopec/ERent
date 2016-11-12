@@ -2,7 +2,7 @@ package com.ua.erent.module.core.item.di;
 
 import com.ua.erent.module.core.di.scopes.ServiceScope;
 import com.ua.erent.module.core.di.target.InjectableServiceComponent;
-import com.ua.erent.module.core.item.sync.SyncService;
+import com.ua.erent.module.core.sync.SyncService;
 import com.ua.erent.module.core.item.sync.api.ItemProvider;
 
 import dagger.Component;
