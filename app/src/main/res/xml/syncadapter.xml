@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <sync-adapter
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:contentAuthority="com.ua.erent.module.core.item.sync.provider"
+    android:contentAuthority="com.ua.erent.module.core.sync.provider"
     android:accountType="com.e-rent.account.type"
     android:userVisible="false"
     android:supportsUploading="false"

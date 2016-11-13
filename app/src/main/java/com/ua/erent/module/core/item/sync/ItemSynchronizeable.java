@@ -1,11 +1,11 @@
 package com.ua.erent.module.core.item.sync;
 
+import android.accounts.Account;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SyncResult;
 import android.util.Log;
 
-import com.ua.erent.module.core.account.auth.domain.bo.Session;
 import com.ua.erent.module.core.item.sync.api.ItemProvider;
 import com.ua.erent.module.core.sync.Synchronizeable;
 
@@ -41,14 +41,16 @@ public final class ItemSynchronizeable implements Synchronizeable {
     }
 
     @Override
-    public void synchronize(@NotNull Session session, @NotNull Context context, @NotNull SyncResult syncResult) {
+    public void synchronize(@NotNull Account account, String token, @NotNull Context context,
+                            @NotNull SyncResult syncResult) {
 
         provider.fetchItems().subscribe(result -> {
             // notify receivers
             final Intent intent = new Intent(ItemSynchronizeable.FILTER);
-
             intent.putParcelableArrayListExtra(ItemSynchronizeable.ARG_RESULT, new ArrayList<>(result));
             context.sendBroadcast(intent);
-        }, th -> Log.w(TAG, String.format("Error occurred while sync %s", getClass().getSimpleName()), th));
+        }, th -> Log.w(TAG, String.format("Error occurred while perform sync in %s",
+                getClass().getSimpleName()), th)
+        );
     }
 }

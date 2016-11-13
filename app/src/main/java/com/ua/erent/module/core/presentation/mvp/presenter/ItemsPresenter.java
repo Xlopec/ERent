@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IItemsPresenter;
-import com.ua.erent.module.core.presentation.mvp.view.CategoriesActivity;
+import com.ua.erent.module.core.presentation.mvp.view.ItemActivity;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +25,7 @@ public class ItemsPresenter extends IItemsPresenter {
     }
 
     @Override
-    protected void onViewAttached(@NotNull CategoriesActivity view, @Nullable Bundle savedState, @Nullable Bundle data) {
+    protected void onViewAttached(@NotNull ItemActivity view, @Nullable Bundle savedState, @Nullable Bundle data) {
 
     }
 

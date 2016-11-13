@@ -104,10 +104,6 @@ public final class AuthDomain implements IAuthDomain {
          * then try to initialize modules which needs it;
          * After this operations session can be finally set
          */
-        /*final Session session = new Session(credentials.getLogin(), credentials.getPassword(), Constant.ACCOUNT_TOKEN_TYPE);
-        initAppService.
-                initialize(session,
-                        initializeables, new LoginCallbackWrapper(callback, session));*/
         provider.signIn(credentials).subscribe(new Subscriber<Session>() {
 
             @Override

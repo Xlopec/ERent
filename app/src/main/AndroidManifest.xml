@@ -25,8 +25,8 @@
         android:theme="@style/MyTheme">
 
         <provider
-            android:name=".module.core.item.sync.ItemContentProvider"
-            android:authorities="com.ua.erent.module.core.item.sync.provider"
+            android:name=".module.core.sync.ItemContentProvider"
+            android:authorities="com.ua.erent.module.core.sync.provider"
             android:exported="false"
             android:syncable="true" />
 

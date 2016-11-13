@@ -5,6 +5,8 @@ import com.ua.erent.module.core.item.domain.storage.ICategoriesStorage;
 
 import java.util.Collection;
 
+import javax.inject.Inject;
+
 import rx.Observable;
 
 /**
@@ -12,27 +14,33 @@ import rx.Observable;
  */
 
 public final class CategoryAppService implements ICategoryAppService {
-    public CategoryAppService(ICategoriesStorage storage) {
 
+    private final ICategoriesStorage storage;
+    private final ICategoryDomain domain;
+
+    @Inject
+    public CategoryAppService(ICategoriesStorage storage, ICategoryDomain domain) {
+        this.storage = storage;
+        this.domain = domain;
     }
 
     @Override
     public Collection<Category> getCachedCategories() {
-        return null;
+        return storage.getAll();
     }
 
     @Override
     public Observable<Collection<Category>> fetchCategories() {
-        return null;
+        return domain.fetchCategories();
     }
 
     @Override
     public Observable<Collection<Category>> getOnCategoriesAddedObs() {
-        return null;
+        return domain.getOnCategoriesAddedObs();
     }
 
     @Override
     public Observable<Collection<Category>> getOnCategoriesDeletedObs() {
-        return null;
+        return domain.getOnCategoriesDeletedObs();
     }
 }

@@ -22,6 +22,7 @@ import java.util.Collection;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import retrofit2.Retrofit;
 
 /**
  * <p>
@@ -36,6 +37,8 @@ import dagger.Component;
         BaseNetworkingModule.class, InitModule.class, ItemModule.class, CategoryModule.class
 })
 public abstract class AppComponent {
+
+    public abstract Retrofit getRetrofit();
 
     public abstract Context getApplicationContext();
 

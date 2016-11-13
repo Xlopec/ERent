@@ -1,5 +1,8 @@
 package com.ua.erent.module.core.presentation.mvp.view;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -24,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ua.erent.R;
+import com.ua.erent.module.core.app.Constant;
 import com.ua.erent.module.core.di.target.InjectableActivity;
 import com.ua.erent.module.core.presentation.mvp.component.CategoriesComponent;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ICategoriesPresenter;
@@ -209,7 +213,7 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
         drawerLayout.addDrawerListener(this);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        /*AccountManager accountManager = AccountManager.get(getApplicationContext());
+        AccountManager accountManager = AccountManager.get(getApplicationContext());
 
         final Account[] accounts = accountManager.getAccountsByType(Constant.ACCOUNT_TYPE);
         Account account = null;
@@ -221,10 +225,10 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
             }
         }
 
-        final String authority = "com.ua.erent.module.core.item.sync.provider";
+        final String authority = "com.ua.erent.module.core.sync.provider";
         ContentResolver.setIsSyncable(account, authority, 1);
         ContentResolver.setSyncAutomatically(account, authority, true);
-        ContentResolver.addPeriodicSync(account, authority, Bundle.EMPTY, 10);*/
+        ContentResolver.addPeriodicSync(account, authority, Bundle.EMPTY, 10);
     }
 
     @Override

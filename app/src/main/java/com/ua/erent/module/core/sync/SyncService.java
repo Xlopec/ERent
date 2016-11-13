@@ -5,8 +5,9 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.ua.erent.module.core.di.target.InjectableService;
-import com.ua.erent.module.core.item.di.SyncServiceComponent;
-import com.ua.erent.module.core.item.sync.api.ItemProvider;
+import com.ua.erent.module.core.sync.di.SyncServiceComponent;
+
+import java.util.Collection;
 
 import javax.inject.Inject;
 
@@ -14,10 +15,10 @@ public final class SyncService extends InjectableService<SyncService> {
 
     private static final String TAG = SyncService.class.getSimpleName();
     private static final Object adapterLock = new Object();
-    private static ItemSyncAdapter syncAdapter = null;
+    private static SyncAdapter syncAdapter = null;
 
     @Inject
-    protected ItemProvider provider;
+    protected Collection<Synchronizeable> synchronizeables;
 
     public SyncService() {
         super(SyncServiceComponent.class);
@@ -36,7 +37,7 @@ public final class SyncService extends InjectableService<SyncService> {
         synchronized (adapterLock) {
 
             if(syncAdapter == null) {
-                syncAdapter = new ItemSyncAdapter(getApplicationContext(), true, provider);
+                syncAdapter = new SyncAdapter(getApplicationContext(), true, synchronizeables);
             }
         }
     }

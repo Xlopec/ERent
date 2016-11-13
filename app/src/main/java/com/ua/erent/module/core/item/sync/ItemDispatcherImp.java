@@ -11,6 +11,7 @@ import java.util.Collection;
  */
 
 public final class ItemDispatcherImp implements ItemDispatcher {
+
     @Override
     public void dispatch(@NotNull Collection<Item> items) {
 
@@ -20,4 +21,5 @@ public final class ItemDispatcherImp implements ItemDispatcher {
     public void dispatchError(@NotNull Throwable th) {
 
     }
+
 }

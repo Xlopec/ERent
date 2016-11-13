@@ -1,9 +1,8 @@
 package com.ua.erent.module.core.sync;
 
+import android.accounts.Account;
 import android.content.Context;
 import android.content.SyncResult;
-
-import com.ua.erent.module.core.account.auth.domain.bo.Session;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -20,10 +19,11 @@ public interface Synchronizeable {
     /**
      * Starts sync process; this process runs in a separate thread than app
      *
-     * @param session    session to use to retrieve data from server
-     * @param syncResult sync result to notify sync adapter about changes
+     * @param account    session to use to retrieve data from server
+     * @param token      token to use for api request
      * @param context    app context
+     * @param syncResult sync result to notify sync adapter about changes
      */
-    void synchronize(@NotNull Session session, @NotNull Context context, @NotNull SyncResult syncResult);
+    void synchronize(@NotNull Account account, String token, @NotNull Context context, @NotNull SyncResult syncResult);
 
 }

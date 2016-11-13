@@ -9,19 +9,24 @@ import com.ua.erent.module.core.config.AbstractConfigComposer;
 import com.ua.erent.module.core.di.Injector;
 import com.ua.erent.module.core.di.config.InjectConfigModule;
 import com.ua.erent.module.core.init.InitModule;
-import com.ua.erent.module.core.item.di.DaggerSyncServiceComponent;
+import com.ua.erent.module.core.item.di.DaggerItemComponent;
 import com.ua.erent.module.core.item.di.ItemModule;
-import com.ua.erent.module.core.item.di.SyncModule;
-import com.ua.erent.module.core.item.di.SyncServiceComponent;
 import com.ua.erent.module.core.item.domain.di.CategoryModule;
 import com.ua.erent.module.core.networking.component.DaggerBaseNetworkingComponent;
 import com.ua.erent.module.core.networking.config.RetrofitConfigModule;
 import com.ua.erent.module.core.networking.module.BaseNetworkingModule;
 import com.ua.erent.module.core.networking.module.NetworkingModule;
 import com.ua.erent.module.core.presentation.mvp.view.InitialScreenActivity;
+import com.ua.erent.module.core.sync.Synchronizeable;
+import com.ua.erent.module.core.sync.di.DaggerSyncServiceComponent;
+import com.ua.erent.module.core.sync.di.SyncModule;
+import com.ua.erent.module.core.sync.di.SyncServiceComponent;
 import com.ua.erent.module.core.util.IBuilder;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 import dagger.internal.Preconditions;
 import retrofit2.Retrofit;
@@ -94,7 +99,7 @@ final class AppConfigComposer extends AbstractConfigComposer {
                 .build();
 
         final SyncServiceComponent syncServiceComponent = DaggerSyncServiceComponent.builder()
-                .syncModule(new SyncModule(retrofit)).build();
+                .syncModule(new SyncModule(getSynchronizeables(appComponent))).build();
 
         appComponent.getInitService().registerInitializeable(appComponent.getInitTargets());
         // signUp target dependency inject modules
@@ -103,4 +108,14 @@ final class AppConfigComposer extends AbstractConfigComposer {
 
         Injector.initialize(BuildConfig.DEBUG).addConfig(injectModuleBuilder.build());
     }
+
+    private static Collection<Synchronizeable> getSynchronizeables(final AppComponent appComponent) {
+
+        return Arrays.asList(
+                DaggerItemComponent.builder()
+                        .appComponent(appComponent).itemModule(new ItemModule()).build()
+                        .getSynchronizeable()
+        );
+    }
+
 }

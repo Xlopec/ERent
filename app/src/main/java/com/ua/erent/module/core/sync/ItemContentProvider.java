@@ -1,4 +1,4 @@
-package com.ua.erent.module.core.item.sync;
+package com.ua.erent.module.core.sync;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
