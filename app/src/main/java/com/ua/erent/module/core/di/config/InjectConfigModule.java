@@ -9,11 +9,11 @@ import com.ua.erent.module.core.presentation.mvp.component.DaggerCategoriesCompo
 import com.ua.erent.module.core.presentation.mvp.component.DaggerCropComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerInitialScreenComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerLoginComponent;
-import com.ua.erent.module.core.presentation.mvp.component.DaggerMainComponent;
+import com.ua.erent.module.core.presentation.mvp.component.DaggerItemsComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerRegisterComponent;
 import com.ua.erent.module.core.presentation.mvp.component.InitialScreenComponent;
+import com.ua.erent.module.core.presentation.mvp.component.ItemsComponent;
 import com.ua.erent.module.core.presentation.mvp.component.LoginComponent;
-import com.ua.erent.module.core.presentation.mvp.component.MainComponent;
 import com.ua.erent.module.core.presentation.mvp.component.RegisterComponent;
 import com.ua.erent.module.core.presentation.mvp.module.CategoriesModule;
 import com.ua.erent.module.core.presentation.mvp.module.CropModule;
@@ -77,7 +77,7 @@ public final class InjectConfigModule extends Injector.IConfigModule {
         // register component factories to create component target
         // for further injection
         injector
-                .registerComponentFactory(MainComponent.class, () -> DaggerMainComponent.builder().
+                .registerComponentFactory(ItemsComponent.class, () -> DaggerItemsComponent.builder().
                         categoriesModule(new CategoriesModule()).appComponent(appComponent).build())
                 .registerComponentFactory(LoginComponent.class, () -> DaggerLoginComponent.builder()
                         .appComponent(appComponent).loginModule(new LoginModule()).build())

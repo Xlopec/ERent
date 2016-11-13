@@ -3,7 +3,7 @@ package com.ua.erent.module.core.presentation.mvp.presenter;
 import android.os.Bundle;
 
 import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
-import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IMainPresenter;
+import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IItemsPresenter;
 import com.ua.erent.module.core.presentation.mvp.view.CategoriesActivity;
 
 import org.jetbrains.annotations.NotNull;
@@ -15,12 +15,12 @@ import javax.inject.Inject;
  * Created by Максим on 10/14/2016.
  */
 
-public class MainPresenter extends IMainPresenter {
+public class ItemsPresenter extends IItemsPresenter {
 
     private final IAuthAppService appService;
 
     @Inject
-    public MainPresenter(IAuthAppService appService) {
+    public ItemsPresenter(IAuthAppService appService) {
         this.appService = appService;
     }
 
@@ -34,8 +34,4 @@ public class MainPresenter extends IMainPresenter {
 
     }
 
-    @Override
-    public void onLogout() {
-        appService.logout();
-    }
 }

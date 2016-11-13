@@ -52,15 +52,8 @@ public final class ItemSyncAdapter extends AbstractThreadedSyncAdapter {
             Log.e("Tag", "error occurred", th);
             
         });
+
         getContext().sendBroadcast(new Intent());
-
         Log.d(TAG, syncResult.toDebugString());
-        /*if(authAppService.isSessionAlive()) {
-
-            final Session session = authAppService.getSession();
-
-            itemProvider.fetchItems(session)
-                    .subscribe(items -> dispatcher.dispatch(items), th -> dispatcher.dispatchError(th));
-        }*/
     }
 }
