@@ -14,10 +14,10 @@ import org.jetbrains.annotations.NotNull;
  * Created by Максим on 11/13/2016.
  */
 
-public final class ItemActivity extends InjectableActivity<ItemActivity, IItemsPresenter>
+public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItemsPresenter>
         implements IItemsView {
 
-    public ItemActivity() {
+    public ItemsActivity() {
         super(R.layout.activity_items, ItemsComponent.class);
     }
 
