@@ -94,16 +94,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <android.support.v7.widget.AppCompatEditText
+                    <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedEditText
                         android:id="@+id/login_fld"
-                        style="@style/input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/wr_ic_account_circle_default_24dp"
                         android:drawablePadding="@dimen/draw_pad_inp"
                         android:drawableStart="@drawable/wr_ic_account_circle_default_24dp"
                         android:hint="Email"
-                        android:inputType="textEmailAddress" />
+                        android:inputType="textEmailAddress"
+                        app:customFont="Roboto-Thin" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -114,9 +114,8 @@
                     android:layout_marginTop="10dp"
                     app:passwordToggleEnabled="false">
 
-                    <android.support.v7.widget.AppCompatEditText
+                    <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedEditText
                         android:id="@+id/password_fld"
-                        style="@style/input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/wr_lock_default_24dp"
@@ -124,7 +123,8 @@
                         android:drawableStart="@drawable/wr_lock_default_24dp"
                         android:hint="Password"
                         android:inputType="textPassword"
-                        android:textColor="@color/primaryTextW" />
+                        android:textColor="@color/primaryTextW"
+                        app:customFont="Roboto-Thin" />
 
                 </android.support.design.widget.TextInputLayout>
 

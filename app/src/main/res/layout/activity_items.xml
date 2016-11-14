@@ -14,7 +14,7 @@
         android:id="@+id/main_app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/MyTheme.AppBarOverlay">
+        >
 
         <include
             layout="@layout/toolbar_head"

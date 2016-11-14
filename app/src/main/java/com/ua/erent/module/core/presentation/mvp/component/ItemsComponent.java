@@ -5,7 +5,7 @@ import com.ua.erent.module.core.di.scopes.ActivityScope;
 import com.ua.erent.module.core.presentation.mvp.core.IMVPComponent;
 import com.ua.erent.module.core.presentation.mvp.module.ItemsModule;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IItemsPresenter;
-import com.ua.erent.module.core.presentation.mvp.view.ItemActivity;
+import com.ua.erent.module.core.presentation.mvp.view.ItemsActivity;
 
 import dagger.Component;
 
@@ -17,6 +17,6 @@ import dagger.Component;
  */
 @Component(dependencies = AppComponent.class, modules = ItemsModule.class)
 @ActivityScope
-public interface ItemsComponent extends IMVPComponent<ItemActivity, IItemsPresenter> {
+public interface ItemsComponent extends IMVPComponent<ItemsActivity, IItemsPresenter> {
 
 }

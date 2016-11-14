@@ -4,8 +4,11 @@
     <dimen name="marker_window_width">280dp</dimen>
     <dimen name="nav_header_avatar_size">72dp</dimen>
 
+    <dimen name="def_list_left_side_divider_spacing">72dp</dimen>
+
     <!-- Default screen background padding -->
     <dimen name="activity_side_pad">15dp</dimen>
+    <dimen name="activity_vertical_pad">5dp</dimen>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="nav_header_vertical_spacing">4dp</dimen>

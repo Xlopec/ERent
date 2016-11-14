@@ -91,7 +91,6 @@ public final class InjectConfigModule extends Injector.IConfigModule {
                 .registerComponentFactory(CategoriesComponent.class, () -> DaggerCategoriesComponent.builder()
                         .appComponent(appComponent).categoriesModule(new CategoriesModule()).build())
                 .registerComponentFactory(SyncServiceComponent.class, () -> syncServiceComponent);
-        ;
     }
 
 }

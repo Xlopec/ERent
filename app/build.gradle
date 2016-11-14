@@ -86,6 +86,7 @@ dependencies {
     compile 'commons-validator:commons-validator:1.5.1'
     compile 'com.theartofdev.edmodo:android-image-cropper:2.3.0'
     compile 'com.j256.ormlite:ormlite-android:5.0'
+    compile 'com.github.clans:fab:1.6.3'
 
     apt 'com.google.dagger:dagger-compiler:2.7'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'

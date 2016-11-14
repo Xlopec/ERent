@@ -8,10 +8,237 @@
     tools:context="com.ua.erent.module.core.presentation.mvp.view.ItemDetailsActivity"
     tools:showIn="@layout/activity_item_details">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:text="@string/large_text" />
+        android:paddingEnd="@dimen/activity_side_pad"
+        android:paddingLeft="@dimen/activity_side_pad"
+        android:paddingRight="@dimen/activity_side_pad"
+        android:paddingStart="@dimen/activity_side_pad">
+
+        <LinearLayout
+            android:id="@+id/item_section_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
+
+            <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+                android:id="@+id/item_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Item info"
+                app:customFont="Roboto-Bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_label_def_24dp" />
+
+                <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+                    android:id="@+id/item_brand_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Brand - Toyota"
+                    app:customFont="Roboto-Light" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_credit_card_default_24dp" />
+
+                <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+                    android:id="@+id/item_price_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Costs 20$"
+                    app:customFont="Roboto-Light" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_location_def_24dp" />
+
+                <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+                    android:id="@+id/item_location_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="село Великі Залупеньки, Кийовскька обл."
+                    app:customFont="Roboto-Light" />
+            </LinearLayout>
+
+            <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+                android:id="@+id/item_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:ellipsize="end"
+                android:text="@string/large_text"
+                app:customFont="Roboto-Light" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_time_def_24dp" />
+
+                <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+                    android:id="@+id/item_pub_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Published 5 min ago"
+                    app:customFont="Roboto-Light" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_category_border_default_24dp" />
+
+                <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+                    android:id="@+id/item_category_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Category - Bicycle"
+                    app:customFont="Roboto-Light" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/item_owner_section_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/item_section_content"
+            android:paddingBottom="16dp">
+
+            <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+                android:id="@+id/item_owner_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="16dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Owner's info"
+                app:customFont="Roboto-Bold" />
+
+            <com.ua.erent.module.core.presentation.mvp.view.util.MyCircleImageView
+                android:id="@+id/item_owner_avatar"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_below="@+id/item_owner_section"
+                android:contentDescription="@null"
+                app:civ_border_color="#66000000"
+                app:civ_border_width="1dp"
+                app:srcCompat="@drawable/bike_test" />
+
+            <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+                android:id="@+id/item_owner_full_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/item_owner_section"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_toEndOf="@id/item_owner_avatar"
+                android:layout_toRightOf="@+id/item_owner_avatar"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Max Oliynick"
+                android:textColor="@color/primary"
+                app:customFont="Roboto-Medium" />
+
+            <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+                android:id="@+id/item_owner_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/item_owner_full_name"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_toEndOf="@id/item_owner_avatar"
+                android:layout_toRightOf="@+id/item_owner_avatar"
+                android:text="Email: maxoleynick@example.com"
+                app:customFont="Roboto-Light" />
+
+            <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+                android:id="@+id/item_owner_skype"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/item_owner_email"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_toEndOf="@id/item_owner_avatar"
+                android:layout_toRightOf="@+id/item_owner_avatar"
+                android:text="Skype: maxoleynick"
+                app:customFont="Roboto-Light" />
+
+        </RelativeLayout>
+
+        <View
+            style="@style/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/item_owner_section_content"
+            android:layout_marginEnd="0dp"
+            android:layout_marginLeft="@dimen/def_list_left_side_divider_spacing"
+            android:layout_marginRight="0dp"
+            android:layout_marginStart="@dimen/def_list_left_side_divider_spacing" />
+
+    </RelativeLayout>
 
 </android.support.v4.widget.NestedScrollView>

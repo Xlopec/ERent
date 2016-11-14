@@ -18,7 +18,7 @@
 
     <!-- Buttons -->
     <color name="white_ic_color">#90FFFFFF</color>
-    <color name="dark_ic_color">#000</color>
+    <color name="def_ic_color">#76000000</color>
     <!-- FAB button -->
     <color name="fab_ic_color">#FFF</color>
     <!-- Raised button -->

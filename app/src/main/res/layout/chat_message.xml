@@ -1,6 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
+    <Space
+        android:id="@+id/message_spacing"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+            android:id="@+id/message_timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:paddingEnd="@dimen/activity_side_pad"
+            android:paddingLeft="@dimen/activity_side_pad"
+            android:paddingRight="@dimen/activity_side_pad"
+            android:paddingStart="@dimen/activity_side_pad"
+            android:text="17.11.1995 18:34"
+            app:customFont="Roboto-Light" />
+
+        <LinearLayout
+            android:id="@+id/message_body_holder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/chat_message_bg_gray"
+            android:padding="@dimen/activity_side_pad">
+
+            <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+                android:id="@+id/message_body"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Some message here"
+                app:customFont="Roboto-Regular" />
+        </LinearLayout>
+
+    </LinearLayout>
 </LinearLayout>

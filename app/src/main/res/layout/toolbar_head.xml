@@ -8,4 +8,4 @@
     android:paddingLeft="0dp"
     android:paddingRight="7dp"
     android:paddingStart="0dp"
-    app:popupTheme="@style/MyTheme.PopupOverlay" />
+     />
