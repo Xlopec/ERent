@@ -1,9 +1,11 @@
 <resources>
 
     <style name="MyTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <style name="MyTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="LightTheme" parent="MyTheme.Light" />
+
     <style name="MyTheme.Base" parent="Theme.AppCompat.Light">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
@@ -34,17 +36,19 @@
         <item name="android:textViewStyle">@style/TextViewStyle</item>
         <item name="android:buttonStyle">@style/ButtonStyle</item>
         <item name="android:textColorHint">@color/secondaryTextB</item>
-        <item name="colorControlNormal">@color/primary</item>
+        <item name="colorControlNormal">#FFF</item>
         <item name="colorControlActivated">@color/primary</item>
         <item name="colorControlHighlight">@color/primary</item>
         <item name="android:textColor">@color/primaryTextB</item>
         <item name="android:textColorSecondary">@color/secondaryTextB</item>
+        <item name="android:textColorPrimary">#FFF</item>
         <item name="android:editTextStyle">@style/EditText.Default</item>
         <item name="editTextStyle">@style/EditText.Default</item>
     </style>
 
     <style name="ThemeOverlay.MyTheme.ActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
-       <!-- <item name="textColorPrimary">#FFF</item>-->
+       <!-- <item name="android:textColorPrimary">#FFF</item>
+        <item name="colorControlNormal">#FFF</item>-->
     </style>
 
     <style name="TextViewStyle" parent="android:Widget.TextView">
