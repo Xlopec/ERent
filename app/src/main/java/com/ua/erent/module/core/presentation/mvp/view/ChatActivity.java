@@ -5,10 +5,13 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -31,6 +34,7 @@ import static android.graphics.Color.WHITE;
 public final class ChatActivity extends AppCompatActivity {
 
     private RecyclerView messagesContainer;
+    private ActionMenuView chatMenu;
 
     private final Adapter adapter;
 
@@ -137,18 +141,25 @@ public final class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        chatMenu = (ActionMenuView) toolbar.findViewById(R.id.chat_menu);
         setSupportActionBar(toolbar);
 
         final ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
-            actionBar.setTitle("Max Oliynick");
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setTitle(null);
+            actionBar.setDisplayShowCustomEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setDisplayShowHomeEnabled(false);
         }
 
         final SpaceDecorator decorator = new SpaceDecorator();
+        final int sidePadding = ImageUtils.dpToPx(5);//convert to dp later
+
         decorator.setBottom(ImageUtils.dpToPx(15));
+        decorator.setLeft(sidePadding);
+        decorator.setRight(sidePadding);
 
         messagesContainer = (RecyclerView) findViewById(R.id.chat_messages_container);
         messagesContainer.addItemDecoration(decorator);
@@ -170,4 +181,22 @@ public final class ChatActivity extends AppCompatActivity {
 
         adapter.notifyDataSetChanged();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.categories_menu, chatMenu.getMenu());
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        final int id = item.getItemId();
+
+        if(id == R.id.action_refresh) {
+        }
+
+        return true;
+    }
+
 }

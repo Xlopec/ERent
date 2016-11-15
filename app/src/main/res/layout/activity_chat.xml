@@ -13,10 +13,82 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include
-            layout="@layout/toolbar_head"
+        <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:paddingEnd="7dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="7dp"
+            android:paddingStart="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp">
+
+                <ImageButton
+                    style="@style/iconButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/activity_side_pad"
+                    android:layout_marginRight="@dimen/activity_side_pad"
+                    android:src="@drawable/wr_ic_back_white_24dp" />
+
+                <com.ua.erent.module.core.presentation.mvp.view.util.MyCircleImageView
+                    android:id="@+id/chat_user_avatar"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    app:civ_border_color="#90FFFFFF"
+                    app:civ_border_width="1dp"
+                    app:srcCompat="@drawable/bike_test" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_side_pad"
+                    android:layout_marginStart="@dimen/activity_side_pad"
+                    android:orientation="vertical">
+
+                    <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+                        android:id="@+id/chat_username"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="Max Oliynick"
+                        android:textColor="#FFF"
+                        android:textSize="17sp"
+                        app:customFont="Roboto-Medium" />
+
+                    <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+                        android:id="@+id/chat_item_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="My awesome bike"
+                        android:textColor="#FFF"
+                        app:customFont="Roboto-Light" />
+
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <android.support.v7.widget.ActionMenuView
+                    android:id="@+id/chat_menu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="?attr/actionBarSize" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -25,11 +97,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/chat_divider"
-        android:layout_below="@+id/app_bar"
-        android:paddingEnd="5dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingStart="5dp" />
+        android:layout_below="@+id/app_bar" />
 
     <View
         android:id="@+id/chat_divider"
