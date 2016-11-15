@@ -5,6 +5,7 @@
     <style name="MyTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="LightTheme" parent="MyTheme.Light" />
+    <style name="DarkTheme" parent="MyTheme.Dark" />
 
     <style name="MyTheme.Base" parent="Theme.AppCompat.Light">
         <item name="windowNoTitle">true</item>

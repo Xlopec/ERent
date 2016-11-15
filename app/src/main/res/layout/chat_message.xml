@@ -33,13 +33,13 @@
             android:id="@+id/message_body_holder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/chat_message_bg_gray"
-            android:padding="@dimen/activity_side_pad">
+            android:background="@drawable/chat_message_bg_gray">
 
             <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
                 android:id="@+id/message_body"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_side_pad"
                 android:text="Some message here"
                 app:customFont="Roboto-Regular" />
         </LinearLayout>
