@@ -64,20 +64,22 @@ public final class UserDomain implements IUserDomain, IAppLifecycleManager.IStat
 
         return userProvider.updateUserProfile(authService.getSession(), userForm)
                 .flatMap(v -> {
-
-                    final User user = storage.getItem();
                     User updated = null;
 
-                    if (user != null) {
-                        // updates user by applying update form
-                        updated = new User.Builder(user)
-                                .setContactInfo(new ContactInfo(userForm.getEmail()))
-                                .setFullName(new FullName(userForm.getUsername()))
-                                .build();
+                    synchronized (storage) {
+                        final User user = storage.getItem();
 
-                        if (!user.equals(updated)) {
-                            storage.store(updated);
-                            userChangedPublisher.onNext(updated);
+                        if (user != null) {
+                            // updates user by applying update form
+                            updated = new User.Builder(user)
+                                    .setContactInfo(new ContactInfo(userForm.getEmail()))
+                                    .setFullName(new FullName(userForm.getUsername()))
+                                    .build();
+
+                            if (!user.equals(updated)) {
+                                storage.store(updated);
+                                userChangedPublisher.onNext(updated);
+                            }
                         }
                     }
                     return Observable.just(updated);
@@ -91,7 +93,7 @@ public final class UserDomain implements IUserDomain, IAppLifecycleManager.IStat
 
     @Override
     public Observable<User> getOnUserProfileChangedObservable() {
-        return userChangedPublisher.asObservable();
+        return userChangedPublisher.observeOn(AndroidSchedulers.mainThread()).asObservable();
     }
 
     @Override
@@ -134,7 +136,6 @@ public final class UserDomain implements IUserDomain, IAppLifecycleManager.IStat
     private Observable<User> fetchUserProfile(Session session) {
 
         return userProvider.fetchUserProfile(session)
-                .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(user -> {
 
                     if (!user.getId().equals(session.getUserId()))
@@ -157,7 +158,7 @@ public final class UserDomain implements IUserDomain, IAppLifecycleManager.IStat
                         userChangedPublisher.onNext(currentUser);
                     }
                     return Observable.just(user);
-                });
+                }).observeOn(AndroidSchedulers.mainThread());
     }
 
     private void clearCaches() {

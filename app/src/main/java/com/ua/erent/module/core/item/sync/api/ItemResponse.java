@@ -29,6 +29,17 @@ final class ItemResponse {
     public Brand brand;
     @SerializedName("region")
     public Region region;
+    @SerializedName("categories")
+    public Category [] categories;
+
+    final static class Category {
+        @SerializedName("id")
+        public long id;
+        @SerializedName("name")
+        public String name;
+        @SerializedName("description")
+        public String description;
+    }
 
     final static class Owner {
         @SerializedName("id")

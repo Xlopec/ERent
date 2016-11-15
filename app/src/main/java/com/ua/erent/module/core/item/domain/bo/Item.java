@@ -9,6 +9,10 @@ import com.ua.erent.module.core.item.domain.vo.ItemID;
 import com.ua.erent.module.core.item.domain.vo.ItemInfo;
 import com.ua.erent.module.core.util.IBuilder;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+
 import dagger.internal.Preconditions;
 
 /**
@@ -20,6 +24,7 @@ public final class Item implements Parcelable {
     private final ItemID id;
     private final UserID owner;
     // todo add update logic
+    private final ArrayList<Category> categories;
     private ItemInfo itemInfo;
     private Details details;
 
@@ -41,6 +46,7 @@ public final class Item implements Parcelable {
         private UserID owner;
         private ItemInfo itemInfo;
         private Details details;
+        private Collection<Category> categories;
 
         public Builder() {
         }
@@ -81,6 +87,15 @@ public final class Item implements Parcelable {
             return this;
         }
 
+        public Collection<Category> getCategories() {
+            return categories;
+        }
+
+        public Builder setCategories(Collection<Category> categories) {
+            this.categories = categories == null ? null : new ArrayList<>(categories);
+            return this;
+        }
+
         @Override
         public Item build() {
             return new Item(this);
@@ -89,10 +104,16 @@ public final class Item implements Parcelable {
 
     private Item(Builder builder) {
         Preconditions.checkNotNull(builder);
+        Preconditions.checkNotNull(builder.getCategories());
+
+        if (builder.getCategories().isEmpty())
+            throw new IllegalArgumentException("item should have at least one category");
+
         this.id = Preconditions.checkNotNull(builder.getId());
         this.owner = Preconditions.checkNotNull(builder.getOwner());
         this.itemInfo = Preconditions.checkNotNull(builder.getItemInfo());
         this.details = Preconditions.checkNotNull(builder.getDetails());
+        this.categories = new ArrayList<>(builder.getCategories());
     }
 
     private Item(Parcel in) {
@@ -100,6 +121,10 @@ public final class Item implements Parcelable {
         owner = in.readParcelable(UserID.class.getClassLoader());
         itemInfo = in.readParcelable(ItemInfo.class.getClassLoader());
         details = in.readParcelable(Details.class.getClassLoader());
+
+        categories = new ArrayList<>();
+        in.readTypedList(categories, Category.CREATOR);
+        categories.trimToSize();
     }
 
     public ItemID getId() {
@@ -118,6 +143,10 @@ public final class Item implements Parcelable {
         return details;
     }
 
+    public Collection<Category> getCategories() {
+        return Collections.unmodifiableCollection(categories);
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -129,6 +158,7 @@ public final class Item implements Parcelable {
         dest.writeParcelable(owner, flags);
         dest.writeParcelable(itemInfo, flags);
         dest.writeParcelable(details, flags);
+        dest.writeTypedList(categories);
     }
 
     @Override
@@ -140,6 +170,7 @@ public final class Item implements Parcelable {
 
         if (!id.equals(item.id)) return false;
         if (!owner.equals(item.owner)) return false;
+        if (!categories.equals(item.categories)) return false;
         if (!itemInfo.equals(item.itemInfo)) return false;
         return details.equals(item.details);
 
@@ -149,6 +180,7 @@ public final class Item implements Parcelable {
     public int hashCode() {
         int result = id.hashCode();
         result = 31 * result + owner.hashCode();
+        result = 31 * result + categories.hashCode();
         result = 31 * result + itemInfo.hashCode();
         result = 31 * result + details.hashCode();
         return result;
@@ -159,6 +191,7 @@ public final class Item implements Parcelable {
         return "Item{" +
                 "id=" + id +
                 ", owner=" + owner +
+                ", categories=" + categories +
                 ", itemInfo=" + itemInfo +
                 ", details=" + details +
                 '}';
