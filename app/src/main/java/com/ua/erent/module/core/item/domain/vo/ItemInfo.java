@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import java.math.BigDecimal;
 
+import dagger.internal.Preconditions;
+
 /**
  * Created by Максим on 11/7/2016.
  */
@@ -16,6 +18,12 @@ public final class ItemInfo implements Parcelable {
     private final BigDecimal price;
 
     public ItemInfo(String name, String description, BigDecimal price) {
+
+        if(BigDecimal.ONE.compareTo(Preconditions.checkNotNull(price)) > 0)
+            throw new IllegalArgumentException(String.format(
+                    "price should be greater than 0, was %s", price));
+
+
         this.name = name;
         this.description = description;
         this.price = price;

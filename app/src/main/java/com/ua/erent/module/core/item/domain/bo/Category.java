@@ -17,15 +17,18 @@ public final class Category implements Parcelable {
 
     private final CategoryID id;
     private final String title;
+    private final String description;
 
-    public Category(@NotNull String title, @NotNull CategoryID id) {
+    public Category(@NotNull String title, @NotNull CategoryID id, String description) {
         this.title = Preconditions.checkNotNull(title);
         this.id = Preconditions.checkNotNull(id);
+        this.description = description;
     }
 
     private Category(Parcel in) {
         id = in.readParcelable(CategoryID.class.getClassLoader());
         title = in.readString();
+        description = in.readString();
     }
 
     public static final Creator<Category> CREATOR = new Creator<Category>() {
@@ -48,6 +51,10 @@ public final class Category implements Parcelable {
         return id;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -57,6 +64,7 @@ public final class Category implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(id, flags);
         dest.writeString(title);
+        dest.writeString(description);
     }
 
     @Override
@@ -67,7 +75,8 @@ public final class Category implements Parcelable {
         Category category = (Category) o;
 
         if (!id.equals(category.id)) return false;
-        return title.equals(category.title);
+        if (!title.equals(category.title)) return false;
+        return description.equals(category.description);
 
     }
 
@@ -75,6 +84,7 @@ public final class Category implements Parcelable {
     public int hashCode() {
         int result = id.hashCode();
         result = 31 * result + title.hashCode();
+        result = 31 * result + description.hashCode();
         return result;
     }
 
@@ -83,6 +93,8 @@ public final class Category implements Parcelable {
         return "Category{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
+
 }

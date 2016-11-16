@@ -9,9 +9,9 @@ import android.os.Parcelable;
 
 public class CategoryID implements Parcelable {
 
-    private final int id;
+    private final long id;
 
-    public CategoryID(int id) {
+    public CategoryID(long id) {
 
         if (id < 1)
             throw new IllegalArgumentException(String.format("id < 1 %s", id));
@@ -20,7 +20,7 @@ public class CategoryID implements Parcelable {
     }
 
     private CategoryID(Parcel in) {
-        id = in.readInt();
+        id = in.readLong();
     }
 
     public static final Creator<CategoryID> CREATOR = new Creator<CategoryID>() {
@@ -35,7 +35,7 @@ public class CategoryID implements Parcelable {
         }
     };
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -53,7 +53,7 @@ public class CategoryID implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
+        dest.writeLong(id);
     }
 
     @Override
@@ -69,6 +69,6 @@ public class CategoryID implements Parcelable {
 
     @Override
     public int hashCode() {
-        return id;
+        return (int) (id ^ (id >>> 32));
     }
 }

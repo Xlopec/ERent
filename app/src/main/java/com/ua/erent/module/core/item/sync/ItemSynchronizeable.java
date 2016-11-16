@@ -47,6 +47,7 @@ public final class ItemSynchronizeable implements Synchronizeable {
         provider.fetchItems().subscribe(result -> {
             // notify receivers
             final Intent intent = new Intent(ItemSynchronizeable.FILTER);
+
             intent.putParcelableArrayListExtra(ItemSynchronizeable.ARG_RESULT, new ArrayList<>(result));
             context.sendBroadcast(intent);
         }, th -> Log.w(TAG, String.format("Error occurred while perform sync in %s",

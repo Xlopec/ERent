@@ -8,6 +8,7 @@ import com.ua.erent.module.core.item.domain.api.CategoriesProvider;
 import com.ua.erent.module.core.item.domain.api.ICategoriesProvider;
 import com.ua.erent.module.core.item.domain.storage.CategoryStorage;
 import com.ua.erent.module.core.item.domain.storage.ICategoriesStorage;
+import com.ua.erent.module.core.storage.DatabaseHelper;
 
 import javax.inject.Singleton;
 
@@ -23,8 +24,8 @@ public final class CategoryModule {
 
     @Singleton
     @Provides
-    ICategoriesStorage provideStorage() {
-        return new CategoryStorage();
+    ICategoriesStorage provideStorage(DatabaseHelper helper) {
+        return new CategoryStorage(helper);
     }
 
     @Singleton

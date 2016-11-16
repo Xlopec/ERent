@@ -9,6 +9,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.ua.erent.module.core.account.auth.domain.session.storage.SessionPO;
 import com.ua.erent.module.core.account.auth.user.domain.storage.UserPO;
+import com.ua.erent.module.core.item.domain.storage.CategoryPO;
 
 import java.sql.SQLException;
 
@@ -32,6 +33,7 @@ public final class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.createTable(connectionSource, SessionPO.class);
             TableUtils.createTable(connectionSource, UserPO.class);
+            TableUtils.createTable(connectionSource, CategoryPO.class);
         } catch (final SQLException e) {
             Log.e(TAG, "error creating DB " + DATABASE_NAME, e);
             throw new RuntimeException(e);
@@ -44,6 +46,7 @@ public final class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.dropTable(connectionSource, SessionPO.class, true);
             TableUtils.dropTable(connectionSource, UserPO.class, true);
+            TableUtils.createTable(connectionSource, CategoryPO.class);
             onCreate(db, connectionSource);
         } catch (final SQLException e) {
             Log.e(TAG, "error upgrading db " + DATABASE_NAME + "from ver " + oldVer);
