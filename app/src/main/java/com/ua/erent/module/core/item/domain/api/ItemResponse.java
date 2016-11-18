@@ -1,4 +1,4 @@
-package com.ua.erent.module.core.item.sync.api;
+package com.ua.erent.module.core.item.domain.api;
 
 import com.google.gson.annotations.SerializedName;
 

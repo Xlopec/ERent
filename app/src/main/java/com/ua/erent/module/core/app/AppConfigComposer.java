@@ -25,7 +25,6 @@ import com.ua.erent.module.core.util.IBuilder;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.Collection;
 
 import dagger.internal.Preconditions;
@@ -85,6 +84,7 @@ final class AppConfigComposer extends AbstractConfigComposer {
         final RetrofitConfigModule.Builder retrofitBuilder = new RetrofitConfigModule.Builder();
         final Retrofit retrofit = retrofitBuilder.setInterceptService(DaggerBaseNetworkingComponent.builder().
                 baseNetworkingModule(baseNetworkingModule).build().getInterceptService()).build().configure();
+        final ItemModule itemModule = new ItemModule(retrofit);
 
         final NetworkingModule networkingModule = new NetworkingModule(retrofit);
         final AppComponent appComponent = DaggerAppComponent.builder()
@@ -94,12 +94,12 @@ final class AppConfigComposer extends AbstractConfigComposer {
                 .baseNetworkingModule(baseNetworkingModule)
                 .networkingModule(networkingModule)
                 .userModule(new UserModule())
-                .itemModule(new ItemModule())
+                .itemModule(itemModule)
                 .categoryModule(new CategoryModule())
                 .build();
 
         final SyncServiceComponent syncServiceComponent = DaggerSyncServiceComponent.builder()
-                .syncModule(new SyncModule(getSynchronizeables(appComponent))).build();
+                .syncModule(new SyncModule(AppConfigComposer.getSynchronizeables(itemModule))).build();
 
         appComponent.getInitService().registerInitializeable(appComponent.getInitTargets());
         // signUp target dependency inject modules
@@ -109,13 +109,11 @@ final class AppConfigComposer extends AbstractConfigComposer {
         Injector.initialize(BuildConfig.DEBUG).addConfig(injectModuleBuilder.build());
     }
 
-    private static Collection<Synchronizeable> getSynchronizeables(final AppComponent appComponent) {
+    private static Collection<Synchronizeable> getSynchronizeables(ItemModule itemModule) {
 
-        return Arrays.asList(
-                DaggerItemComponent.builder()
-                        .appComponent(appComponent).itemModule(new ItemModule()).build()
-                        .getSynchronizeable()
-        );
+        return DaggerItemComponent.builder()
+                        .itemModule(itemModule).build()
+                        .getSynchronizeables();
     }
 
 }

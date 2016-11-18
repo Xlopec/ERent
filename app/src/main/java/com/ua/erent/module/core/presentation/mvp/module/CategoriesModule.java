@@ -18,8 +18,8 @@ public final class CategoriesModule {
 
     @ActivityScope
     @Provides
-    ICategoriesPresenter providePresenter() {
-        return new CategoriesPresenter();
+    ICategoriesPresenter providePresenter(ICategoriesModel model) {
+        return new CategoriesPresenter(model);
     }
 
     @ActivityScope

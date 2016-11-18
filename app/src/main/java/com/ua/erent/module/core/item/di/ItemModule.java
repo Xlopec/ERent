@@ -1,17 +1,18 @@
 package com.ua.erent.module.core.item.di;
 
 import com.ua.erent.module.core.di.scopes.ServiceScope;
-import com.ua.erent.module.core.item.sync.ItemDispatcher;
-import com.ua.erent.module.core.item.sync.ItemDispatcherImp;
+import com.ua.erent.module.core.item.domain.api.CategoriesProvider;
+import com.ua.erent.module.core.item.domain.api.ItemProviderImp;
+import com.ua.erent.module.core.item.sync.CategorySynchronizeable;
 import com.ua.erent.module.core.item.sync.ItemSynchronizeable;
-import com.ua.erent.module.core.item.sync.api.ItemProvider;
-import com.ua.erent.module.core.item.sync.api.ItemProviderImp;
 import com.ua.erent.module.core.sync.Synchronizeable;
 
-import javax.inject.Singleton;
+import java.util.Arrays;
+import java.util.Collection;
 
 import dagger.Module;
 import dagger.Provides;
+import dagger.internal.Preconditions;
 import retrofit2.Retrofit;
 
 /**
@@ -20,22 +21,19 @@ import retrofit2.Retrofit;
 @Module
 public final class ItemModule {
 
-    @Provides
-    @Singleton
-    ItemDispatcher provideDispatcher() {
-        return new ItemDispatcherImp();
+    private final Retrofit retrofit;
+
+    public ItemModule(Retrofit retrofit) {
+        this.retrofit = Preconditions.checkNotNull(retrofit);
     }
 
     @Provides
     @ServiceScope
-    ItemProvider provideProvider(Retrofit retrofit) {
-        return new ItemProviderImp(retrofit);
-    }
-
-    @Provides
-    @ServiceScope
-    Synchronizeable provideSynchronizeable(ItemProvider itemProvider) {
-        return new ItemSynchronizeable(itemProvider);
+    Collection<Synchronizeable> provideSynchronizeable() {
+        return Arrays.asList(
+                new CategorySynchronizeable(new CategoriesProvider(retrofit)),
+                new ItemSynchronizeable(new ItemProviderImp(retrofit))
+        );
     }
 
 }

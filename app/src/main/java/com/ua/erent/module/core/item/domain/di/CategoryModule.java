@@ -1,5 +1,7 @@
 package com.ua.erent.module.core.item.domain.di;
 
+import android.app.Application;
+
 import com.ua.erent.module.core.item.domain.CategoryAppService;
 import com.ua.erent.module.core.item.domain.CategoryDomain;
 import com.ua.erent.module.core.item.domain.ICategoryAppService;
@@ -42,8 +44,8 @@ public final class CategoryModule {
 
     @Singleton
     @Provides
-    ICategoryDomain provideDomain(ICategoriesStorage storage, ICategoriesProvider provider) {
-        return new CategoryDomain(storage, provider);
+    ICategoryDomain provideDomain(Application app, ICategoriesStorage storage, ICategoriesProvider provider) {
+        return new CategoryDomain(app, storage, provider);
     }
 
 }

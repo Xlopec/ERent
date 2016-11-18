@@ -1,10 +1,16 @@
 package com.ua.erent.module.core.item.domain;
 
+import android.app.Application;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+
 import com.ua.erent.module.core.account.auth.domain.bo.Session;
 import com.ua.erent.module.core.item.domain.api.ICategoriesProvider;
 import com.ua.erent.module.core.item.domain.bo.Category;
 import com.ua.erent.module.core.item.domain.storage.ICategoriesStorage;
-import com.ua.erent.module.core.item.sync.ICategorySynchronized;
+import com.ua.erent.module.core.item.sync.CategorySynchronizeable;
 import com.ua.erent.module.core.util.Initializeable;
 
 import org.jetbrains.annotations.NotNull;
@@ -21,18 +27,30 @@ import rx.subjects.PublishSubject;
  * Created by Максим on 11/13/2016.
  */
 
-public final class CategoryDomain implements ICategoryDomain, ICategorySynchronized {
+public final class CategoryDomain implements ICategoryDomain {
 
     private final ICategoriesStorage storage;
     private final ICategoriesProvider provider;
     private final PublishSubject<Collection<Category>> addedObs;
     private final PublishSubject<Collection<Category>> deletedObs;
 
-    public CategoryDomain(ICategoriesStorage storage, ICategoriesProvider provider) {
+    public CategoryDomain(Application context, ICategoriesStorage storage, ICategoriesProvider provider) {
         this.storage = storage;
         this.provider = provider;
         this.addedObs = PublishSubject.create();
         this.deletedObs = PublishSubject.create();
+
+        context.registerReceiver(new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                final Collection<Category> categories =
+                        intent.getParcelableArrayListExtra(CategorySynchronizeable.ARG_RESULT);
+
+                synchronize(categories);
+            }
+        }, new IntentFilter(CategorySynchronizeable.FILTER));
     }
 
     @Override
@@ -81,29 +99,27 @@ public final class CategoryDomain implements ICategoryDomain, ICategorySynchroni
         return false;
     }
 
-    @Override
-    public void synchronize(@NotNull Collection<Category> update) {
+    private void synchronize(Collection<Category> update) {
 
-        new Thread(() -> {
+        Collection<Category> stored = storage.getAll();
 
-            synchronized (storage) {
+        if (stored.isEmpty() || !update.equals(stored)) {
 
-                Collection<Category> stored = storage.getAll();
+            final Collection<Category> added = new ArrayList<>(update);
+            added.removeAll(stored);
 
-                if (stored.isEmpty() || !update.equals(stored)) {
+            final Collection<Category> removed = new ArrayList<>(stored);
+            removed.removeAll(update);
 
-                    final Collection<Category> added = new ArrayList<>(update);
-                    added.removeAll(stored);
-
-                    final Collection<Category> removed = new ArrayList<>(stored);
-                    removed.removeAll(update);
-
-                    addedObs.onNext(added);
-                    deletedObs.onNext(removed);
-                    storage.store(update);
-                }
+            if (!added.isEmpty()) {
+                addedObs.onNext(added);
             }
-        }).start();
+
+            if (!removed.isEmpty()) {
+                deletedObs.onNext(removed);
+            }
+            storage.store(update);
+        }
     }
 
 }

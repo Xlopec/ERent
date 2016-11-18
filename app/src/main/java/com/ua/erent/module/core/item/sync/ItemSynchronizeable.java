@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.SyncResult;
 import android.util.Log;
 
-import com.ua.erent.module.core.item.sync.api.ItemProvider;
+import com.ua.erent.module.core.item.domain.api.ItemProvider;
 import com.ua.erent.module.core.sync.Synchronizeable;
 
 import org.jetbrains.annotations.NotNull;

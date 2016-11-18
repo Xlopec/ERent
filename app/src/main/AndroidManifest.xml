@@ -45,23 +45,22 @@
         <activity android:name=".module.core.presentation.mvp.view.NextActivity" />
         <activity android:name=".module.core.presentation.mvp.view.CategoriesActivity">
 
-
-            <!--  <intent-filter>
+            <!--
+              <intent-filter>
                   <action android:name="android.intent.action.MAIN" />
                   <category android:name="android.intent.category.LAUNCHER" />
-              </intent-filter>-->
+              </intent-filter>
+            -->
 
         </activity>
         <activity
             android:name=".module.core.presentation.mvp.view.InitialScreenActivity"
             android:theme="@style/LightTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-
-             <!--   <intent-filter>
-                  <action android:name="android.intent.action.MAIN" />
-                   <category android:name="android.intent.category.LAUNCHER" />
-                </intent-filter>-->
-
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <service android:name=".module.core.account.auth.service.AuthService">
@@ -82,19 +81,24 @@
         <activity
             android:name=".module.core.presentation.mvp.view.ItemDetailsActivity"
             android:label="@string/title_activity_item_details">
+
+            <!--
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
+                 <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
+            -->
+        </activity>
+
+        <activity
+            android:name=".module.core.presentation.mvp.view.ChatActivity"
+            android:parentActivityName=".module.core.presentation.mvp.view.CategoriesActivity">
             <!-- <intent-filter>
                  <action android:name="android.intent.action.MAIN" />
                  <category android:name="android.intent.category.LAUNCHER" />
              </intent-filter>-->
         </activity>
-        <activity
-            android:name=".module.core.presentation.mvp.view.ChatActivity"
-            android:parentActivityName=".module.core.presentation.mvp.view.CategoriesActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+
     </application>
 
 </manifest>

@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.support.annotation.Px;
 
 import com.ua.erent.R;
+import com.ua.erent.module.core.presentation.mvp.model.interfaces.ICategoriesModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ICategoriesPresenter;
 import com.ua.erent.module.core.presentation.mvp.presenter.model.CategoryModel;
 import com.ua.erent.module.core.presentation.mvp.view.CategoriesActivity;
@@ -38,7 +39,7 @@ public final class CategoriesPresenter extends ICategoriesPresenter {
     };
 
     @Inject
-    public CategoriesPresenter() {
+    public CategoriesPresenter(ICategoriesModel model) {
     }
 
     @Override
