@@ -156,6 +156,10 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
             content.add(model);
         }
 
+        void clearItems() {
+            content.clear();
+        }
+
         void addItem(@NotNull Collection<CategoryModel> models) {
             content.addAll(models);
         }
@@ -182,8 +186,8 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             final Window w = getWindow();
-            w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-            w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            //w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            //w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
 
         getWindow().setSoftInputMode(
@@ -334,6 +338,12 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
     @Override
     public void addCategory(@NotNull Collection<CategoryModel> models) {
         adapter.addItem(models);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void clearCategories() {
+        adapter.clearItems();
         adapter.notifyDataSetChanged();
     }
 
