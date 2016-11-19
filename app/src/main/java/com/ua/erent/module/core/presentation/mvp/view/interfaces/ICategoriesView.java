@@ -17,6 +17,8 @@ public interface ICategoriesView extends IBaseView {
 
     void addCategory(@NotNull Collection<CategoryModel> models);
 
+    void clearCategories();
+
     void hideRefreshProgress();
 
     void showRefreshProgress();

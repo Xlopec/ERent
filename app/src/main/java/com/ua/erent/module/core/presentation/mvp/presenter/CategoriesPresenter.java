@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Px;
+import android.util.Log;
 
 import com.ua.erent.R;
+import com.ua.erent.module.core.presentation.mvp.model.CategoriesModel;
 import com.ua.erent.module.core.presentation.mvp.model.interfaces.ICategoriesModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ICategoriesPresenter;
 import com.ua.erent.module.core.presentation.mvp.presenter.model.CategoryModel;
@@ -38,14 +40,17 @@ public final class CategoriesPresenter extends ICategoriesPresenter {
             0x00cccc//cyan
     };
 
+    private final ICategoriesModel model;
+
     @Inject
     public CategoriesPresenter(ICategoriesModel model) {
+        this.model = model;
     }
 
     @Override
     protected void onViewAttached(@NotNull CategoriesActivity view, @Nullable Bundle savedState, @Nullable Bundle data) {
 
-        CategoryModel model1 = new CategoryModel(2, "Bike", "Bike category", new IFutureBitmap() {
+        /*CategoryModel model1 = new CategoryModel(1, "Bike", "Bike category", new IFutureBitmap() {
             @NotNull
             @Override
             public Observable<Bitmap> fetch(@Px int width, @Px int height) {
@@ -63,91 +68,12 @@ public final class CategoriesPresenter extends ICategoriesPresenter {
                     }
                 });
             }
-        });
+        });*/
 
-        CategoryModel model2 = new CategoryModel(2, "Bike", "Bike category", new IFutureBitmap() {
-            @NotNull
-            @Override
-            public Observable<Bitmap> fetch(@Px int width, @Px int height) {
-                return Observable.create(new Observable.OnSubscribe<Bitmap>() {
-                    @Override
-                    public void call(Subscriber<? super Bitmap> subscriber) {
-                        final Bitmap bitmap = ImageUtils.decodeSampledBitmapFromResource(
-                                view.getContext().getResources(),
-                                R.drawable.nav_drawer_bg,
-                                ImageUtils.pxToDp(width),
-                                ImageUtils.pxToDp(height));
+        model.fetchCategories().subscribe(view::addCategory
+                , throwable -> Log.e("MODEL CAT", "error", throwable));
 
-                        subscriber.onNext(bitmap);
-                        subscriber.onCompleted();
-                    }
-                });
-            }
-        });
-
-        CategoryModel model3 = new CategoryModel(3, "Bike", "Bike category", new IFutureBitmap() {
-            @NotNull
-            @Override
-            public Observable<Bitmap> fetch(@Px int width, @Px int height) {
-                return Observable.create(new Observable.OnSubscribe<Bitmap>() {
-                    @Override
-                    public void call(Subscriber<? super Bitmap> subscriber) {
-                        final Bitmap bitmap = ImageUtils.decodeSampledBitmapFromResource(
-                                view.getContext().getResources(),
-                                R.drawable.bg_test1,
-                                ImageUtils.pxToDp(width),
-                                ImageUtils.pxToDp(height));
-                        subscriber.onNext(bitmap);
-                        subscriber.onCompleted();
-                    }
-                });
-            }
-        });
-
-        CategoryModel model4 = new CategoryModel(3, "Bike", "Bike category", new IFutureBitmap() {
-            @NotNull
-            @Override
-            public Observable<Bitmap> fetch(@Px int width, @Px int height) {
-                return Observable.create(new Observable.OnSubscribe<Bitmap>() {
-                    @Override
-                    public void call(Subscriber<? super Bitmap> subscriber) {
-                        final Bitmap bitmap = ImageUtils.decodeSampledBitmapFromResource(
-                                view.getContext().getResources(),
-                                R.drawable.bg_test1,
-                                ImageUtils.pxToDp(width),
-                                ImageUtils.pxToDp(height));
-                        subscriber.onNext(bitmap);
-                        subscriber.onCompleted();
-                    }
-                });
-            }
-        });
-
-        CategoryModel model5 = new CategoryModel(3, "Bike", "Bike category", new IFutureBitmap() {
-            @NotNull
-            @Override
-            public Observable<Bitmap> fetch(@Px int width, @Px int height) {
-                return Observable.create(new Observable.OnSubscribe<Bitmap>() {
-                    @Override
-                    public void call(Subscriber<? super Bitmap> subscriber) {
-
-                        final Bitmap bitmap = ImageUtils.decodeSampledBitmapFromResource(
-                                view.getContext().getResources(),
-                                R.drawable.nav_drawer_bg,
-                                ImageUtils.pxToDp(width),
-                                ImageUtils.pxToDp(height));
-                        subscriber.onNext(bitmap);
-                        subscriber.onCompleted();
-                    }
-                });
-            }
-        });
-
-        view.addCategory(model1);
-        view.addCategory(model2);
-        view.addCategory(model3);
-        view.addCategory(model4);
-        view.addCategory(model5);
+        //view.addCategory(model1);
     }
 
     @Override
@@ -161,12 +87,27 @@ public final class CategoriesPresenter extends ICategoriesPresenter {
     }
 
     @Override
-    public void onOpenCategory(int categoryId) {
+    public void onOpenCategory(long categoryId) {
+
+        System.out.println(categoryId);
 
     }
 
     @Override
     public void onRefresh() {
-        new Handler(Looper.getMainLooper()).postDelayed(() -> getView().hideRefreshProgress(), 3000L);
+        model.fetchCategories().subscribe(cat -> {
+                    if (getView() != null) {
+                        getView().clearCategories();
+                        getView().addCategory(cat);
+                        getView().hideRefreshProgress();
+                    }
+                }
+                , throwable -> {
+                    Log.e("MODEL CAT", "error", throwable);
+                    if (getView() != null) {
+                        getView().hideRefreshProgress();
+                    }
+                }
+        );
     }
 }

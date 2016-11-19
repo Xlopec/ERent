@@ -10,12 +10,12 @@ import dagger.internal.Preconditions;
 
 public final class CategoryModel {
 
-    private final int id;
+    private final long id;
     private final String title;
     private final String description;
     private final IFutureBitmap futureBitmap;
 
-    public CategoryModel(int id, String title, String description, IFutureBitmap futureBitmap) {
+    public CategoryModel(long id, String title, String description, IFutureBitmap futureBitmap) {
         this.id = id;
         this.title = Preconditions.checkNotNull(title);
         this.description = Preconditions.checkNotNull(description);
@@ -26,7 +26,7 @@ public final class CategoryModel {
         return futureBitmap;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

@@ -11,7 +11,7 @@ public abstract class ICategoriesPresenter extends IBasePresenter<CategoriesActi
 
     public abstract int getRandomColor();
 
-    public abstract void onOpenCategory(int categoryId);
+    public abstract void onOpenCategory(long categoryId);
 
     public abstract void onRefresh();
 

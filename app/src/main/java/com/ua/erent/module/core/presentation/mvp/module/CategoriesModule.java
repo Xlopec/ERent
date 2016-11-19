@@ -1,5 +1,7 @@
 package com.ua.erent.module.core.presentation.mvp.module;
 
+import android.app.Application;
+
 import com.ua.erent.module.core.di.scopes.ActivityScope;
 import com.ua.erent.module.core.item.domain.ICategoryAppService;
 import com.ua.erent.module.core.presentation.mvp.model.CategoriesModel;
@@ -24,8 +26,8 @@ public final class CategoriesModule {
 
     @ActivityScope
     @Provides
-    ICategoriesModel provideModel(ICategoryAppService categoryAppService) {
-        return new CategoriesModel(categoryAppService);
+    ICategoriesModel provideModel(Application app, ICategoryAppService categoryAppService) {
+        return new CategoriesModel(app, categoryAppService);
     }
 
 }
