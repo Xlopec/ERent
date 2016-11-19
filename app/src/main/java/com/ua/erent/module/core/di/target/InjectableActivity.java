@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
-import android.util.Log;
 
 import com.ua.erent.module.core.presentation.mvp.core.IBasePresenter;
 import com.ua.erent.module.core.presentation.mvp.core.IBaseView;
@@ -46,10 +45,11 @@ public class InjectableActivity<View extends IBaseView, Presenter extends IBaseP
     /**
      * Presenter which handles this view
      */
-    @Inject protected Presenter presenter;
+    @Inject
+    protected Presenter presenter;
     /**
      * View layout resource id
-     * */
+     */
     private final int layoutResId;
 
     /**
@@ -67,45 +67,35 @@ public class InjectableActivity<View extends IBaseView, Presenter extends IBaseP
         component.inject(view);
         Preconditions.checkNotNull(presenter,
                 String.format("Presenter wasn't injected, check whether you've specified correct inject" +
-                        " target type for view %s (no subclasses allowed) in component %s",
+                                " target type for view %s (no subclasses allowed) in component %s",
                         getClass().getName(), cl.getName()));
     }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        presenter.attachView(view, getIntent().getExtras(), savedInstanceState);
+    }
 
-        try {
-            super.onCreate(savedInstanceState);
-            // setup layout view
-            setContentView(layoutResId);
-            // bind view fields
-            ButterKnife.bind(this);
-            presenter.attachView(view, getIntent().getExtras(), savedInstanceState);
-        } catch (final Exception exc) {
-            Log.e(TAG, "exception in #onCreate", exc);
-        }
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // setup layout view
+        setContentView(layoutResId);
+        // bind view fields
+        ButterKnife.bind(this);
     }
 
     @Override
     protected void onResume() {
-
-        try {
-            super.onResume();
-            presenter.onResume();
-        } catch (final Exception exc) {
-            Log.e(TAG, "exception in #onResume", exc);
-        }
+        super.onResume();
+        presenter.onResume();
     }
 
     @Override
     protected void onPause() {
-
-        try {
-            super.onPause();
-            presenter.onPause();
-        } catch (final Exception exc) {
-            Log.e(TAG, "exception in #onPause", exc);
-        }
+        super.onPause();
+        presenter.onPause();
     }
 
     @Override
@@ -113,11 +103,9 @@ public class InjectableActivity<View extends IBaseView, Presenter extends IBaseP
 
         try {
             presenter.onDestroy();
-        } catch (final Exception exc) {
-            Log.e(TAG, "exception in #onSaveState", exc);
         } finally {
-            injector().destroyComponent(this);
             super.onDestroy();
+            injector().destroyComponent(this);
         }
     }
 
@@ -126,8 +114,6 @@ public class InjectableActivity<View extends IBaseView, Presenter extends IBaseP
 
         try {
             presenter.onSaveInstanceState(outState);
-        } catch (final Exception exc) {
-            Log.e(TAG, "exception in #onSaveInstanceState", exc);
         } finally {
             super.onSaveInstanceState(outState);
         }

@@ -1,36 +1,31 @@
 package com.ua.erent.module.core.presentation.mvp.presenter;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.annotation.Px;
 import android.util.Log;
 
-import com.ua.erent.R;
-import com.ua.erent.module.core.presentation.mvp.model.CategoriesModel;
 import com.ua.erent.module.core.presentation.mvp.model.interfaces.ICategoriesModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ICategoriesPresenter;
 import com.ua.erent.module.core.presentation.mvp.presenter.model.CategoryModel;
 import com.ua.erent.module.core.presentation.mvp.view.CategoriesActivity;
-import com.ua.erent.module.core.presentation.mvp.view.util.IFutureBitmap;
-import com.ua.erent.module.core.presentation.mvp.view.util.ImageUtils;
+import com.ua.erent.module.core.presentation.mvp.view.interfaces.ICategoriesView;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Random;
 
 import javax.inject.Inject;
-
-import rx.Observable;
-import rx.Subscriber;
 
 /**
  * Created by Максим on 11/12/2016.
  */
 
 public final class CategoriesPresenter extends ICategoriesPresenter {
+
+    private static final String ARG_CACHED_CATEGORIES = "argCachedCategories";
+    private static final String TAG = CategoriesPresenter.class.getSimpleName();
 
     private static final int[] CATEGORY_COLORS = {
             0xcc0000,// red
@@ -41,39 +36,47 @@ public final class CategoriesPresenter extends ICategoriesPresenter {
     };
 
     private final ICategoriesModel model;
+    private final ArrayList<CategoryModel> localCache;
 
     @Inject
     public CategoriesPresenter(ICategoriesModel model) {
         this.model = model;
+        this.localCache = new ArrayList<>(0);
     }
 
     @Override
     protected void onViewAttached(@NotNull CategoriesActivity view, @Nullable Bundle savedState, @Nullable Bundle data) {
 
-        /*CategoryModel model1 = new CategoryModel(1, "Bike", "Bike category", new IFutureBitmap() {
-            @NotNull
-            @Override
-            public Observable<Bitmap> fetch(@Px int width, @Px int height) {
-                return Observable.create(new Observable.OnSubscribe<Bitmap>() {
-                    @Override
-                    public void call(Subscriber<? super Bitmap> subscriber) {
-                        final Bitmap bitmap = ImageUtils.decodeSampledBitmapFromResource(
-                                view.getContext().getResources(),
-                                R.drawable.bike_test,
-                                ImageUtils.pxToDp(width),
-                                ImageUtils.pxToDp(height));
+        if (isFirstTimeAttached()) {
 
-                        subscriber.onNext(bitmap);
-                        subscriber.onCompleted();
-                    }
-                });
+            Collection<CategoryModel> categoryModels = model.getCategories();
+
+            if (savedState == null) {
+
+                if (categoryModels.isEmpty()) {
+                    // no cached categories available,
+                    // pull them from the api server
+                    model.fetchCategories().subscribe(this::syncWithView,
+                            th -> {
+                                if (!isViewGone()) {
+                                    getView().showMessage(th.getMessage());
+                                }
+                                Log.w(TAG, "error on fetch categories#", th);
+                            });
+                } else {
+                    syncWithView(categoryModels);
+                }
+            } else {
+                categoryModels = savedState.getParcelableArrayList(CategoriesPresenter.ARG_CACHED_CATEGORIES);
+                syncWithView(categoryModels);
             }
-        });*/
+        }
+    }
 
-        model.fetchCategories().subscribe(view::addCategory
-                , throwable -> Log.e("MODEL CAT", "error", throwable));
-
-        //view.addCategory(model1);
+    @Override
+    public void onSaveInstanceState(@NotNull Bundle outState) {
+        outState.putParcelableArrayList(CategoriesPresenter.ARG_CACHED_CATEGORIES, localCache);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -95,19 +98,31 @@ public final class CategoriesPresenter extends ICategoriesPresenter {
 
     @Override
     public void onRefresh() {
-        model.fetchCategories().subscribe(cat -> {
-                    if (getView() != null) {
-                        getView().clearCategories();
-                        getView().addCategory(cat);
+
+        model.fetchCategories().subscribe(categories -> {
+                    if (!isViewGone()) {
+                        syncWithView(categories);
                         getView().hideRefreshProgress();
                     }
-                }
-                , throwable -> {
-                    Log.e("MODEL CAT", "error", throwable);
-                    if (getView() != null) {
+                }, th -> {
+                    if (!isViewGone()) {
                         getView().hideRefreshProgress();
                     }
+                    Log.w(TAG, "error occurred on refresh#", th);
                 }
         );
     }
+
+    private void syncWithView(Collection<CategoryModel> categoryModels) {
+
+        if (isViewGone())
+            throw new IllegalStateException("nothing to sync with");
+
+        final ICategoriesView view = getView();
+
+        localCache.addAll(categoryModels);
+        view.clearCategories();
+        view.addCategory(categoryModels);
+    }
+
 }

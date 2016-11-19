@@ -13,6 +13,8 @@ import java.util.Collection;
 
 public interface ICategoriesView extends IBaseView {
 
+    void showMessage(@NotNull String message);
+
     void addCategory(@NotNull CategoryModel model);
 
     void addCategory(@NotNull Collection<CategoryModel> models);

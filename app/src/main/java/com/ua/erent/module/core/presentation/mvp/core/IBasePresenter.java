@@ -74,6 +74,7 @@ public abstract class IBasePresenter<View extends IBaseView> {
     public final void attachView(@NotNull View view, @Nullable Bundle data, @Nullable Bundle savedState) {
 
         viewWeakReference = new WeakReference<>(view);
+        isAttached = true;
 
         try {
             onViewAttached(view, savedState, data);
@@ -81,7 +82,6 @@ public abstract class IBasePresenter<View extends IBaseView> {
             Log.e(TAG, "Exception occurred in onAttachView!", e);
         } finally {
             isFirstTimeAttached = false;
-            isAttached = true;
         }
     }
 
@@ -134,13 +134,13 @@ public abstract class IBasePresenter<View extends IBaseView> {
 
     /**
      * Called when corresponding activity or fragment calls #onResume()
-     * */
+     */
     public void onResume() {
     }
 
     /**
      * Called when corresponding activity or fragment calls #onPause()
-     * */
+     */
     public void onPause() {
     }
 }

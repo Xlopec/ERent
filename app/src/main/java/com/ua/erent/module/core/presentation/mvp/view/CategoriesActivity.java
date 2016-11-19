@@ -27,6 +27,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ua.erent.R;
 import com.ua.erent.module.core.app.Constant;
@@ -102,11 +103,11 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
             categoryDescription.setText(description);
         }
 
-        void tryLoadImage(int color) {
+        void tryLoadImage(int color, Context context) {
 
             final ViewGroup.LayoutParams params = categoryPhoto.getLayoutParams();
 
-            bitmap.fetch(params.width, params.height)
+            bitmap.fetch(params.width, params.height, context)
                     .subscribe(categoryPhoto::setImageBitmap,
                             th -> categoryPhoto.setBackgroundColor(color));
         }
@@ -149,7 +150,7 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
 
         @Override
         public void onViewAttachedToWindow(CategoryHolder holder) {
-            holder.tryLoadImage(presenter.getRandomColor());
+            holder.tryLoadImage(presenter.getRandomColor(), CategoriesActivity.this);
         }
 
         void addItem(CategoryModel model) {
@@ -327,6 +328,11 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
     @Override
     public void onDrawerStateChanged(int newState) {
 
+    }
+
+    @Override
+    public void showMessage(@NotNull String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

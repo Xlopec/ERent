@@ -12,6 +12,8 @@ import rx.Observable;
 
 public interface ICategoriesModel {
 
+    Collection<CategoryModel> getCategories();
+
     Observable<Collection<CategoryModel>> getOnCategoriesDeletedObs();
 
     Observable<Collection<CategoryModel>> fetchCategories();

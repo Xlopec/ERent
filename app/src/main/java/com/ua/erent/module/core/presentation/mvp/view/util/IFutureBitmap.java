@@ -1,5 +1,6 @@
 package com.ua.erent.module.core.presentation.mvp.view.util;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.Px;
 
@@ -14,6 +15,6 @@ import rx.Observable;
 public interface IFutureBitmap {
 
     @NotNull
-    Observable<Bitmap> fetch(@Px int width, @Px int height);
+    Observable<Bitmap> fetch(@Px int width, @Px int height, @NotNull Context context);
 
 }

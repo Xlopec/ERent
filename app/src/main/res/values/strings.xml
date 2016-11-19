@@ -19,6 +19,8 @@
 
     <!-- Categories activity -->
     <string name="categories_refresh">Refresh</string>
+    <string name="categories_no_internet">No internet connection…</string>
+    <string name="categories_fetch_err">Failed to fetch categories</string>
 
     <!-- Strings related to signIn -->
     <string name="prompt_email">Email</string>
