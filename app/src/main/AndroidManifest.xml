@@ -3,6 +3,7 @@
     package="com.ua.erent">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCOUNT_MANAGER" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
@@ -12,6 +13,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_SYNC_STATS" />
     <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS" />
 
     <application
@@ -43,24 +45,21 @@
         </service>
 
         <activity android:name=".module.core.presentation.mvp.view.NextActivity" />
+
         <activity android:name=".module.core.presentation.mvp.view.CategoriesActivity">
-
-            <!--
-              <intent-filter>
-                  <action android:name="android.intent.action.MAIN" />
-                  <category android:name="android.intent.category.LAUNCHER" />
-              </intent-filter>
-            -->
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+
         <activity
             android:name=".module.core.presentation.mvp.view.InitialScreenActivity"
             android:theme="@style/LightTheme">
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
 
         <service android:name=".module.core.account.auth.service.AuthService">
@@ -90,13 +89,11 @@
             -->
         </activity>
 
-        <activity
-            android:name=".module.core.presentation.mvp.view.ChatActivity"
-            android:parentActivityName=".module.core.presentation.mvp.view.CategoriesActivity">
-            <!-- <intent-filter>
-                 <action android:name="android.intent.action.MAIN" />
-                 <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>-->
+        <activity android:name=".module.core.presentation.mvp.view.ChatActivity">
+            <!--     <intent-filter>
+                     <action android:name="android.intent.action.MAIN" />
+                     <category android:name="android.intent.category.LAUNCHER" />
+                 </intent-filter>-->
         </activity>
 
     </application>

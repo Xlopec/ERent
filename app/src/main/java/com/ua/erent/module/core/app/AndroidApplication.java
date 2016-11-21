@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.ua.erent.BuildConfig;
 import com.ua.erent.R;
+import com.ua.erent.module.core.app.domain.interfaces.IAppService;
+import com.ua.erent.module.core.di.Injector;
 
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
@@ -27,5 +29,8 @@ public final class AndroidApplication extends Application {
         super.onCreate();
         // initializes configuration composer
         AppConfigComposer.initialize(this);
+
+        final IAppService appService = Injector.injector().getComponent(this, AppComponent.class).getAppService();
+        appService.initialize();
     }
 }

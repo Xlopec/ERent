@@ -106,17 +106,19 @@ public final class CategoriesModel implements ICategoriesModel {
 
     @Override
     public Observable<Collection<CategoryModel>> getOnCategoriesDeletedObs() {
-        return null;
+        return categoryAppService.getOnCategoriesDeletedObs().map(this::toModel);
     }
 
     @Override
     public Observable<Collection<CategoryModel>> fetchCategories() {
-        return categoryAppService.fetchCategories().map(this::toModel);
+        return categoryAppService.fetchCategories().map(this::toModel)
+                .onErrorResumeNext(throwable ->
+                        Observable.error(new Throwable(context.getString(R.string.categories_fetch_err))));
     }
 
     @Override
     public Observable<Collection<CategoryModel>> getOnCategoriesAddedObs() {
-        return null;
+        return categoryAppService.getOnCategoriesAddedObs().map(this::toModel);
     }
 
     private Collection<CategoryModel> toModel(Collection<Category> categories) {

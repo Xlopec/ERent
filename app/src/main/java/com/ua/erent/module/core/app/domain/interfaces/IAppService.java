@@ -8,4 +8,6 @@ public interface IAppService {
 
     IAppLifecycleManager getStateCallbackManager();
 
+    void initialize();
+
 }

@@ -8,11 +8,9 @@ import android.util.Log;
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.ReferenceObjectCache;
-import com.j256.ormlite.table.TableUtils;
 import com.ua.erent.module.core.account.auth.domain.bo.Session;
-import com.ua.erent.module.core.account.auth.user.domain.vo.UserID;
-import com.ua.erent.module.core.storage.DatabaseHelper;
 import com.ua.erent.module.core.app.Constant;
+import com.ua.erent.module.core.storage.DatabaseHelper;
 import com.ua.erent.module.core.storage.ISingleItemStorage;
 
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +19,6 @@ import java.sql.SQLException;
 
 import javax.inject.Inject;
 
-import static android.R.attr.id;
 import static com.ua.erent.module.core.account.auth.domain.session.storage.SessionMapper.toPersistenceObject;
 
 public final class SessionStorage implements ISingleItemStorage<Session> {
@@ -73,8 +70,7 @@ public final class SessionStorage implements ISingleItemStorage<Session> {
 
             accountManager.invalidateAuthToken(Constant.ACCOUNT_TYPE, session.getToken());
 
-            final long id = session.getUserId().getId();
-            final Session newSession = new Session(new UserID(id), null, session.getUsername(), session.getTokenType());
+            final Session newSession = new Session.Modifier(session).setToken(null).create();
             final SessionPO po = SessionMapper.toPersistenceObject(newSession);
 
             cachedSession = newSession;

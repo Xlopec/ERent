@@ -10,7 +10,10 @@ import com.ua.erent.module.core.app.domain.AppService;
 import com.ua.erent.module.core.app.domain.interfaces.IAppInitManager;
 import com.ua.erent.module.core.app.domain.interfaces.IAppLifecycleManager;
 import com.ua.erent.module.core.app.domain.interfaces.IAppService;
+import com.ua.erent.module.core.networking.util.ConnectionManager;
 import com.ua.erent.module.core.storage.DatabaseHelper;
+import com.ua.erent.module.core.sync.IAppSyncService;
+import com.ua.erent.module.core.sync.di.SyncModule;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +28,7 @@ import dagger.Provides;
  * </p>
  * Created by Максим on 10/9/2016.
  */
-@Module
+@Module(includes = SyncModule.class)
 public final class AppModule {
 
     private final Application app;
@@ -54,14 +57,20 @@ public final class AppModule {
 
     @Provides
     @Singleton
+    ConnectionManager provideConnectionManager(Application application) {
+        return new ConnectionManager(application);
+    }
+
+    @Provides
+    @Singleton
     IAppLifecycleManager provideAppLifecycleManager() {
         return new AppLifecycleManager(app);
     }
 
     @Provides
     @Singleton
-    IAppInitManager provideAppInitManager() {
-        return new AppInitManager(app);
+    IAppInitManager provideAppInitManager(IAppSyncService appSyncService) {
+        return new AppInitManager(app, appSyncService);
     }
 
     @Provides

@@ -155,7 +155,7 @@ public final class AuthDomain implements IAuthDomain {
         intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, session.getUsername());
 
         sessionStorage.clear();
-        sessionPublishSubject.onNext(new Session(session.getUserId(), null, session.getUsername(), session.getTokenType()));
+        sessionPublishSubject.onNext(new Session.Modifier(session).setToken(null).create());
         application.startActivity(intent);
     }
 

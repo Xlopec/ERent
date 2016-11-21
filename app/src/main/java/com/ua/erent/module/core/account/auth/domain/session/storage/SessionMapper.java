@@ -1,5 +1,7 @@
 package com.ua.erent.module.core.account.auth.domain.session.storage;
 
+import android.accounts.Account;
+
 import com.ua.erent.module.core.account.auth.domain.bo.Session;
 import com.ua.erent.module.core.account.auth.user.domain.vo.UserID;
 
@@ -19,7 +21,7 @@ final class SessionMapper {
 
     static Session toSession(@NotNull SessionPO po) {
         Preconditions.checkNotNull(po);
-        return new Session(new UserID(po.getId()), po.getToken(), po.getLogin(), po.getTokenType());
+        return new Session(new UserID(po.getId()), new Account(po.getLogin(), po.getTokenType()), po.getToken());
     }
 
     static SessionPO toPersistenceObject(@NotNull Session session) {

@@ -1,10 +1,13 @@
 package com.ua.erent.module.core.account.auth.domain.bo;
 
+import android.accounts.Account;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
 import com.ua.erent.module.core.account.auth.user.domain.vo.UserID;
+
+import org.jetbrains.annotations.NotNull;
 
 import dagger.internal.Preconditions;
 
@@ -18,37 +21,85 @@ import dagger.internal.Preconditions;
 public final class Session implements Parcelable {
 
     private final UserID userId;
-    private final String username;
+    private final Account account;
     private final String token;
-    private final String tokenType;
 
-    public Session(UserID userId, String token, String username, String tokenType) {
+    public static final class Modifier {
 
-        if(TextUtils.isEmpty(username))
-            throw new IllegalArgumentException(String.format("illegal username, was %s", username));
+        private UserID userId;
+        private String username;
+        private String accountType;
+        private String token;
 
-        if (TextUtils.isEmpty(tokenType))
-            throw new IllegalArgumentException(String.format("illegal token type, was %s", tokenType));
+        public Modifier(@NotNull Session session) {
+            Preconditions.checkNotNull(session);
+            this.userId = session.userId;
+            this.username = session.account.name;
+            this.accountType = session.account.type;
+            this.token = session.token;
+        }
 
+        public UserID getUserId() {
+            return userId;
+        }
+
+        public Modifier setUserId(UserID userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public Modifier setUsername(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public String getAccountType() {
+            return accountType;
+        }
+
+        public Modifier setAccountType(String accountType) {
+            this.accountType = accountType;
+            return this;
+        }
+
+        public String getToken() {
+            return token;
+        }
+
+        public Modifier setToken(String token) {
+            this.token = token;
+            return this;
+        }
+
+        public Session create() {
+            return new Session(userId, new Account(username, accountType), token);
+        }
+    }
+
+    public Session(UserID userId, Account account, String token) {
+        Preconditions.checkNotNull(account, "account == null");
+        Preconditions.checkNotNull(userId, "user id == null");
+
+        this.account = account;
+        this.userId = userId;
         this.token = token;
-        this.tokenType = tokenType;
-        this.userId = Preconditions.checkNotNull(userId);
-        this.username = username;
     }
 
     private Session(Parcel in) {
         token = in.readString();
-        tokenType = in.readString();
         userId = in.readParcelable(UserID.class.getClassLoader());
-        username = in.readString();
+        account = in.readParcelable(Account.class.getClassLoader());
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(token);
-        dest.writeString(tokenType);
         dest.writeParcelable(userId, flags);
-        dest.writeString(username);
+        dest.writeParcelable(account, flags);
     }
 
     @Override
@@ -77,7 +128,7 @@ public final class Session implements Parcelable {
     }
 
     public String getTokenType() {
-        return tokenType;
+        return account.type;
     }
 
     public boolean isExpired() {
@@ -89,7 +140,7 @@ public final class Session implements Parcelable {
     }
 
     public String getUsername() {
-        return username;
+        return account.name;
     }
 
     @Override
@@ -100,18 +151,16 @@ public final class Session implements Parcelable {
         Session session = (Session) o;
 
         if (!userId.equals(session.userId)) return false;
-        if (!username.equals(session.username)) return false;
-        if (!token.equals(session.token)) return false;
-        return tokenType.equals(session.tokenType);
+        if (!account.equals(session.account)) return false;
+        return token != null ? token.equals(session.token) : session.token == null;
 
     }
 
     @Override
     public int hashCode() {
         int result = userId.hashCode();
-        result = 31 * result + username.hashCode();
-        result = 31 * result + token.hashCode();
-        result = 31 * result + tokenType.hashCode();
+        result = 31 * result + account.hashCode();
+        result = 31 * result + (token != null ? token.hashCode() : 0);
         return result;
     }
 
@@ -119,9 +168,8 @@ public final class Session implements Parcelable {
     public String toString() {
         return "Session{" +
                 "userId=" + userId +
-                ", username='" + username + '\'' +
+                ", account=" + account +
                 ", token='" + token + '\'' +
-                ", tokenType='" + tokenType + '\'' +
                 '}';
     }
 }

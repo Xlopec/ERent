@@ -1,5 +1,7 @@
 package com.ua.erent.module.core.account.auth.domain.api.auth;
 
+import android.accounts.Account;
+
 import com.ua.erent.BuildConfig;
 import com.ua.erent.module.core.account.auth.domain.bo.Session;
 import com.ua.erent.module.core.account.auth.domain.vo.SignInCredentials;
@@ -63,8 +65,12 @@ public final class AuthProvider implements IAuthProvider {
                 api.fetchToken(new SignInRequest(credentials.getUsername(), credentials.getPassword(), BuildConfig.SERVER_API_KEY));
 
         return call.observeOn(AndroidSchedulers.mainThread())
-                .map(authResponse -> new Session(new UserID(authResponse.getUserId()), authResponse.getToken(),
-                        credentials.getUsername(), Constant.ACCOUNT_TOKEN_TYPE));
+                .map(authResponse -> {
+                    final UserID userID = new UserID(authResponse.getUserId());
+                    final Account account = new Account(credentials.getUsername(), Constant.ACCOUNT_TYPE);
+
+                    return new Session(userID, account, authResponse.getToken());
+                });
     }
 
     @Override
@@ -76,8 +82,12 @@ public final class AuthProvider implements IAuthProvider {
                 api.signUp(new SignUpRequest(credentials.getEmail(), credentials.getUsername(), plainPassword));
 
         return call.observeOn(AndroidSchedulers.mainThread())
-                .map(signUpResponse -> new Session(new UserID(signUpResponse.getUserId()), signUpResponse.getToken(),
-                        credentials.getUsername(), Constant.ACCOUNT_TOKEN_TYPE));
+                .map(signUpResponse -> {
+                    final UserID userID = new UserID(signUpResponse.getUserId());
+                    final Account account = new Account(credentials.getUsername(), Constant.ACCOUNT_TYPE);
+
+                    return new Session(userID, account, signUpResponse.getToken());
+                });
     }
 
 }

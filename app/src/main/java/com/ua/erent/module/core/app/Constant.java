@@ -10,5 +10,10 @@ public final class Constant {
      * */
     public static final String ACCOUNT_TYPE = "com.e-rent.account.type";
     public static final String ACCOUNT_TOKEN_TYPE = "com.e-rent.account.token.type";
+    public static final String ACCOUNT_AUTHORITY = "com.ua.erent.module.core.sync.provider";
+    /**
+     * Synchronization delay period, in seconds
+     */
+    public static final int SYNC_PERIOD = 10;
 
 }

@@ -18,8 +18,8 @@ import com.mobsandgeeks.saripaar.annotation.Length;
 import com.mobsandgeeks.saripaar.annotation.Password;
 import com.mobsandgeeks.saripaar.annotation.Pattern;
 import com.ua.erent.R;
-import com.ua.erent.module.core.presentation.mvp.component.LoginComponent;
 import com.ua.erent.module.core.di.target.InjectableV4Fragment;
+import com.ua.erent.module.core.presentation.mvp.component.LoginComponent;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ILoginPresenter;
 import com.ua.erent.module.core.presentation.mvp.view.interfaces.ILoginView;
 
@@ -36,7 +36,8 @@ import rx.Observable;
 public final class LoginFragment extends InjectableV4Fragment<LoginFragment, ILoginPresenter>
         implements ILoginView, Validator.ValidationListener {
 
-    @Pattern(regex = "^([_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,}))|(\\w{5,20})$")
+    //@Pattern(regex = "^([_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,}))|(\\w{5,20})$")
+    @Pattern(regex = "^\\w{5,20}$")
     @BindView(R.id.login_fld)
     protected EditText loginEditText;
 

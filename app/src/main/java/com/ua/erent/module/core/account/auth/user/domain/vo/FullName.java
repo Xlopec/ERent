@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 public final class FullName {
 
-    public static final RegexValidator USERNAME_VALIDATOR = new RegexValidator(Regexes.USERNAME);
+    private static final RegexValidator USERNAME_VALIDATOR = new RegexValidator(Regexes.USERNAME);
 
     private final String username;
 

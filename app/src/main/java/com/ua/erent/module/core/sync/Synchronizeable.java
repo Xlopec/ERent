@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SyncResult;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * <p>
@@ -20,10 +21,11 @@ public interface Synchronizeable {
      * Starts sync process; this process runs in a separate thread than app
      *
      * @param account    session to use to retrieve data from server
-     * @param token      token to use for api request
+     * @param token      token to use for api request, might be null if session expired
      * @param context    app context
      * @param syncResult sync result to notify sync adapter about changes
      */
-    void synchronize(@NotNull Account account, String token, @NotNull Context context, @NotNull SyncResult syncResult);
+    void synchronize(@NotNull Account account, @Nullable String token, @NotNull Context context,
+                     @NotNull SyncResult syncResult);
 
 }

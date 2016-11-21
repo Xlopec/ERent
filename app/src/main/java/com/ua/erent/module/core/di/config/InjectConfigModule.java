@@ -78,6 +78,7 @@ public final class InjectConfigModule extends Injector.IConfigModule {
         // register component factories to create component target
         // for further injection
         injector
+                .registerComponentFactory(AppComponent.class, () -> appComponent)
                 .registerComponentFactory(ItemsComponent.class, () -> DaggerItemsComponent.builder().
                         itemsModule(new ItemsModule()).appComponent(appComponent).build())
                 .registerComponentFactory(LoginComponent.class, () -> DaggerLoginComponent.builder()

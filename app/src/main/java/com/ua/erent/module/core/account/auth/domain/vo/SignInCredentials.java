@@ -1,6 +1,9 @@
 package com.ua.erent.module.core.account.auth.domain.vo;
 
-import dagger.internal.Preconditions;
+import com.ua.erent.module.core.util.validation.Regexes;
+
+import org.apache.commons.validator.routines.RegexValidator;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * <p>
@@ -11,12 +14,22 @@ import dagger.internal.Preconditions;
 
 public final class SignInCredentials {
 
+    private static final RegexValidator USERNAME_VALIDATOR = new RegexValidator(Regexes.SIGN_IN_USERNAME, true);
+    private static final RegexValidator PASSWORD_VALIDATOR = new RegexValidator(Regexes.PASSWORD, true);
+
     private final String login;
     private final String password;
 
-    public SignInCredentials(String login, String password) {
-        this.login = Preconditions.checkNotNull(login);
-        this.password = Preconditions.checkNotNull(password);
+    public SignInCredentials(@NotNull String login, @NotNull String password) {
+
+        if (!USERNAME_VALIDATOR.isValid(login))
+            throw new IllegalArgumentException(String.format("login %s isn't valid", login));
+
+        if (!PASSWORD_VALIDATOR.isValid(password))
+            throw new IllegalArgumentException(String.format("password %s isn't valid", password));
+
+        this.login = login;
+        this.password = password;
     }
 
     public String getUsername() {

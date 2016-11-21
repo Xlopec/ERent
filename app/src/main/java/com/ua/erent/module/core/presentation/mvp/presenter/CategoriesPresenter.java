@@ -3,6 +3,8 @@ package com.ua.erent.module.core.presentation.mvp.presenter;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.ua.erent.R;
+import com.ua.erent.module.core.networking.util.ConnectionManager;
 import com.ua.erent.module.core.presentation.mvp.model.interfaces.ICategoriesModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ICategoriesPresenter;
 import com.ua.erent.module.core.presentation.mvp.presenter.model.CategoryModel;
@@ -17,6 +19,8 @@ import java.util.Collection;
 import java.util.Random;
 
 import javax.inject.Inject;
+
+import dagger.internal.Preconditions;
 
 /**
  * Created by Максим on 11/12/2016.
@@ -37,10 +41,12 @@ public final class CategoriesPresenter extends ICategoriesPresenter {
 
     private final ICategoriesModel model;
     private final ArrayList<CategoryModel> localCache;
+    private final ConnectionManager connectionManager;
 
     @Inject
-    public CategoriesPresenter(ICategoriesModel model) {
+    public CategoriesPresenter(ICategoriesModel model, ConnectionManager connectionManager) {
         this.model = model;
+        this.connectionManager = connectionManager;
         this.localCache = new ArrayList<>(0);
     }
 
@@ -49,26 +55,32 @@ public final class CategoriesPresenter extends ICategoriesPresenter {
 
         if (isFirstTimeAttached()) {
 
-            Collection<CategoryModel> categoryModels = model.getCategories();
+            final Collection<CategoryModel> categoryModels = model.getCategories();
 
             if (savedState == null) {
 
-                if (categoryModels.isEmpty()) {
+                if (connectionManager.hasConnection()) {
                     // no cached categories available,
                     // pull them from the api server
-                    model.fetchCategories().subscribe(this::syncWithView,
-                            th -> {
-                                if (!isViewGone()) {
-                                    getView().showMessage(th.getMessage());
-                                }
-                                Log.w(TAG, "error on fetch categories#", th);
-                            });
-                } else {
+                    model.fetchCategories()
+                            .doOnSubscribe(view::showRefreshProgress)
+                            .doOnCompleted(view::hideRefreshProgress)
+                            .subscribe(this::syncWithView,
+                                    th -> {
+                                        if (!isViewGone()) {
+                                            view.showMessage(th.getMessage());
+                                            syncWithView(categoryModels);
+                                            view.hideRefreshProgress();
+                                        }
+                                        Log.w(TAG, "error on fetch categories#", th);
+                                    });
+                } else if (!categoryModels.isEmpty()) {
                     syncWithView(categoryModels);
+                } else {
+                    view.showMessage(view.getString(R.string.categories_no_internet));
                 }
             } else {
-                categoryModels = savedState.getParcelableArrayList(CategoriesPresenter.ARG_CACHED_CATEGORIES);
-                syncWithView(categoryModels);
+                syncWithView(savedState.getParcelableArrayList(CategoriesPresenter.ARG_CACHED_CATEGORIES));
             }
         }
     }
@@ -118,8 +130,11 @@ public final class CategoriesPresenter extends ICategoriesPresenter {
         if (isViewGone())
             throw new IllegalStateException("nothing to sync with");
 
+        Preconditions.checkNotNull(categoryModels);
+
         final ICategoriesView view = getView();
 
+        localCache.clear();
         localCache.addAll(categoryModels);
         view.clearCategories();
         view.addCategory(categoryModels);

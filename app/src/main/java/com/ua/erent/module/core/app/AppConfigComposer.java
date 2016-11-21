@@ -85,11 +85,13 @@ final class AppConfigComposer extends AbstractConfigComposer {
         final Retrofit retrofit = retrofitBuilder.setInterceptService(DaggerBaseNetworkingComponent.builder().
                 baseNetworkingModule(baseNetworkingModule).build().getInterceptService()).build().configure();
         final ItemModule itemModule = new ItemModule(retrofit);
+        final SyncModule syncModule = new SyncModule(AppConfigComposer.getSynchronizeables(itemModule), application);
 
         final NetworkingModule networkingModule = new NetworkingModule(retrofit);
         final AppComponent appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(application))
                 .initModule(new InitModule())
+                .syncModule(syncModule)
                 .authModule(new AuthModule(InitialScreenActivity.class))
                 .baseNetworkingModule(baseNetworkingModule)
                 .networkingModule(networkingModule)
@@ -99,7 +101,7 @@ final class AppConfigComposer extends AbstractConfigComposer {
                 .build();
 
         final SyncServiceComponent syncServiceComponent = DaggerSyncServiceComponent.builder()
-                .syncModule(new SyncModule(AppConfigComposer.getSynchronizeables(itemModule))).build();
+                .syncModule(syncModule).build();
 
         appComponent.getInitService().registerInitializeable(appComponent.getInitTargets());
         // signUp target dependency inject modules

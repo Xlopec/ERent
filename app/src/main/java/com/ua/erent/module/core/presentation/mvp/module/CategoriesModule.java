@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.ua.erent.module.core.di.scopes.ActivityScope;
 import com.ua.erent.module.core.item.domain.ICategoryAppService;
+import com.ua.erent.module.core.networking.util.ConnectionManager;
 import com.ua.erent.module.core.presentation.mvp.model.CategoriesModel;
 import com.ua.erent.module.core.presentation.mvp.model.interfaces.ICategoriesModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.CategoriesPresenter;
@@ -20,8 +21,8 @@ public final class CategoriesModule {
 
     @ActivityScope
     @Provides
-    ICategoriesPresenter providePresenter(ICategoriesModel model) {
-        return new CategoriesPresenter(model);
+    ICategoriesPresenter providePresenter(ICategoriesModel model, ConnectionManager connectionManager) {
+        return new CategoriesPresenter(model, connectionManager);
     }
 
     @ActivityScope

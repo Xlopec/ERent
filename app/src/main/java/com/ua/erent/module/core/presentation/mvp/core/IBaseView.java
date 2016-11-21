@@ -24,4 +24,6 @@ public interface IBaseView {
     @NotNull
     Context getApplicationContext();
 
+    String getString(int resId);
+
 }

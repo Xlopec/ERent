@@ -14,16 +14,22 @@ import dagger.internal.Preconditions;
 
 public final class AppService implements IAppService {
 
+    private final IAppInitManager initManager;
     private final IAppLifecycleManager lifecycleManager;
 
     @Inject
     public AppService(IAppLifecycleManager lifecycleManager, IAppInitManager initManager) {
         this.lifecycleManager = Preconditions.checkNotNull(lifecycleManager);
-        initManager.initialize();
+        this.initManager = initManager;
     }
 
     @Override
     public IAppLifecycleManager getStateCallbackManager() {
         return lifecycleManager;
+    }
+
+    @Override
+    public void initialize() {
+        initManager.initialize();
     }
 }
