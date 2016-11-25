@@ -2,6 +2,8 @@ package com.ua.erent.module.core.presentation.mvp.module;
 
 import android.app.Application;
 
+import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
+import com.ua.erent.module.core.account.auth.user.domain.IUserAppService;
 import com.ua.erent.module.core.di.scopes.ActivityScope;
 import com.ua.erent.module.core.item.domain.ICategoryAppService;
 import com.ua.erent.module.core.networking.util.ConnectionManager;
@@ -21,14 +23,16 @@ public final class CategoriesModule {
 
     @ActivityScope
     @Provides
-    ICategoriesPresenter providePresenter(ICategoriesModel model, ConnectionManager connectionManager) {
-        return new CategoriesPresenter(model, connectionManager);
+    ICategoriesPresenter providePresenter(ICategoriesModel model) {
+        return new CategoriesPresenter(model);
     }
 
     @ActivityScope
     @Provides
-    ICategoriesModel provideModel(Application app, ICategoryAppService categoryAppService) {
-        return new CategoriesModel(app, categoryAppService);
+    ICategoriesModel provideModel(Application app, ICategoryAppService categoryAppService,
+                                  ConnectionManager connectionManager,
+                                  IAuthAppService authAppService, IUserAppService userAppService) {
+        return new CategoriesModel(app, categoryAppService, connectionManager, authAppService, userAppService);
     }
 
 }

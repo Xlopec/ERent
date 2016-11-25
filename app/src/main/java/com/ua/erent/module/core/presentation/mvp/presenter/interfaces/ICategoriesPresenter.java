@@ -15,4 +15,8 @@ public abstract class ICategoriesPresenter extends IBasePresenter<CategoriesActi
 
     public abstract void onRefresh();
 
+    public abstract void onLogin();
+
+    public abstract void onLogout();
+
 }

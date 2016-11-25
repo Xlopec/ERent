@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.MenuRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -67,6 +68,8 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
     protected SwipeRefreshLayout refreshLayout;
 
     private ImageView bgHeaderImageView;
+    private TextView headerCredentials;
+    private TextView headerEmail;
     private View headerContainer;
 
     private ActionBarDrawerToggle toggle;
@@ -178,7 +181,6 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
         final ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
-            actionBar.setTitle("Recent items");
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
@@ -204,6 +206,8 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
         final View headerView = navigationView.getHeaderView(0);
 
         headerContainer = headerView.findViewById(R.id.nav_header_container);
+        headerCredentials = (TextView) headerView.findViewById(R.id.nav_username);
+        headerEmail = (TextView) headerView.findViewById(R.id.nav_email);
         bgHeaderImageView = (ImageView) headerView.findViewById(R.id.nav_bg);
         bgHeaderImageView.setDrawingCacheEnabled(true);
         bgHeaderImageView.buildDrawingCache();
@@ -223,22 +227,6 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
         drawerLayout.addDrawerListener(this);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        /*AccountManager accountManager = AccountManager.get(getApplicationContext());
-
-        final Account[] accounts = accountManager.getAccountsByType(Constant.ACCOUNT_TYPE);
-        Account account = null;
-
-        for (final Account tmp : accounts) {
-            if (tmp.name.equals("peter")) {
-                account = tmp;
-                break;
-            }
-        }
-
-        final String authority = "com.ua.erent.module.core.sync.provider";
-        ContentResolver.setIsSyncable(account, authority, 1);
-        ContentResolver.setSyncAutomatically(account, authority, true);
-        ContentResolver.addPeriodicSync(account, authority, Bundle.EMPTY, 10);*/
     }
 
     @Override
@@ -267,7 +255,7 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
 
         final int id = item.getItemId();
 
-        if(id == R.id.action_refresh) {
+        if (id == R.id.action_refresh) {
             refreshLayout.setRefreshing(true);
             presenter.onRefresh();
         }
@@ -277,7 +265,23 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
 
     @Override
     public boolean onNavigationItemSelected(@NotNull MenuItem item) {
-        drawerLayout.closeDrawer(GravityCompat.START);
+
+        final int id = item.getItemId();
+
+        if (id == R.id.action_profile) {
+
+        } else if (id == R.id.action_conversation) {
+
+        } else if (id == R.id.action_items) {
+
+        } else if (id == R.id.action_logout) {
+            presenter.onLogout();
+        } else if (id == R.id.action_setting) {
+
+        } else if (id == R.id.action_login) {
+            presenter.onLogin();
+        }
+
         return true;
     }
 
@@ -325,6 +329,23 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
     @Override
     public void onDrawerStateChanged(int newState) {
 
+    }
+
+    @Override
+    public void setDrawerMenu(@MenuRes int resId) {
+        navigationView.getMenu().clear();
+        navigationView.inflateMenu(resId);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    public void setCredentials(String fullName, String email) {
+
+        headerCredentials.setVisibility(fullName == null ? View.GONE : View.VISIBLE);
+        headerEmail.setVisibility(email == null ? View.GONE : View.VISIBLE);
+
+        headerCredentials.setText(fullName);
+        headerEmail.setText(email);
     }
 
     @Override

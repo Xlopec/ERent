@@ -3,8 +3,10 @@ package com.ua.erent.module.core.presentation.mvp.presenter;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.ua.erent.BuildConfig;
 import com.ua.erent.R;
-import com.ua.erent.module.core.networking.util.ConnectionManager;
+import com.ua.erent.module.core.account.auth.domain.bo.Session;
+import com.ua.erent.module.core.account.auth.user.domain.bo.User;
 import com.ua.erent.module.core.presentation.mvp.model.interfaces.ICategoriesModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ICategoriesPresenter;
 import com.ua.erent.module.core.presentation.mvp.presenter.model.CategoryModel;
@@ -21,6 +23,7 @@ import java.util.Random;
 import javax.inject.Inject;
 
 import dagger.internal.Preconditions;
+import rx.Subscription;
 
 /**
  * Created by Максим on 11/12/2016.
@@ -41,47 +44,35 @@ public final class CategoriesPresenter extends ICategoriesPresenter {
 
     private final ICategoriesModel model;
     private final ArrayList<CategoryModel> localCache;
-    private final ConnectionManager connectionManager;
+    private final Subscription userSubscriber;
+    private final Subscription sessionSubscriber;
 
     @Inject
-    public CategoriesPresenter(ICategoriesModel model, ConnectionManager connectionManager) {
+    public CategoriesPresenter(ICategoriesModel model) {
         this.model = model;
-        this.connectionManager = connectionManager;
         this.localCache = new ArrayList<>(0);
+
+        userSubscriber = model.getOnUserProfileChangedObservable()
+                .subscribe(user -> {
+                    if (!isViewGone()) {
+                        syncWithView(user);
+                    }
+                });
+
+        sessionSubscriber = model.getSessionObs()
+                .subscribe(session -> {
+                    if (!isViewGone()) {
+                        syncWithView(session);
+                    }
+                });
     }
 
     @Override
     protected void onViewAttached(@NotNull CategoriesActivity view, @Nullable Bundle savedState, @Nullable Bundle data) {
 
         if (isFirstTimeAttached()) {
-
-            final Collection<CategoryModel> categoryModels = model.getCategories();
-
-            if (savedState == null) {
-
-                if (connectionManager.hasConnection()) {
-                    // no cached categories available,
-                    // pull them from the api server
-                    model.fetchCategories()
-                            .doOnSubscribe(view::showRefreshProgress)
-                            .doOnCompleted(view::hideRefreshProgress)
-                            .subscribe(this::syncWithView,
-                                    th -> {
-                                        if (!isViewGone()) {
-                                            view.showMessage(th.getMessage());
-                                            syncWithView(categoryModels);
-                                            view.hideRefreshProgress();
-                                        }
-                                        Log.w(TAG, "error on fetch categories#", th);
-                                    });
-                } else if (!categoryModels.isEmpty()) {
-                    syncWithView(categoryModels);
-                } else {
-                    view.showMessage(view.getString(R.string.categories_no_internet));
-                }
-            } else {
-                syncWithView(savedState.getParcelableArrayList(CategoriesPresenter.ARG_CACHED_CATEGORIES));
-            }
+            setupDrawer();
+            setupCategories(savedState);
         }
     }
 
@@ -93,7 +84,8 @@ public final class CategoriesPresenter extends ICategoriesPresenter {
 
     @Override
     protected void onDestroyed() {
-
+        userSubscriber.unsubscribe();
+        sessionSubscriber.unsubscribe();
     }
 
     @Override
@@ -125,6 +117,83 @@ public final class CategoriesPresenter extends ICategoriesPresenter {
         );
     }
 
+    @Override
+    public void onLogin() {
+        getView().startActivity(model.createLoginIntent());
+    }
+
+    @Override
+    public void onLogout() {
+        model.logout();
+        getView().startActivity(model.createLogoutIntent());
+    }
+
+    private void setupCategories(Bundle savedState) {
+
+        final Collection<CategoryModel> categoryModels = model.getCategories();
+
+        if (savedState == null) {
+
+            if (model.hasConnection()) {
+                // no cached categories available,
+                // pull them from the api server
+                model.fetchCategories()
+                        .doOnSubscribe(getView()::showRefreshProgress)
+                        .doOnCompleted(getView()::hideRefreshProgress)
+                        .subscribe(this::syncWithView,
+                                th -> {
+                                    if (!isViewGone()) {
+                                        getView().showMessage(th.getMessage());
+                                        syncWithView(categoryModels);
+                                        getView().hideRefreshProgress();
+                                    }
+                                    Log.w(TAG, "error on fetch categories#", th);
+                                });
+            } else if (!categoryModels.isEmpty()) {
+                syncWithView(categoryModels);
+            } else {
+                getView().showMessage(getView().getString(R.string.categories_no_internet));
+            }
+        } else {
+            syncWithView(savedState.getParcelableArrayList(CategoriesPresenter.ARG_CACHED_CATEGORIES));
+        }
+    }
+
+    private void setupDrawer() {
+
+        if (isViewGone())
+            throw new IllegalStateException();
+
+        final User user = model.getCachedProfile();
+
+        if (model.isSessionAlive() && ((user == null && model.hasConnection()) || user != null)) {
+
+            if (user == null) {
+
+                model.fetchUserProfile().subscribe(profile -> {
+                    if (!isViewGone()) {
+                        getView().setDrawerMenu(R.menu.categories_drawer_authorized);
+                        getView().setCredentials(profile.getFullName().getUsername(), profile.getContactInfo().getEmail());
+                    }
+                }, th -> {
+                    if (!isViewGone()) {
+                        getView().setDrawerMenu(R.menu.categories_drawer_unauthorized);
+                        getView().setCredentials(getView().getString(R.string.main_drawer_credentials_title_unauthorized),
+                                getView().getString(R.string.main_drawer_credentials_sub_title_unauthorized, BuildConfig.VERSION_NAME));
+                        getView().showMessage(th.getMessage());
+                    }
+                });
+            } else {
+                getView().setDrawerMenu(R.menu.categories_drawer_authorized);
+                getView().setCredentials(user.getFullName().getUsername(), user.getContactInfo().getEmail());
+            }
+        } else {
+            getView().setDrawerMenu(R.menu.categories_drawer_unauthorized);
+            getView().setCredentials(getView().getString(R.string.main_drawer_credentials_title_unauthorized),
+                    getView().getString(R.string.main_drawer_credentials_sub_title_unauthorized, BuildConfig.VERSION_NAME));
+        }
+    }
+
     private void syncWithView(Collection<CategoryModel> categoryModels) {
 
         if (isViewGone())
@@ -138,6 +207,31 @@ public final class CategoriesPresenter extends ICategoriesPresenter {
         localCache.addAll(categoryModels);
         view.clearCategories();
         view.addCategory(categoryModels);
+    }
+
+    private void syncWithView(User user) {
+
+        if (isViewGone())
+            throw new IllegalStateException("nothing to sync with");
+
+        if (user == null) {
+            getView().setCredentials(getView().getString(R.string.main_drawer_credentials_title_unauthorized),
+                    getView().getString(R.string.main_drawer_credentials_sub_title_unauthorized, BuildConfig.VERSION_NAME));
+        } else {
+            getView().setCredentials(user.getFullName().getUsername(), user.getContactInfo().getEmail());
+        }
+    }
+
+    private void syncWithView(Session session) {
+
+        if (isViewGone())
+            throw new IllegalStateException("nothing to sync with");
+
+        if (session.isExpired()) {
+            syncWithView((User) null);
+        } else {
+            setupDrawer();
+        }
     }
 
 }

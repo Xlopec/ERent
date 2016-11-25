@@ -9,15 +9,19 @@
     <string name="font_name_source_sans_pro">SourceSansPro</string>
 
     <!-- Main drawer -->
+    <string name="main_drawer_credentials_title_unauthorized">E-Rent service</string>
+    <string name="main_drawer_credentials_sub_title_unauthorized">Version build %s</string>
     <string name="main_drawer_profile">Profile</string>
     <string name="main_drawer_conversation">Conversations (1 new)</string>
     <string name="main_drawer_settings">Settings</string>
     <string name="main_drawer_items">Items</string>
     <string name="main_drawer_logout">Logout</string>
+    <string name="main_drawer_login">Login</string>
     <string name="main_drawer_open">Open</string>
     <string name="main_drawer_close">Close</string>
 
     <!-- Categories activity -->
+    <string name="categories_title_activity">Categories</string>
     <string name="categories_refresh">Refresh</string>
     <string name="categories_no_internet">No internet connection…</string>
     <string name="categories_fetch_err">Failed to fetch categories</string>

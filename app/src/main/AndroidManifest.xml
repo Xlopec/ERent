@@ -46,7 +46,9 @@
 
         <activity android:name=".module.core.presentation.mvp.view.NextActivity" />
 
-        <activity android:name=".module.core.presentation.mvp.view.CategoriesActivity">
+        <activity
+            android:name=".module.core.presentation.mvp.view.CategoriesActivity"
+            android:label="@string/categories_title_activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

@@ -1,5 +1,7 @@
 package com.ua.erent.module.core.presentation.mvp.view.interfaces;
 
+import android.support.annotation.MenuRes;
+
 import com.ua.erent.module.core.presentation.mvp.core.IBaseView;
 import com.ua.erent.module.core.presentation.mvp.presenter.model.CategoryModel;
 
@@ -12,6 +14,10 @@ import java.util.Collection;
  */
 
 public interface ICategoriesView extends IBaseView {
+
+    void setDrawerMenu(@MenuRes int resId);
+
+    void setCredentials(String fullName, String email);
 
     void showMessage(@NotNull String message);
 
