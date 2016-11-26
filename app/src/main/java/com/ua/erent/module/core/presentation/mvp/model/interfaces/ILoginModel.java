@@ -1,5 +1,8 @@
 package com.ua.erent.module.core.presentation.mvp.model.interfaces;
 
+import android.content.Context;
+import android.content.Intent;
+
 import com.ua.erent.module.core.init.IInitCallback;
 
 import org.jetbrains.annotations.NotNull;
@@ -9,6 +12,8 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public interface ILoginModel {
+
+    Intent createLoginIntent(@NotNull Context context);
 
     boolean isSessionAlive();
 

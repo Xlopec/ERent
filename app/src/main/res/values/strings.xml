@@ -4,10 +4,6 @@
 
     <string name="err_app_crash">E-Rent has crashed, please, send error report</string>
 
-    <!-- Fonts -->
-    <string name="font_name_fontawesome">fontawesome</string>
-    <string name="font_name_source_sans_pro">SourceSansPro</string>
-
     <!-- Main drawer -->
     <string name="main_drawer_credentials_title_unauthorized">E-Rent service</string>
     <string name="main_drawer_credentials_sub_title_unauthorized">Version build %s</string>
@@ -19,6 +15,19 @@
     <string name="main_drawer_login">Login</string>
     <string name="main_drawer_open">Open</string>
     <string name="main_drawer_close">Close</string>
+
+    <!-- Registration -->
+    <string name="register_operation_progress">Registration in progress, please wait…</string>
+    <string name="register_operation_failure">Failed to create account…</string>
+    <string name="register_upload_avatar_failure">Failed to upload avatar, proceed…</string>
+
+    <!-- Authorization -->
+    <string name="auth_loading">Loading…</string>
+    <string name="auth_loaded">Loaded</string>
+    <string name="auth_component_loaded" formatted="false">"Loaded %s component (%d/%d)"</string>
+    <string name="auth_component_load_err" formatted="false">"Failed to load %s component: %s"</string>
+    <string name="auth_operation_failure">Operation failed</string>
+    <string name="auth_operation_failure_formatted" formatted="false">Operation failed: %s</string>
 
     <!-- Categories activity -->
     <string name="categories_title_activity">Categories</string>

@@ -4,11 +4,12 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.ua.erent.module.core.presentation.mvp.model.interfaces.IRegisterModel;
+import com.ua.erent.R;
 import com.ua.erent.module.core.presentation.mvp.model.SignUpForm;
+import com.ua.erent.module.core.presentation.mvp.model.interfaces.IRegisterModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IRegisterPresenter;
-import com.ua.erent.module.core.presentation.mvp.view.interfaces.IInitialScreenView;
 import com.ua.erent.module.core.presentation.mvp.view.RegisterFragment;
+import com.ua.erent.module.core.presentation.mvp.view.interfaces.IInitialScreenView;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,7 +43,7 @@ public final class RegisterPresenter extends IRegisterPresenter {
                             IInitialScreenView.NavigationListener.class.getSimpleName()));
         }
 
-        if(savedState != null) {
+        if (savedState != null) {
             restoreState(savedState);
         }
     }
@@ -51,7 +52,7 @@ public final class RegisterPresenter extends IRegisterPresenter {
 
         avatarUri = state.getParcelable(ARG_AVATAR_URI_STATE);
 
-        if(avatarUri != null) {
+        if (avatarUri != null) {
             getView().setAvatarUri(avatarUri);
         }
     }
@@ -74,18 +75,19 @@ public final class RegisterPresenter extends IRegisterPresenter {
 
     @Override
     public void onCreateAccount(@NotNull SignUpForm form) {
-        getView().showProgress("Registering in progress...");
+        getView().showProgress(getView().getString(R.string.register_operation_progress));
 
-        model.signUp(form.setAvatarUri(avatarUri)).subscribe(
-                aVoid -> {
-                    getView().showToast("You've successfully registered");
-                    getView().hideProgress();
-                },
-                th -> {
-                    getView().showToast(th.getMessage());
-                    getView().hideProgress();
-                }
-        );
+        model.signUp(form.setAvatarUri(avatarUri))
+                .doOnCompleted(getView()::hideProgress)
+                .subscribe(
+                        aVoid -> {
+                            getView().hideProgress();
+                            getView().startActivity(model.createLoginIntent(getView().getContext()));
+                            getView().getActivity().finish();
+                        }, th -> {
+                            getView().showToast(th.getMessage());
+                            getView().hideProgress();
+                        });
     }
 
     @Override

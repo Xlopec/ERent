@@ -99,7 +99,7 @@ public final class RegisterFragment extends InjectableV4Fragment<RegisterFragmen
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        progressDialog = new ProgressDialog(getActivity());
+        progressDialog = new ProgressDialog(getActivity(), R.style.DefaultDialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
     }
@@ -108,7 +108,6 @@ public final class RegisterFragment extends InjectableV4Fragment<RegisterFragmen
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-
 
         final View layout = inflater.inflate(R.layout.fragment_register, container, false);
         final ViewTreeObserver vto = layout.getViewTreeObserver();

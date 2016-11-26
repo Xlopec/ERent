@@ -1,7 +1,7 @@
 package com.ua.erent.module.core.presentation.mvp.view;
 
 import android.content.Context;
-import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -12,12 +12,13 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import com.ua.erent.R;
-import com.ua.erent.module.core.presentation.mvp.component.InitialScreenComponent;
 import com.ua.erent.module.core.di.target.InjectableActivity;
+import com.ua.erent.module.core.presentation.mvp.component.InitialScreenComponent;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IInitialScreenPresenter;
 import com.ua.erent.module.core.presentation.mvp.view.interfaces.IInitialScreenView;
 
@@ -49,23 +50,12 @@ public final class InitialScreenActivity extends InjectableActivity<InitialScree
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!isTaskRoot())
-        {
-            final Intent intent = getIntent();
-            final String intentAction = intent.getAction();
-            if (intent.hasCategory(Intent.CATEGORY_LAUNCHER) && intentAction != null && intentAction.equals(Intent.ACTION_MAIN)) {
-                finish();
-                return;
-            }
-        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            final Window w = getWindow();
 
-        /*if(!isTaskRoot()
-                && getIntent().hasCategory(Intent.CATEGORY_LAUNCHER)
-                && getIntent().getAction() != null
-                && getIntent().getAction().equals(Intent.ACTION_MAIN)) {
-            finish();
-            return;
-        }*/
+            w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
 
         appBarLayout.setExpanded(false);
 
@@ -91,10 +81,12 @@ public final class InitialScreenActivity extends InjectableActivity<InitialScree
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {}
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {}
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
         });
     }
 

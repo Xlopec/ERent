@@ -30,7 +30,6 @@ import java.util.Collection;
 import javax.inject.Inject;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -75,21 +74,23 @@ public final class CategoriesModel implements ICategoriesModel {
         @Override
         public Observable<Bitmap> fetch(@Px int width, @Px int height, @NotNull Context context) {
 
-            return bitmap == null ? Observable.create(new Observable.OnSubscribe<Bitmap>() {
+            return bitmap == null ? Observable.defer(() ->
+                    Observable.create((Observable.OnSubscribe<Bitmap>) subscriber -> {
 
-                @Override
-                public void call(Subscriber<? super Bitmap> subscriber) {
+                        subscriber.onStart();
 
-                    bitmap = ImageUtils.decodeSampledBitmapFromResource(
-                            context.getResources(),
-                            R.drawable.bike_test,
-                            ImageUtils.pxToDp(width),
-                            ImageUtils.pxToDp(height));
-
-                    subscriber.onNext(bitmap);
-                    subscriber.onCompleted();
-                }
-            }).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread())
+                        try {
+                            bitmap = ImageUtils.decodeSampledBitmapFromResource(
+                                    context.getResources(),
+                                    R.drawable.bike_test,
+                                    ImageUtils.pxToDp(width),
+                                    ImageUtils.pxToDp(height));
+                            subscriber.onNext(bitmap);
+                        } finally {
+                            subscriber.onCompleted();
+                        }
+                    }))
+                    .subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread())
                     : Observable.just(bitmap);
         }
 
@@ -100,6 +101,7 @@ public final class CategoriesModel implements ICategoriesModel {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
+            bitmap = null;
             dest.writeInt(resourceId);
         }
     }

@@ -5,51 +5,49 @@
     <style name="MyTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="LightTheme" parent="MyTheme.Light" />
+
     <style name="DarkTheme" parent="MyTheme.Dark" />
+
+    <style name="MyTheme.Dark" parent="MyTheme.Base" />
 
     <style name="MyTheme.Base" parent="Theme.AppCompat.Light">
         <item name="windowNoTitle">true</item>
+        <item name="android:buttonStyle">@style/Button.Flat</item>
         <item name="windowActionBar">false</item>
+        <item name="android:textColorHint">@color/secondaryTextB</item>
+        <item name="android:textColor">@color/primaryTextB</item>
+        <item name="android:textColorSecondary">@color/secondaryTextB</item>
+        <item name="android:textColorPrimary">@color/primaryTextB</item>
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primaryDark</item>
         <item name="colorAccent">@color/accent</item>
         <item name="colorButtonNormal">@color/primary</item>
-        <item name="actionBarStyle">@style/Widget.AppCompat.Light.ActionBar</item>
-        <item name="actionBarTheme">@style/ThemeOverlay.MyTheme.ActionBar</item>
-        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-        <item name="toolbarStyle">@style/Widget.AppCompat.Toolbar</item>
+        <item name="colorControlNormal">#FFF</item>
+        <item name="colorControlActivated">@color/primary</item>
+        <item name="colorControlHighlight">@color/primary</item>
     </style>
 
     <style name="MyTheme.Light" parent="MyTheme.Base">
         <item name="android:textViewStyle">@style/TextViewStyle</item>
-        <item name="android:buttonStyle">@style/ButtonStyle</item>
         <item name="android:textColorHint">@color/primaryTextW</item>
         <item name="colorControlNormal">@color/primaryTextW</item>
         <item name="colorControlActivated">@color/primaryTextW</item>
         <item name="colorControlHighlight">@color/primaryTextW</item>
         <item name="android:textColor">@color/primaryTextW</item>
         <item name="android:textColorSecondary">@color/secondaryTextW</item>
-        <item name="android:editTextStyle">@style/EditText.Default</item>
-        <item name="editTextStyle">@style/EditText.Default</item>
+        <item name="android:textColorPrimary">@color/primaryTextB</item>
+        <item name="android:editTextStyle">@style/EditText.Light</item>
+        <item name="editTextStyle">@style/EditText.Light</item>
+        <item name="android:itemTextAppearance">@style/ItemTextStyle</item>
     </style>
 
-    <style name="MyTheme.Dark" parent="MyTheme.Base">
-        <item name="android:textViewStyle">@style/TextViewStyle</item>
-        <item name="android:buttonStyle">@style/ButtonStyle</item>
-        <item name="android:textColorHint">@color/secondaryTextB</item>
-        <item name="colorControlNormal">#FFF</item>
-        <item name="colorControlActivated">@color/primary</item>
-        <item name="colorControlHighlight">@color/primary</item>
+    <style name="ItemTextStyle" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
         <item name="android:textColor">@color/primaryTextB</item>
-        <item name="android:textColorSecondary">@color/secondaryTextB</item>
-        <item name="android:textColorPrimary">#FFF</item>
-        <item name="android:editTextStyle">@style/EditText.Default</item>
-        <item name="editTextStyle">@style/EditText.Default</item>
     </style>
 
-    <style name="ThemeOverlay.MyTheme.ActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
-       <!-- <item name="android:textColorPrimary">#FFF</item>
-        <item name="colorControlNormal">#FFF</item>-->
+    <style name="DefaultDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:textColor">@color/primaryTextB</item>
     </style>
 
     <style name="TextViewStyle" parent="android:Widget.TextView">
@@ -70,19 +68,9 @@
         <item name="android:textColor">@color/primaryLight</item>/>
     </style>
 
-    <style name="EditText.Default" parent="Widget.AppCompat.EditText">
+    <style name="EditText.Light" parent="Widget.AppCompat.EditText">
         <item name="android:textColor">@color/primaryTextW</item>
         <item name="android:textColorSecondary">@color/secondaryTextW</item>
-        <item name="android:fontFamily">sans-serif-thin</item>
-    </style>
-
-    <style name="EditText.Light" parent="Widget.AppCompat.EditText">
-        <item name="colorAccent">#FFF</item>
-        <item name="colorControlNormal">#FFF</item>
-        <item name="colorControlActivated">#FFF</item>
-        <item name="android:textColor">#FFF</item>
-        <item name="android:textColorSecondary">#FFF</item>
-        <item name="android:textColorHint">#FFF</item>
         <item name="android:fontFamily">sans-serif-thin</item>
     </style>
 

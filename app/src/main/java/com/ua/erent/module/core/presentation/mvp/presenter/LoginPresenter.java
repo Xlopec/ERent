@@ -1,22 +1,19 @@
 package com.ua.erent.module.core.presentation.mvp.presenter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import com.ua.erent.R;
 import com.ua.erent.module.core.init.IInitCallback;
 import com.ua.erent.module.core.presentation.mvp.model.interfaces.ILoginModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ILoginPresenter;
-import com.ua.erent.module.core.presentation.mvp.view.CategoriesActivity;
 import com.ua.erent.module.core.presentation.mvp.view.LoginFragment;
 import com.ua.erent.module.core.presentation.mvp.view.interfaces.IInitialScreenView;
 import com.ua.erent.module.core.util.Initializeable;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -37,74 +34,76 @@ public final class LoginPresenter extends ILoginPresenter {
 
         private final Subscriber<? super String> subscriber;
 
-        public InitCallbackImp(Subscriber<? super String> subscriber) {
+        InitCallbackImp(Subscriber<? super String> subscriber) {
             this.subscriber = subscriber;
         }
 
         @Override
         public void onPreExecute() {
-            subscriber.onNext("Loading...");
+            subscriber.onStart();
             getView().showProgressView();
         }
 
         @Override
         public void onInitialized() {
-            subscriber.onNext("Loaded...");
-
-            final Intent intent = new Intent(getView().getActivity(), CategoriesActivity.class);
-
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            getView().hideProgressView();
-            getView().startActivity(intent);
-            getView().getActivity().finish();
+            try {
+                subscriber.onNext(context.getString(R.string.auth_loaded));
+                getView().hideProgressView();
+                getView().startActivity(model.createLoginIntent(context));
+                getView().getActivity().finish();
+            } finally {
+                subscriber.onCompleted();
+            }
         }
 
         @Override
         public void onComponentInitialized(@NotNull Initializeable initializeable, int progress, int total) {
-            subscriber.onNext(String.format(Locale.getDefault(), "Loaded %s component (%d/%d)",
+            subscriber.onNext(context.getString(R.string.auth_component_loaded,
                     initializeable.getClass().getSimpleName(), progress, total));
-            subscriber.onCompleted();
         }
 
         @Override
         public void onException(@NotNull Initializeable initializeable, @NotNull Throwable th) {
-            subscriber.onNext(String.format(Locale.getDefault(), "Failed to load %s component: %s",
+            subscriber.onNext(context.getString(R.string.auth_component_load_err,
                     initializeable.getClass().getSimpleName(), th.getMessage()));
         }
 
         @Override
         public void onFailure(@NotNull Initializeable initializeable, @NotNull Throwable th) {
+            try {
+                String message;
 
-            String message;
+                if (TextUtils.isEmpty(th.getMessage())) {
+                    message = context.getString(R.string.auth_operation_failure);
+                } else {
+                    message = context.getString(R.string.auth_operation_failure_formatted, th.getMessage());
+                }
 
-            if (TextUtils.isEmpty(th.getMessage())) {
-                message = "Operation failed";
-            } else {
-                message = String.format(Locale.getDefault(), "Operation failed: %s", th.getMessage());
+                getView().showToast(message);
+                subscriber.onNext(message);
+                getView().hideProgressView();
+            } finally {
+                subscriber.onCompleted();
             }
-
-            getView().showToast(message);
-            subscriber.onNext(message);
-            getView().hideProgressView();
-            subscriber.onCompleted();
         }
 
         @Override
         public void onFailure(@NotNull Throwable th) {
+            try {
+                String message;
 
-            String message;
+                if (TextUtils.isEmpty(th.getMessage())) {
+                    message = context.getString(R.string.auth_operation_failure);
+                } else {
+                    message = context.getString(R.string.auth_operation_failure_formatted, th.getMessage());
+                }
 
-            if (TextUtils.isEmpty(th.getMessage())) {
-                message = "Operation failed";
-            } else {
-                message = String.format(Locale.getDefault(), "Operation failed: %s", th.getMessage());
+                getView().showToast(message);
+                subscriber.onNext(message);
+                getView().hideProgressView();
+            } finally {
+                subscriber.onCompleted();
             }
-
-            getView().showToast(message);
-            subscriber.onNext(message);
-            getView().hideProgressView();
-            subscriber.onCompleted();
         }
 
     }
