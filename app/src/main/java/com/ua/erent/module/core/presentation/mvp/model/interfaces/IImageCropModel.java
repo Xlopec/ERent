@@ -11,6 +11,8 @@ import org.jetbrains.annotations.NotNull;
 
 public interface IImageCropModel {
 
+    String getImageFormat();
+
     Uri createStoreFileUri(@NotNull Context context);
 
 }

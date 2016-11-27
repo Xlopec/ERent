@@ -17,13 +17,20 @@ import java.io.IOException;
 
 public final class ImageCropModel implements IImageCropModel {
 
+    private static final String IMAGE_FORMAT = "png";
+
     private static final String TAG = ImageCropModel.class.getSimpleName();
+
+    @Override
+    public String getImageFormat() {
+        return IMAGE_FORMAT;
+    }
 
     @Override
     public Uri createStoreFileUri(@NotNull Context context) {
 
         try {
-            return Uri.fromFile(File.createTempFile("image", ".tmp", context.getExternalCacheDir()));
+            return Uri.fromFile(File.createTempFile("image", ".".concat(IMAGE_FORMAT), context.getExternalCacheDir()));
         } catch (final IOException e) {
             Log.e(TAG, "Exception occurred while creating temp file", e);
         }

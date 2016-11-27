@@ -8,6 +8,8 @@ import com.ua.erent.module.core.util.Initializeable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
+
 import rx.Observable;
 
 /**
@@ -37,6 +39,8 @@ public interface IUserDomain extends Initializeable {
      * @return rx observable to monitor operation progress
      */
     Observable<User> updateUserProfile(@NotNull UserForm userForm);
+
+    Observable<Void> uploadAvatar(@NotNull File avatar);
 
     /**
      * Returns cached user instance if any. To update cache user

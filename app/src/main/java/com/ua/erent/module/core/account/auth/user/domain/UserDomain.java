@@ -15,6 +15,8 @@ import com.ua.erent.module.core.util.Initializeable;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -84,6 +86,21 @@ public final class UserDomain implements IUserDomain, IAppLifecycleManager.IStat
                     }
                     return Observable.just(updated);
                 }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<Void> uploadAvatar(@NotNull File avatar) {
+
+        Preconditions.checkNotNull(avatar);
+
+        if (!avatar.exists() || !avatar.isFile())
+            throw new IllegalArgumentException(String.format("Invalid user avatar file exists %s, is file %s",
+                    avatar.exists(), avatar.isFile()));
+
+        if (!authService.isSessionAlive())
+            throw new IllegalStateException(String.format("%s session expired", getClass()));
+
+        return userProvider.uploadAvatar(authService.getSession(), avatar);
     }
 
     @Override

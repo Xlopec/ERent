@@ -1,5 +1,8 @@
 package com.ua.erent.module.core.item.domain.api;
 
+import android.net.Uri;
+
+import com.ua.erent.BuildConfig;
 import com.ua.erent.module.core.account.auth.user.domain.vo.UserID;
 import com.ua.erent.module.core.item.domain.bo.Item;
 import com.ua.erent.module.core.item.domain.vo.Brand;
@@ -7,6 +10,7 @@ import com.ua.erent.module.core.item.domain.vo.Details;
 import com.ua.erent.module.core.item.domain.vo.ItemID;
 import com.ua.erent.module.core.item.domain.vo.ItemInfo;
 import com.ua.erent.module.core.item.domain.vo.Region;
+import com.ua.erent.module.core.item.domain.vo.UserInfo;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -40,14 +44,15 @@ final class ConverterFactory {
         Preconditions.checkNotNull(convert);
 
         return new Item.Builder().setId(new ItemID(convert.id))
-                .setOwner(new UserID(convert.owner.id))
                 .setItemInfo(new ItemInfo(convert.name, convert.description, new BigDecimal(convert.price)))
                 .setDetails(new Details.Builder()
-                        .setUsername(convert.owner.username)
                         .setBrand(new Brand(convert.brand.id, convert.brand.name, convert.brand.description))
                         .setRegion(new Region(convert.region.id, convert.region.name))
                         .setPublicationDate(convert.publicationDate)
-                        .build())
+                        .setUserInfo(
+                                new UserInfo(new UserID(convert.owner.id), convert.owner.username,
+                                        Uri.parse(BuildConfig.API_BASE_URL.concat(convert.owner.avatarUrl)))
+                        ).build())
                 .build();
     }
 

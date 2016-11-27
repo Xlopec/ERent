@@ -9,8 +9,6 @@ import com.ua.erent.module.core.util.validation.Regexes;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.RegexValidator;
 
-import java.io.File;
-
 import dagger.internal.Preconditions;
 
 /**
@@ -23,7 +21,6 @@ public final class SignUpCredentials implements Parcelable {
     private final String username;
     private final String password;
     private final String confPassword;
-    private final File avatarImage;
 
     public static final class Builder implements IBuilder<SignUpCredentials> {
 
@@ -31,18 +28,8 @@ public final class SignUpCredentials implements Parcelable {
         private String username;
         private String password;
         private String confPassword;
-        private File avatarImage;
 
         public Builder() {
-        }
-
-        public File getAvatarImage() {
-            return avatarImage;
-        }
-
-        public Builder setAvatarImage(File avatarImage) {
-            this.avatarImage = avatarImage;
-            return this;
         }
 
         public String getEmail() {
@@ -105,16 +92,10 @@ public final class SignUpCredentials implements Parcelable {
             throw new IllegalArgumentException(String.format(
                     "Illegal password %s or conf pass %s", builder.getPassword(), builder.getConfPassword()));
 
-        if (builder.getAvatarImage() != null && (!builder.getAvatarImage().exists() ||
-                !builder.getAvatarImage().isFile()))
-            throw new IllegalArgumentException(String.format("Invalid user avatar file exists %s, is file %s",
-                    builder.getAvatarImage().exists(), builder.getAvatarImage().isFile()));
-
         this.email = builder.getEmail();
         this.username = builder.getUsername();
         this.password = builder.getPassword();
         this.confPassword = builder.getPassword();
-        this.avatarImage = builder.getAvatarImage();
     }
 
     private SignUpCredentials(Parcel in) {
@@ -122,8 +103,6 @@ public final class SignUpCredentials implements Parcelable {
         username = in.readString();
         password = in.readString();
         confPassword = in.readString();
-        final String absPath = in.readString();
-        avatarImage = absPath == null ? null : new File(absPath);
     }
 
     public static final Creator<SignUpCredentials> CREATOR = new Creator<SignUpCredentials>() {
@@ -149,13 +128,6 @@ public final class SignUpCredentials implements Parcelable {
         dest.writeString(username);
         dest.writeString(password);
         dest.writeString(confPassword);
-        if (avatarImage != null) {
-            dest.writeString(avatarImage.getAbsolutePath());
-        }
-    }
-
-    public File getAvatarImage() {
-        return avatarImage;
     }
 
     public String getEmail() {

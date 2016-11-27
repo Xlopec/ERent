@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 import retrofit2.Retrofit;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.Path;
 import rx.Observable;
 
@@ -27,6 +28,7 @@ public final class CategoriesProvider implements ICategoriesProvider {
          * @return rx observable to monitor process state
          */
         @GET("categories")
+        @Headers("Content-Type: application/json")
         Observable<Collection<CategoriesResponse>> fetchCategories();
 
         /**
@@ -36,6 +38,7 @@ public final class CategoriesProvider implements ICategoriesProvider {
          * @return rx observable to monitor process state
          */
         @GET("categories/{id}")
+        @Headers("Content-Type: application/json")
         Observable<CategoriesResponse> fetchCategory(@Path("id") long categoryId);
 
     }

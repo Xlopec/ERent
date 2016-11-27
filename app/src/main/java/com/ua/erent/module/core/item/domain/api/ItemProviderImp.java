@@ -10,6 +10,7 @@ import java.util.Collection;
 import dagger.internal.Preconditions;
 import retrofit2.Retrofit;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.Path;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -31,6 +32,7 @@ public final class ItemProviderImp implements ItemProvider {
          * @return observable to monitor process
          */
         @GET("things")
+        @Headers("Content-Type: application/json")
         Observable<Collection<ItemResponse>> getItems();
 
         /**
@@ -40,6 +42,7 @@ public final class ItemProviderImp implements ItemProvider {
          * @return observable to monitor process
          */
         @GET("things/{id}")
+        @Headers("Content-Type: application/json")
         Observable<ItemResponse> getItemForId(@Path("id") long id);
 
     }

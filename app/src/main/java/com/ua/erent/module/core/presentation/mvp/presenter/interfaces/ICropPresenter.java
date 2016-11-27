@@ -17,6 +17,9 @@ public abstract class ICropPresenter extends IBasePresenter<ImageCropActivity> {
 
     public abstract void onCropFinished(@NotNull CropImageView.CropResult result);
 
+    @NotNull
+    public abstract String getImageFormat();
+
     @Nullable public abstract Uri onSaveCroppedImage();
 
 }

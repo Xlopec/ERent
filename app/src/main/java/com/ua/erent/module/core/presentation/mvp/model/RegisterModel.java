@@ -1,23 +1,18 @@
 package com.ua.erent.module.core.presentation.mvp.model;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
 
 import com.ua.erent.R;
 import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
 import com.ua.erent.module.core.exception.FileUploadException;
 import com.ua.erent.module.core.presentation.mvp.model.interfaces.IRegisterModel;
 import com.ua.erent.module.core.presentation.mvp.util.SignUpFormConverter;
-import com.ua.erent.module.core.presentation.mvp.view.CategoriesActivity;
 
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by Максим on 10/27/2016.
@@ -35,19 +30,8 @@ public final class RegisterModel implements IRegisterModel {
     }
 
     @Override
-    public Intent createLoginIntent(@NotNull Context context) {
-
-        final Intent intent = new Intent(context, CategoriesActivity.class);
-
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        return intent;
-    }
-
-    @Override
     public Observable<Void> signUp(@NotNull SignUpForm form) {
-        return authAppService.signUp(SignUpFormConverter.convert(context, form))
+        return authAppService.signUp(SignUpFormConverter.convert(form))
                 .onErrorResumeNext(throwable -> {
 
                     if(throwable instanceof FileUploadException) {
@@ -58,10 +42,4 @@ public final class RegisterModel implements IRegisterModel {
                 });
     }
 
-    @Override
-    public Observable<Bitmap> resizeBitmap(@NotNull Bitmap original, int h, int w) {
-        return Observable.just(Bitmap.createScaledBitmap(original, w, h, true))
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
 }

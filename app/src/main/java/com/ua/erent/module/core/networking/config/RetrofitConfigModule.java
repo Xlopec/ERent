@@ -93,12 +93,15 @@ public final class RetrofitConfigModule extends IConfigModule<Retrofit> {
                 (chain) -> {
                     // packet interception
                     final Request original = chain.request();
-                            final String toString = bodyToString(original.body());
+                    final String reqBody = bodyToString(original.body());
 
-                            Log.d("Tag", "Request body: " + toString);
+                    final String str = String.format("Headers %s, request body: %s",
+                            original.headers(), reqBody);
+
+                    Log.d("Tag", str);
 
                     final Request request = original.newBuilder().
-                            header("Content-Type", "application/json").
+                            //header("Content-Type", "application/json").
                             method(original.method(), original.body()).
                             build();
 
@@ -107,7 +110,7 @@ public final class RetrofitConfigModule extends IConfigModule<Retrofit> {
         ).addInterceptor(logging);
 
         return retrofit = new Retrofit.Builder().
-                baseUrl(BuildConfig.API_BASE_URL).
+                baseUrl(BuildConfig.API_BASE_URL.concat("/api/")).
                 client(httpClient.build()).
                 addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io())).
                 addConverterFactory(GsonConverterFactory.create(gson)).build();

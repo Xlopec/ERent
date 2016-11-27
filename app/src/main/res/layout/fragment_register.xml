@@ -25,14 +25,25 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <com.ua.erent.module.core.presentation.mvp.view.util.MyCircleImageView
-                    android:id="@+id/user_avatar_select"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="@null"
-                    app:civ_border_color="#FFFFFF"
-                    app:civ_border_width="2dp" />
+                <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+                    style="@style/Base.TextAppearance.AppCompat.Display2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:text="E-Rent"
+                    android:textColor="@color/accent"
+                    app:customFont="Roboto-Medium" />
+
+                <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+                    style="@style/Base.TextAppearance.AppCompat.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:text="Internet rent service"
+                    android:textColor="#FFF"
+                    app:customFont="Roboto-Light" />
 
             </LinearLayout>
 

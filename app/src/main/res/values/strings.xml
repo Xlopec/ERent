@@ -20,6 +20,8 @@
     <string name="register_operation_progress">Registration in progress, please wait…</string>
     <string name="register_operation_failure">Failed to create account…</string>
     <string name="register_upload_avatar_failure">Failed to upload avatar, proceed…</string>
+    <string name="register_operation_success" formatted="false">"You've almost finished! To finish
+        registration process, please, visit activation link on your email %s"</string>
 
     <!-- Authorization -->
     <string name="auth_loading">Loading…</string>

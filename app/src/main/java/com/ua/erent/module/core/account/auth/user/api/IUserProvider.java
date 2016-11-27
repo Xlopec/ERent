@@ -7,6 +7,8 @@ import com.ua.erent.module.core.account.auth.user.domain.bo.User;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+
 import rx.Observable;
 
 /**
@@ -24,4 +26,5 @@ public interface IUserProvider {
 
     Observable<Void> changePassword(@NotNull Session session, @NotNull PasswordForm form);
 
+    Observable<Void> uploadAvatar(@NotNull Session session, @NotNull File avatar);
 }

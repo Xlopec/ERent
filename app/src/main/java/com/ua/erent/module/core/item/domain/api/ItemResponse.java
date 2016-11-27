@@ -46,6 +46,8 @@ final class ItemResponse {
         public long id;
         @SerializedName("username")
         public String username;
+        @SerializedName("avatar")
+        public String avatarUrl;
     }
 
     final static class Brand {

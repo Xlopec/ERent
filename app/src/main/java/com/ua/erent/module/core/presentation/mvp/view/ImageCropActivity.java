@@ -66,9 +66,14 @@ public final class ImageCropActivity extends InjectableActivity<ImageCropActivit
         fab.setOnClickListener(v -> {
 
             final Uri uri = presenter.onSaveCroppedImage();
+            final String format = presenter.getImageFormat();
 
-            if(uri != null) {
-                cropImageView.saveCroppedImageAsync(uri, Bitmap.CompressFormat.PNG, 100);
+            if (uri != null) {
+                cropImageView.saveCroppedImageAsync(
+                        uri,
+                        format.equalsIgnoreCase("jpeg") ? Bitmap.CompressFormat.JPEG : Bitmap.CompressFormat.PNG,
+                        100
+                );
             }
         });
     }

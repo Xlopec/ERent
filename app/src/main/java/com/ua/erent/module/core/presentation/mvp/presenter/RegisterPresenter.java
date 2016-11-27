@@ -1,7 +1,5 @@
 package com.ua.erent.module.core.presentation.mvp.presenter;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 
 import com.ua.erent.R;
@@ -14,17 +12,12 @@ import com.ua.erent.module.core.presentation.mvp.view.interfaces.IInitialScreenV
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import rx.Observable;
-
 /**
  * Created by Максим on 10/27/2016.
  */
 
 public final class RegisterPresenter extends IRegisterPresenter {
 
-    private final String ARG_AVATAR_URI_STATE = "argAvatarUriState";
-
-    private Uri avatarUri;
     private IInitialScreenView.NavigationListener callback;
     private final IRegisterModel model;
 
@@ -43,24 +36,6 @@ public final class RegisterPresenter extends IRegisterPresenter {
                             IInitialScreenView.NavigationListener.class.getSimpleName()));
         }
 
-        if (savedState != null) {
-            restoreState(savedState);
-        }
-    }
-
-    private void restoreState(Bundle state) {
-
-        avatarUri = state.getParcelable(ARG_AVATAR_URI_STATE);
-
-        if (avatarUri != null) {
-            getView().setAvatarUri(avatarUri);
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(@NotNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(ARG_AVATAR_URI_STATE, avatarUri);
     }
 
     @Override
@@ -75,24 +50,16 @@ public final class RegisterPresenter extends IRegisterPresenter {
 
     @Override
     public void onCreateAccount(@NotNull SignUpForm form) {
-        getView().showProgress(getView().getString(R.string.register_operation_progress));
 
-        model.signUp(form.setAvatarUri(avatarUri))
+        model.signUp(form)
                 .doOnCompleted(getView()::hideProgress)
+                .doOnSubscribe(() -> getView().showProgress(getView().getString(R.string.register_operation_progress)))
                 .subscribe(
                         aVoid -> {
-                            getView().hideProgress();
-                            getView().startActivity(model.createLoginIntent(getView().getContext()));
-                            getView().getActivity().finish();
-                        }, th -> {
-                            getView().showToast(th.getMessage());
-                            getView().hideProgress();
-                        });
+                            getView().showToast(getView().getString(R.string.register_operation_success, form.getEmail()));
+                            onNavigateLogin();
+                        }, th -> getView().showToast(th.getMessage())
+                );
     }
 
-    @Override
-    public Observable<Bitmap> resizeAvatarBitmap(@NotNull Uri uri, @NotNull Bitmap original, int h, int w) {
-        avatarUri = uri;
-        return model.resizeBitmap(original, h, w);
-    }
 }

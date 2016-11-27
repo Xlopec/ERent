@@ -16,28 +16,19 @@ import dagger.internal.Preconditions;
 
 public final class Details implements Parcelable {
 
-    private final String username;
+    private final UserInfo userInfo;
     private final Brand brand;
     private final Region region;
     private final DateTime publicationDate;
 
     public final static class Builder implements IBuilder<Details> {
 
-        private String username;
+        private UserInfo userInfo;
         private Brand brand;
         private DateTime publicationDate;
         private Region region;
 
         public Builder() {
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public Builder setUsername(String username) {
-            this.username = username;
-            return this;
         }
 
         public Region getRegion() {
@@ -67,6 +58,15 @@ public final class Details implements Parcelable {
             return this;
         }
 
+        public UserInfo getUserInfo() {
+            return userInfo;
+        }
+
+        public Builder setUserInfo(UserInfo userInfo) {
+            this.userInfo = userInfo;
+            return this;
+        }
+
         @Override
         public Details build() {
             return new Details(this);
@@ -76,14 +76,14 @@ public final class Details implements Parcelable {
     private Details(@NotNull Builder builder) {
         Preconditions.checkNotNull(builder);
         // todo validation
-        this.username = builder.getUsername();
-        this.region = builder.getRegion();
+        this.userInfo = Preconditions.checkNotNull(builder.getUserInfo());
+        this.region = Preconditions.checkNotNull(builder.getRegion());
         this.publicationDate = builder.getPublicationDate();
-        this.brand = builder.getBrand();
+        this.brand = Preconditions.checkNotNull(builder.getBrand());
     }
 
     private Details(Parcel in) {
-        username = in.readString();
+        userInfo = in.readParcelable(UserInfo.class.getClassLoader());
         brand = in.readParcelable(Brand.class.getClassLoader());
         region = in.readParcelable(Region.class.getClassLoader());
         publicationDate = (DateTime) in.readSerializable();
@@ -91,7 +91,7 @@ public final class Details implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(username);
+        dest.writeParcelable(userInfo, flags);
         dest.writeParcelable(brand, flags);
         dest.writeParcelable(region, flags);
         dest.writeSerializable(publicationDate);
@@ -114,8 +114,8 @@ public final class Details implements Parcelable {
         }
     };
 
-    public String getUsername() {
-        return username;
+    public UserInfo getUserInfo() {
+        return userInfo;
     }
 
     public Region getRegion() {
@@ -137,7 +137,7 @@ public final class Details implements Parcelable {
 
         Details details = (Details) o;
 
-        if (!username.equals(details.username)) return false;
+        if (!userInfo.equals(details.userInfo)) return false;
         if (!brand.equals(details.brand)) return false;
         if (!region.equals(details.region)) return false;
         return publicationDate.equals(details.publicationDate);
@@ -146,7 +146,7 @@ public final class Details implements Parcelable {
 
     @Override
     public int hashCode() {
-        int result = username.hashCode();
+        int result = userInfo.hashCode();
         result = 31 * result + brand.hashCode();
         result = 31 * result + region.hashCode();
         result = 31 * result + publicationDate.hashCode();
@@ -156,7 +156,7 @@ public final class Details implements Parcelable {
     @Override
     public String toString() {
         return "Details{" +
-                "username='" + username + '\'' +
+                "userInfo='" + userInfo + '\'' +
                 ", brand=" + brand +
                 ", region=" + region +
                 ", publicationDate=" + publicationDate +

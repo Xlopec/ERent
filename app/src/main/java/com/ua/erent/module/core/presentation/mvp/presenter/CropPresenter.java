@@ -102,6 +102,12 @@ public final class CropPresenter extends ICropPresenter {
         }
     }
 
+    @NotNull
+    @Override
+    public String getImageFormat() {
+        return model.getImageFormat();
+    }
+
     @Nullable
     @Override
     public Uri onSaveCroppedImage() {
