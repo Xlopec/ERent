@@ -1,7 +1,11 @@
 package com.ua.erent.module.core.presentation.mvp.module;
 
-import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
+import android.content.Context;
+
 import com.ua.erent.module.core.di.scopes.ActivityScope;
+import com.ua.erent.module.core.item.domain.IItemAppService;
+import com.ua.erent.module.core.presentation.mvp.model.ItemsModel;
+import com.ua.erent.module.core.presentation.mvp.model.interfaces.IItemsModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.ItemsPresenter;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IItemsPresenter;
 
@@ -16,8 +20,14 @@ public final class ItemsModule {
 
     @Provides
     @ActivityScope
-    IItemsPresenter provideItemsPresenter(IAuthAppService authAppService) {
-        return new ItemsPresenter(authAppService);
+    IItemsModel provideItemsModel(Context context, IItemAppService appService) {
+        return new ItemsModel(context, appService);
+    }
+
+    @Provides
+    @ActivityScope
+    IItemsPresenter provideItemsPresenter(IItemsModel model) {
+        return new ItemsPresenter(model);
     }
 
 }

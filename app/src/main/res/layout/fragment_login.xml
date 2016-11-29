@@ -98,9 +98,9 @@
                         android:id="@+id/login_fld"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/wr_ic_account_circle_default_24dp"
+                        android:drawableLeft="@drawable/wr_ic_account_circle_light_24dp"
                         android:drawablePadding="@dimen/draw_pad_inp"
-                        android:drawableStart="@drawable/wr_ic_account_circle_default_24dp"
+                        android:drawableStart="@drawable/wr_ic_account_circle_light_24dp"
                         android:hint="Email"
                         android:inputType="textEmailAddress"
                         app:customFont="Roboto-Thin" />

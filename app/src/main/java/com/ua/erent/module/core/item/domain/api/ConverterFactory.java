@@ -1,16 +1,17 @@
 package com.ua.erent.module.core.item.domain.api;
 
-import android.net.Uri;
-
 import com.ua.erent.BuildConfig;
 import com.ua.erent.module.core.account.auth.user.domain.vo.UserID;
+import com.ua.erent.module.core.item.domain.bo.Category;
 import com.ua.erent.module.core.item.domain.bo.Item;
 import com.ua.erent.module.core.item.domain.vo.Brand;
+import com.ua.erent.module.core.item.domain.vo.CategoryID;
 import com.ua.erent.module.core.item.domain.vo.Details;
 import com.ua.erent.module.core.item.domain.vo.ItemID;
 import com.ua.erent.module.core.item.domain.vo.ItemInfo;
 import com.ua.erent.module.core.item.domain.vo.Region;
 import com.ua.erent.module.core.item.domain.vo.UserInfo;
+import com.ua.erent.module.core.presentation.mvp.view.util.MyURL;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -44,6 +45,7 @@ final class ConverterFactory {
         Preconditions.checkNotNull(convert);
 
         return new Item.Builder().setId(new ItemID(convert.id))
+                .setCategories(toCategory(convert.categories))
                 .setItemInfo(new ItemInfo(convert.name, convert.description, new BigDecimal(convert.price)))
                 .setDetails(new Details.Builder()
                         .setBrand(new Brand(convert.brand.id, convert.brand.name, convert.brand.description))
@@ -51,7 +53,7 @@ final class ConverterFactory {
                         .setPublicationDate(convert.publicationDate)
                         .setUserInfo(
                                 new UserInfo(new UserID(convert.owner.id), convert.owner.username,
-                                        Uri.parse(BuildConfig.API_BASE_URL.concat(convert.owner.avatarUrl)))
+                                        new MyURL(BuildConfig.API_BASE_URL.concat(convert.owner.avatarUrl)))
                         ).build())
                 .build();
     }
@@ -70,6 +72,17 @@ final class ConverterFactory {
         for (final ItemResponse respItem : convert) {
             result.add(toItem(respItem));
         }
+        return result;
+    }
+
+    private static Collection<Category> toCategory(ItemResponse.Category [] categories) {
+
+        final Collection<Category> result = new ArrayList<>(categories.length);
+
+        for(final ItemResponse.Category category : categories) {
+            result.add(new Category(category.name, new CategoryID(category.id), category.description));
+        }
+
         return result;
     }
 

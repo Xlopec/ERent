@@ -9,4 +9,12 @@ import com.ua.erent.module.core.presentation.mvp.view.ItemsActivity;
 
 public abstract class IItemsPresenter extends IBasePresenter<ItemsActivity> {
 
+    public static final String ARG_CATEGORY_ID = IItemsPresenter.class.getName().concat(".argCategoryId");
+
+    public abstract void onItemClicked(long id);
+
+    public abstract void onLoadNext();
+
+    public abstract void onLoadPrev();
+
 }

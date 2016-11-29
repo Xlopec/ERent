@@ -13,7 +13,7 @@ import dagger.Component;
  * Created by Максим on 11/7/2016.
  */
 @ServiceScope
-@Component(modules = SyncModule.class)
+@Component(modules = AppSyncModule.class)
 public interface SyncServiceComponent extends InjectableServiceComponent<SyncService> {
 
     Collection<Synchronizeable> getSyncTarget();

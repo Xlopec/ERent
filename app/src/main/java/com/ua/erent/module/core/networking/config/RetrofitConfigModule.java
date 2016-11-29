@@ -84,6 +84,7 @@ public final class RetrofitConfigModule extends IConfigModule<Retrofit> {
 
             httpClient.addInterceptor(chain -> {
                 final Response response = chain.proceed(chain.request());
+               // String respBody = response.body().string();
                 interceptService.intercept(response);
                 return response;
             });

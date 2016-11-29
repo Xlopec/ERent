@@ -49,10 +49,10 @@
         <activity
             android:name=".module.core.presentation.mvp.view.CategoriesActivity"
             android:label="@string/categories_title_activity">
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
 
         <activity
@@ -74,7 +74,12 @@
                 android:resource="@xml/authenticator" />
         </service>
 
-        <activity android:name=".module.core.presentation.mvp.view.ItemsActivity" />
+        <activity android:name=".module.core.presentation.mvp.view.ItemsActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            </activity>
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/LightTheme" />

@@ -9,17 +9,18 @@ import com.ua.erent.module.core.config.AbstractConfigComposer;
 import com.ua.erent.module.core.di.Injector;
 import com.ua.erent.module.core.di.config.InjectConfigModule;
 import com.ua.erent.module.core.init.InitModule;
-import com.ua.erent.module.core.item.di.DaggerItemComponent;
+import com.ua.erent.module.core.item.di.DaggerSyncComponent;
 import com.ua.erent.module.core.item.di.ItemModule;
-import com.ua.erent.module.core.item.domain.di.CategoryModule;
+import com.ua.erent.module.core.item.di.ItemSyncModule;
+import com.ua.erent.module.core.item.di.CategoryModule;
 import com.ua.erent.module.core.networking.component.DaggerBaseNetworkingComponent;
 import com.ua.erent.module.core.networking.config.RetrofitConfigModule;
 import com.ua.erent.module.core.networking.module.BaseNetworkingModule;
 import com.ua.erent.module.core.networking.module.NetworkingModule;
 import com.ua.erent.module.core.presentation.mvp.view.InitialScreenActivity;
 import com.ua.erent.module.core.sync.Synchronizeable;
+import com.ua.erent.module.core.sync.di.AppSyncModule;
 import com.ua.erent.module.core.sync.di.DaggerSyncServiceComponent;
-import com.ua.erent.module.core.sync.di.SyncModule;
 import com.ua.erent.module.core.sync.di.SyncServiceComponent;
 import com.ua.erent.module.core.util.IBuilder;
 
@@ -84,24 +85,25 @@ final class AppConfigComposer extends AbstractConfigComposer {
         final RetrofitConfigModule.Builder retrofitBuilder = new RetrofitConfigModule.Builder();
         final Retrofit retrofit = retrofitBuilder.setInterceptService(DaggerBaseNetworkingComponent.builder().
                 baseNetworkingModule(baseNetworkingModule).build().getInterceptService()).build().configure();
-        final ItemModule itemModule = new ItemModule(retrofit);
-        final SyncModule syncModule = new SyncModule(AppConfigComposer.getSynchronizeables(itemModule), application);
+        final ItemSyncModule itemSyncModule = new ItemSyncModule(retrofit);
+        final AppSyncModule appSyncModule = new AppSyncModule(AppConfigComposer.getSynchronizeables(itemSyncModule), application);
 
         final NetworkingModule networkingModule = new NetworkingModule(retrofit);
         final AppComponent appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(application))
                 .initModule(new InitModule())
-                .syncModule(syncModule)
                 .authModule(new AuthModule(InitialScreenActivity.class))
                 .baseNetworkingModule(baseNetworkingModule)
                 .networkingModule(networkingModule)
                 .userModule(new UserModule())
-                .itemModule(itemModule)
+                .itemSyncModule(itemSyncModule)
+                .appSyncModule(appSyncModule)
+                .itemModule(new ItemModule())
                 .categoryModule(new CategoryModule())
                 .build();
 
         final SyncServiceComponent syncServiceComponent = DaggerSyncServiceComponent.builder()
-                .syncModule(syncModule).build();
+                .appSyncModule(appSyncModule).build();
 
         appComponent.getInitService().registerInitializeable(appComponent.getInitTargets());
         // signUp target dependency inject modules
@@ -111,10 +113,10 @@ final class AppConfigComposer extends AbstractConfigComposer {
         Injector.initialize(BuildConfig.DEBUG).addConfig(injectModuleBuilder.build());
     }
 
-    private static Collection<Synchronizeable> getSynchronizeables(ItemModule itemModule) {
+    private static Collection<Synchronizeable> getSynchronizeables(ItemSyncModule itemSyncModule) {
 
-        return DaggerItemComponent.builder()
-                        .itemModule(itemModule).build()
+        return DaggerSyncComponent.builder()
+                        .itemSyncModule(itemSyncModule).build()
                         .getSynchronizeables();
     }
 

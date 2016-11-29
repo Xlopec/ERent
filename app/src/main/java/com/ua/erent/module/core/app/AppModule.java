@@ -13,7 +13,7 @@ import com.ua.erent.module.core.app.domain.interfaces.IAppService;
 import com.ua.erent.module.core.networking.util.ConnectionManager;
 import com.ua.erent.module.core.storage.DatabaseHelper;
 import com.ua.erent.module.core.sync.IAppSyncService;
-import com.ua.erent.module.core.sync.di.SyncModule;
+import com.ua.erent.module.core.sync.di.AppSyncModule;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +28,7 @@ import dagger.Provides;
  * </p>
  * Created by Максим on 10/9/2016.
  */
-@Module(includes = SyncModule.class)
+@Module(includes = AppSyncModule.class)
 public final class AppModule {
 
     private final Application app;

@@ -21,12 +21,12 @@ import dagger.Provides;
  * Created by Максим on 11/13/2016.
  */
 @Module
-public final class SyncModule {
+public final class AppSyncModule {
 
     private final Collection<Synchronizeable> synchronizeables;
     private final Application application;
 
-    public SyncModule(@NotNull Collection<Synchronizeable> synchronizeables, @NotNull Application application) {
+    public AppSyncModule(@NotNull Collection<Synchronizeable> synchronizeables, @NotNull Application application) {
         this.synchronizeables = new ArrayList<>(synchronizeables);
         this.application = application;
     }

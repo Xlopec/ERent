@@ -4,6 +4,11 @@
 
     <string name="err_app_crash">E-Rent has crashed, please, send error report</string>
 
+    <!-- View time formats -->
+    <string name="time_minutes_ago">%d minutes ago</string>
+    <string name="time_now">just now</string>
+    <string name="time_general">h:mm a</string>
+
     <!-- Main drawer -->
     <string name="main_drawer_credentials_title_unauthorized">E-Rent service</string>
     <string name="main_drawer_credentials_sub_title_unauthorized">Version build %s</string>
@@ -37,6 +42,9 @@
     <string name="categories_no_internet">No internet connection…</string>
     <string name="categories_fetch_err">Failed to fetch categories</string>
 
+    <!-- Items activity -->
+    <string name="items_sub_title" formatted="false">%s, %s — by %s</string>
+
     <!-- Strings related to signIn -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
@@ -54,7 +62,7 @@
         "Material is the metaphor.\n\n"
 
         "A material metaphor is the unifying theory of a rationalized space and a system of motion."
-        "The material is grounded in tactile reality, inspired by the study of paper and ink, yet "
+        "The material is grounded in tactile reality, inspired order the study of paper and ink, yet "
         "technologically advanced and open to imagination and magic.\n"
 
     </string>

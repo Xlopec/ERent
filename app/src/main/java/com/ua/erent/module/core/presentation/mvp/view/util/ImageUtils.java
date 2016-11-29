@@ -3,8 +3,13 @@ package com.ua.erent.module.core.presentation.mvp.view.util;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.DrawableRes;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.net.URL;
 
 /**
  * <p>
@@ -89,6 +94,18 @@ public final class ImageUtils {
 
     public static int spToPx(int sp) {
         return (int) (sp * Resources.getSystem().getDisplayMetrics().scaledDensity);
+    }
+
+    public static IParcelableFutureBitmap resourceBitmap(@DrawableRes int resId) {
+        return new ResourceBitmapFuture(resId);
+    }
+
+    public static IParcelableFutureBitmap urlBitmap(@NotNull MyURL url) {
+        return new UrlBitmapFuture(url);
+    }
+
+    public static IParcelableFutureBitmap urlBitmap(@NotNull URL url) {
+        return new UrlBitmapFuture(url);
     }
 
 }

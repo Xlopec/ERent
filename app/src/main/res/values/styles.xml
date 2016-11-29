@@ -25,6 +25,7 @@
         <item name="colorControlNormal">#FFF</item>
         <item name="colorControlActivated">@color/primary</item>
         <item name="colorControlHighlight">@color/primary</item>
+        <item name="imageButtonStyle">@style/iconButton</item>
     </style>
 
     <style name="MyTheme.Light" parent="MyTheme.Base">

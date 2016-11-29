@@ -19,9 +19,9 @@ public final class ItemInfo implements Parcelable {
 
     public ItemInfo(String name, String description, BigDecimal price) {
 
-        if(BigDecimal.ONE.compareTo(Preconditions.checkNotNull(price)) > 0)
+        if(BigDecimal.ZERO.compareTo(Preconditions.checkNotNull(price)) > 0)
             throw new IllegalArgumentException(String.format(
-                    "price should be greater than 0, was %s", price));
+                    "price should be greater than 1, was %s", price));
 
 
         this.name = name;

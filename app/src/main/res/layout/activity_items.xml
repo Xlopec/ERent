@@ -4,32 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".module.core.presentation.mvp.view.MainActivity">
+    tools:context=".module.core.presentation.mvp.view.ItemsActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/main_app_bar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-
-        <include
-            layout="@layout/toolbar_head"
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/main_app_bar_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
 
-    </android.support.design.widget.AppBarLayout>
+            <include
+                layout="@layout/toolbar_head"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-    <fragment
-        android:layout_below="@id/main_app_bar_layout"
-        android:id="@+id/main_content_fragment"
-        android:name="com.ua.erent.module.core.presentation.mvp.view.RecentGoodsFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/fragment_recent_goods" />
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/items_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/main_app_bar_layout"
+            android:background="@color/cards_container_bg" />
 
     </RelativeLayout>
 

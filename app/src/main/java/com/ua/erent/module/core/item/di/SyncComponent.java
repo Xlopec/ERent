@@ -10,9 +10,9 @@ import dagger.Component;
 /**
  * Created by Максим on 11/13/2016.
  */
-@Component(modules = ItemModule.class)
+@Component(modules = ItemSyncModule.class)
 @ServiceScope
-public interface ItemComponent {
+public interface SyncComponent {
 
     Collection<Synchronizeable> getSynchronizeables();
 

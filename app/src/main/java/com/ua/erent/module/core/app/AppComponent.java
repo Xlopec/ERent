@@ -12,8 +12,10 @@ import com.ua.erent.module.core.app.domain.interfaces.IAppService;
 import com.ua.erent.module.core.init.InitModule;
 import com.ua.erent.module.core.init.domain.IInitAppService;
 import com.ua.erent.module.core.item.di.ItemModule;
+import com.ua.erent.module.core.item.di.ItemSyncModule;
 import com.ua.erent.module.core.item.domain.ICategoryAppService;
-import com.ua.erent.module.core.item.domain.di.CategoryModule;
+import com.ua.erent.module.core.item.di.CategoryModule;
+import com.ua.erent.module.core.item.domain.IItemAppService;
 import com.ua.erent.module.core.networking.module.BaseNetworkingModule;
 import com.ua.erent.module.core.networking.module.NetworkingModule;
 import com.ua.erent.module.core.networking.util.ConnectionManager;
@@ -36,7 +38,8 @@ import retrofit2.Retrofit;
 @Singleton
 @Component(modules = {
         AppModule.class, AuthModule.class, UserModule.class, NetworkingModule.class,
-        BaseNetworkingModule.class, InitModule.class, ItemModule.class, CategoryModule.class
+        BaseNetworkingModule.class, InitModule.class, ItemSyncModule.class, CategoryModule.class,
+        ItemModule.class
 })
 public abstract class AppComponent {
 
@@ -57,6 +60,8 @@ public abstract class AppComponent {
     public abstract IUserAppService getUserAppService();
 
     public abstract ICategoryAppService getCategoryAppService();
+
+    public abstract IItemAppService getItemAppService();
 
     abstract Collection<Initializeable> getInitTargets();
 

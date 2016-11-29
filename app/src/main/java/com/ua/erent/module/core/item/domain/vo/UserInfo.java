@@ -1,10 +1,10 @@
 package com.ua.erent.module.core.item.domain.vo;
 
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.ua.erent.module.core.account.auth.user.domain.vo.UserID;
+import com.ua.erent.module.core.presentation.mvp.view.util.MyURL;
 import com.ua.erent.module.core.util.validation.Regexes;
 
 import org.apache.commons.validator.routines.RegexValidator;
@@ -20,31 +20,31 @@ public final class UserInfo implements Parcelable {
 
     private static final RegexValidator USERNAME_VALIDATOR = new RegexValidator(Regexes.USERNAME);
 
-    private final UserID owner;
+    private final UserID id;
     private final String username;
-    private final Uri uri;
+    private final MyURL avatar;
 
-    public UserInfo(@NotNull UserID owner, @NotNull String username, @NotNull Uri uri) {
+    public UserInfo(@NotNull UserID id, @NotNull String username, @NotNull MyURL avatar) {
 
         if (!USERNAME_VALIDATOR.isValid(username))
             throw new IllegalArgumentException(String.format("invalid username %s", username));
 
-        this.owner = Preconditions.checkNotNull(owner);
+        this.id = Preconditions.checkNotNull(id);
         this.username = username;
-        this.uri = uri;
+        this.avatar = avatar;
     }
 
     private UserInfo(Parcel in) {
-        owner = in.readParcelable(UserID.class.getClassLoader());
+        id = in.readParcelable(UserID.class.getClassLoader());
         username = in.readString();
-        uri = in.readParcelable(Uri.class.getClassLoader());
+        avatar = in.readParcelable(MyURL.class.getClassLoader());
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(owner, flags);
+        dest.writeParcelable(id, flags);
         dest.writeString(username);
-        dest.writeParcelable(uri, flags);
+        dest.writeParcelable(avatar, flags);
     }
 
     @Override
@@ -64,16 +64,16 @@ public final class UserInfo implements Parcelable {
         }
     };
 
-    public UserID getOwner() {
-        return owner;
+    public UserID getId() {
+        return id;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public Uri getUri() {
-        return uri;
+    public MyURL getAvatar() {
+        return avatar;
     }
 
     @Override
@@ -83,26 +83,26 @@ public final class UserInfo implements Parcelable {
 
         UserInfo userInfo = (UserInfo) o;
 
-        if (!owner.equals(userInfo.owner)) return false;
+        if (!id.equals(userInfo.id)) return false;
         if (!username.equals(userInfo.username)) return false;
-        return uri.equals(userInfo.uri);
+        return avatar.equals(userInfo.avatar);
 
     }
 
     @Override
     public int hashCode() {
-        int result = owner.hashCode();
+        int result = id.hashCode();
         result = 31 * result + username.hashCode();
-        result = 31 * result + uri.hashCode();
+        result = 31 * result + avatar.hashCode();
         return result;
     }
 
     @Override
     public String toString() {
         return "UserInfo{" +
-                "owner=" + owner +
+                "id=" + id +
                 ", username='" + username + '\'' +
-                ", uri=" + uri +
+                ", avatar=" + avatar +
                 '}';
     }
 }

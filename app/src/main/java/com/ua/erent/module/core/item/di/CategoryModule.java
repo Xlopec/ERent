@@ -1,4 +1,4 @@
-package com.ua.erent.module.core.item.domain.di;
+package com.ua.erent.module.core.item.di;
 
 import android.app.Application;
 
