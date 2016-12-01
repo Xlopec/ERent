@@ -11,10 +11,30 @@ import java.util.Map;
 
 public final class WithLastId implements IApiFilter {
 
+    enum Sign {
+        GREATER(">%d"), LOWER("<%d");
+
+        private final String str;
+
+        Sign(String str) {
+            this.str = str;
+        }
+
+        public String toFilterVal(long val) {
+            return String.format(str, val);
+        }
+    }
+
+    private final Sign sign;
     private final long lastId;
 
-    public WithLastId(long lastId) {
+    public WithLastId(Sign sign, long lastId) {
+        this.sign = sign;
         this.lastId = lastId;
+    }
+
+    public Sign getSign() {
+        return sign;
     }
 
     public long getLastId() {
@@ -24,6 +44,6 @@ public final class WithLastId implements IApiFilter {
 
     @Override
     public Map<String, String> toFilter() {
-        return Collections.singletonMap("lastId", String.valueOf(lastId));
+        return Collections.singletonMap("lastId", sign == null ? String.valueOf(lastId) : sign.toFilterVal(lastId));
     }
 }

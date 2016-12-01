@@ -3,10 +3,15 @@ package com.ua.erent.module.core.item.domain.vo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.ua.erent.module.core.presentation.mvp.view.util.MyURL;
 import com.ua.erent.module.core.util.IBuilder;
 
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 import dagger.internal.Preconditions;
 
@@ -20,6 +25,7 @@ public final class Details implements Parcelable {
     private final Brand brand;
     private final Region region;
     private final DateTime publicationDate;
+    private final ArrayList<MyURL> photos;
 
     public final static class Builder implements IBuilder<Details> {
 
@@ -27,8 +33,10 @@ public final class Details implements Parcelable {
         private Brand brand;
         private DateTime publicationDate;
         private Region region;
+        private final ArrayList<MyURL> photos;
 
         public Builder() {
+            photos = new ArrayList<>(0);
         }
 
         public Region getRegion() {
@@ -67,6 +75,20 @@ public final class Details implements Parcelable {
             return this;
         }
 
+        public Builder addPhoto(@NotNull MyURL photo) {
+            this.photos.add(Preconditions.checkNotNull(photo));
+            return this;
+        }
+
+        public Builder addPhoto(@NotNull Collection<MyURL> photos) {
+            this.photos.addAll(Preconditions.checkNotNull(photos));
+            return this;
+        }
+
+        public Collection<MyURL> getPhotos() {
+            return Collections.unmodifiableCollection(photos);
+        }
+
         @Override
         public Details build() {
             return new Details(this);
@@ -78,8 +100,9 @@ public final class Details implements Parcelable {
         // todo validation
         this.userInfo = Preconditions.checkNotNull(builder.getUserInfo());
         this.region = Preconditions.checkNotNull(builder.getRegion());
-        this.publicationDate = builder.getPublicationDate();
+        this.publicationDate = Preconditions.checkNotNull(builder.getPublicationDate());
         this.brand = Preconditions.checkNotNull(builder.getBrand());
+        this.photos = new ArrayList<>(Preconditions.checkNotNull(builder.getPhotos()));
     }
 
     private Details(Parcel in) {
@@ -87,6 +110,8 @@ public final class Details implements Parcelable {
         brand = in.readParcelable(Brand.class.getClassLoader());
         region = in.readParcelable(Region.class.getClassLoader());
         publicationDate = (DateTime) in.readSerializable();
+        photos = new ArrayList<>(0);
+        in.readTypedList(photos, MyURL.CREATOR);
     }
 
     @Override
@@ -95,6 +120,7 @@ public final class Details implements Parcelable {
         dest.writeParcelable(brand, flags);
         dest.writeParcelable(region, flags);
         dest.writeSerializable(publicationDate);
+        dest.writeTypedList(photos);
     }
 
     @Override
@@ -130,6 +156,10 @@ public final class Details implements Parcelable {
         return brand;
     }
 
+    public Collection<? extends MyURL> getPhotos() {
+        return Collections.unmodifiableCollection(photos);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -140,7 +170,8 @@ public final class Details implements Parcelable {
         if (!userInfo.equals(details.userInfo)) return false;
         if (!brand.equals(details.brand)) return false;
         if (!region.equals(details.region)) return false;
-        return publicationDate.equals(details.publicationDate);
+        if (!publicationDate.equals(details.publicationDate)) return false;
+        return photos.equals(details.photos);
 
     }
 
@@ -150,16 +181,18 @@ public final class Details implements Parcelable {
         result = 31 * result + brand.hashCode();
         result = 31 * result + region.hashCode();
         result = 31 * result + publicationDate.hashCode();
+        result = 31 * result + photos.hashCode();
         return result;
     }
 
     @Override
     public String toString() {
         return "Details{" +
-                "userInfo='" + userInfo + '\'' +
+                "userInfo=" + userInfo +
                 ", brand=" + brand +
                 ", region=" + region +
                 ", publicationDate=" + publicationDate +
+                ", photos=" + photos +
                 '}';
     }
 }

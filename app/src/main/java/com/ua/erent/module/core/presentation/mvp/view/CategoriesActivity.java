@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.MenuRes;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -194,6 +195,7 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
 
+        refreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.primary));
         refreshLayout.setOnRefreshListener(() -> presenter.onRefresh());
 
         final SpaceDecorator decorator = new SpaceDecorator(

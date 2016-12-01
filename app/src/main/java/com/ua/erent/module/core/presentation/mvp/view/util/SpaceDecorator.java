@@ -1,6 +1,7 @@
 package com.ua.erent.module.core.presentation.mvp.view.util;
 
 import android.graphics.Rect;
+import android.support.annotation.Px;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -18,39 +19,43 @@ public class SpaceDecorator extends RecyclerView.ItemDecoration {
     public SpaceDecorator() {
     }
 
-    public SpaceDecorator(int space) {
+    public SpaceDecorator(@Px int space) {
         left = right = top = bottom = space;
     }
 
+    @Px
     public int getLeft() {
         return left;
     }
 
-    public void setLeft(int left) {
+    public void setLeft(@Px int left) {
         this.left = left;
     }
 
+    @Px
     public int getRight() {
         return right;
     }
 
-    public void setRight(int right) {
+    public void setRight(@Px int right) {
         this.right = right;
     }
 
+    @Px
     public int getTop() {
         return top;
     }
 
-    public void setTop(int top) {
+    public void setTop(@Px int top) {
         this.top = top;
     }
 
+    @Px
     public int getBottom() {
         return bottom;
     }
 
-    public void setBottom(int bottom) {
+    public void setBottom(@Px int bottom) {
         this.bottom = bottom;
     }
 

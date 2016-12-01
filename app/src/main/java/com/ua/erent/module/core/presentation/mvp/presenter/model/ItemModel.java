@@ -175,7 +175,7 @@ public final class ItemModel implements Parcelable {
     }
 
     public Collection<IParcelableFutureBitmap> getGallery() {
-        return gallery;
+        return Collections.unmodifiableCollection(gallery);
     }
 
     public String getPrice() {

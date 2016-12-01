@@ -16,7 +16,7 @@ public interface IItemsModel {
 
     Observable<Collection<ItemModel>> fetchNext(long limit, long lastId);
 
-    Observable<Collection<ItemModel>> fetchPrev(long limit, int offset);
+    Observable<Collection<ItemModel>> fetchPrev(long limit, long lastId);
 
     Observable<Collection<ItemModel>> getOnItemAddedObs();
 

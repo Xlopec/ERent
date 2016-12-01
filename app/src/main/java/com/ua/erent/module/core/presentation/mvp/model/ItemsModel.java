@@ -9,6 +9,7 @@ import com.ua.erent.module.core.item.domain.bo.Category;
 import com.ua.erent.module.core.item.domain.bo.Item;
 import com.ua.erent.module.core.presentation.mvp.model.interfaces.IItemsModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.model.ItemModel;
+import com.ua.erent.module.core.presentation.mvp.view.util.IParcelableFutureBitmap;
 import com.ua.erent.module.core.presentation.mvp.view.util.ImageUtils;
 import com.ua.erent.module.core.presentation.mvp.view.util.MyURL;
 
@@ -39,21 +40,22 @@ public final class ItemsModel implements IItemsModel {
 
     @Override
     public Observable<Collection<ItemModel>> fetch(long limit) {
-        return appService.fetchItems(new FilterBuilder()/*.withLimit(limit)*/.build())
+        return appService.fetchItems(new FilterBuilder().withLimit(limit).build())
                 .map(this::toModel);
     }
 
     @Override
     public Observable<Collection<ItemModel>> fetchNext(long limit, long lastId) {
         return appService
-                .fetchItems(new FilterBuilder().withLastId(lastId).withLimit(limit).build())
+                .fetchItems(new FilterBuilder().withLastIdGreater(lastId)
+                        .sort(FilterBuilder.SortType.ASC).withLimit(limit).build())
                 .map(this::toModel);
     }
 
     @Override
-    public Observable<Collection<ItemModel>> fetchPrev(long limit, int offset) {
+    public Observable<Collection<ItemModel>> fetchPrev(long limit, long lastId) {
         return appService
-                .fetchItems(new FilterBuilder().withOffset(offset).withLimit(limit).build())
+                .fetchItems(new FilterBuilder().withLastIdLower(lastId).withLimit(limit).build())
                 .map(this::toModel);
     }
 
@@ -83,8 +85,18 @@ public final class ItemsModel implements IItemsModel {
             if (url != null) {
                 builder.setUserAvatar(ImageUtils.urlBitmap(url));
             }
-
+            builder.addGallery(toGallery(item.getDetails().getPhotos()));
             result.add(builder.build());
+        }
+
+        return result;
+    }
+
+    private static Collection<IParcelableFutureBitmap> toGallery(Collection<? extends MyURL> src) {
+        final Collection<IParcelableFutureBitmap> result = new ArrayList<>(src.size());
+
+        for (final MyURL url : src) {
+            result.add(ImageUtils.urlBitmap(url));
         }
 
         return result;

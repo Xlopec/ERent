@@ -14,7 +14,7 @@
             android:id="@+id/good_photo"
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:background="@drawable/image_placeholder_48dp"
+            android:background="@drawable/image_placeholder_photo"
             android:scaleType="centerCrop" />
 
         <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView

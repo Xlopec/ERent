@@ -50,8 +50,13 @@ public final class FilterBuilder implements IBuilder<IApiFilter> {
         this.classToFilter = new HashMap<>(5);
     }
 
-    public FilterBuilder withLastId(long id) {
-        classToFilter.put(WithLastId.class, new WithLastId(id));
+    public FilterBuilder withLastIdGreater(long id) {
+        classToFilter.put(WithLastId.class, new WithLastId(WithLastId.Sign.GREATER, id));
+        return this;
+    }
+
+    public FilterBuilder withLastIdLower(long id) {
+        classToFilter.put(WithLastId.class, new WithLastId(WithLastId.Sign.LOWER, id));
         return this;
     }
 

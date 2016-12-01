@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,13 +24,83 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/items_container"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/items_swipe_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/main_app_bar_layout"
-            android:background="@color/cards_container_bg" />
+            android:layout_below="@id/main_app_bar_layout">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/items_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/main_app_bar_layout"
+                android:background="@color/cards_container_bg" />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
 
     </RelativeLayout>
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/items_fab_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="5dp"
+        android:paddingEnd="10dp"
+        android:paddingLeft="0dp"
+        android:paddingRight="10dp"
+        android:paddingStart="0dp"
+        android:paddingTop="0dp"
+        fab:menu_animationDelayPerItem="50"
+        fab:menu_backgroundColor="#91303F9F"
+        fab:menu_buttonSpacing="15dp"
+        fab:menu_colorNormal="@color/accent"
+        fab:menu_colorPressed="@color/primary"
+        fab:menu_colorRipple="@color/fab_ripple"
+        fab:menu_fab_label="test"
+        fab:menu_fab_size="normal"
+        fab:menu_icon="@drawable/fab_add"
+        fab:menu_labels_colorNormal="#333333"
+        fab:menu_labels_colorPressed="#444444"
+        fab:menu_labels_colorRipple="#66FFFFFF"
+        fab:menu_labels_cornerRadius="3dp"
+        fab:menu_labels_ellipsize="none"
+        fab:menu_labels_margin="0dp"
+        fab:menu_labels_padding="8dp"
+        fab:menu_labels_paddingBottom="4dp"
+        fab:menu_labels_paddingLeft="8dp"
+        fab:menu_labels_paddingRight="8dp"
+        fab:menu_labels_paddingTop="4dp"
+        fab:menu_labels_position="left"
+        fab:menu_labels_showShadow="true"
+        fab:menu_labels_singleLine="false"
+        fab:menu_labels_textColor="#FFF"
+        fab:menu_labels_textSize="14sp"
+        fab:menu_openDirection="up"
+        fab:menu_shadowColor="@color/fab_menu_shadow"
+        fab:menu_shadowRadius="4dp"
+        fab:menu_shadowXOffset="1dp"
+        fab:menu_shadowYOffset="3dp"
+        fab:menu_showShadow="true">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/user_info_fab_upload_wallpaper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/accent"
+            app:fab_colorPressed="@color/primary"
+            app:fab_colorRipple="@color/fab_ripple"
+            fab:fab_label="test" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/user_info_fab_upload_avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/accent"
+            app:fab_colorPressed="@color/primary"
+            app:fab_colorRipple="@color/fab_ripple"
+            fab:fab_label="test" />
+
+    </com.github.clans.fab.FloatingActionMenu>
 
 </android.support.design.widget.CoordinatorLayout>

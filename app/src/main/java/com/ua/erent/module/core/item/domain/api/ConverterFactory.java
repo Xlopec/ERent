@@ -48,6 +48,7 @@ final class ConverterFactory {
                 .setCategories(toCategory(convert.categories))
                 .setItemInfo(new ItemInfo(convert.name, convert.description, new BigDecimal(convert.price)))
                 .setDetails(new Details.Builder()
+                        .addPhoto(toPhotos(convert.photos))
                         .setBrand(new Brand(convert.brand.id, convert.brand.name, convert.brand.description))
                         .setRegion(new Region(convert.region.id, convert.region.name))
                         .setPublicationDate(convert.publicationDate)
@@ -81,6 +82,17 @@ final class ConverterFactory {
 
         for(final ItemResponse.Category category : categories) {
             result.add(new Category(category.name, new CategoryID(category.id), category.description));
+        }
+
+        return result;
+    }
+
+    private static Collection<MyURL> toPhotos(String [] rawUrls) {
+
+        final Collection<MyURL> result = new ArrayList<>(rawUrls.length);
+
+        for(final String rawUrl : rawUrls) {
+            result.add(new MyURL(BuildConfig.API_BASE_URL.concat(rawUrl)));
         }
 
         return result;

@@ -31,6 +31,8 @@ final class ItemResponse {
     public Region region;
     @SerializedName("categories")
     public Category [] categories;
+    @SerializedName("photos")
+    public String [] photos;
 
     final static class Category {
         @SerializedName("id")

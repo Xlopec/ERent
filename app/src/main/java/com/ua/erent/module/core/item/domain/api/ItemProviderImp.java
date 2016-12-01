@@ -72,7 +72,7 @@ public final class ItemProviderImp implements ItemProvider {
 
     @Override
     public Observable<Collection<Item>> fetchItems(@NotNull IApiFilter filter) {
-        return api.getItems().observeOn(AndroidSchedulers.mainThread()).map(ConverterFactory::toItem);
+        return api.getItems(filter.toFilter()).observeOn(AndroidSchedulers.mainThread()).map(ConverterFactory::toItem);
     }
 
     @Override

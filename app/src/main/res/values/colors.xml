@@ -38,7 +38,7 @@
     <color name="flat_btn_disabled_txt">#26000000</color>
 
     <color name="fab_menu_bg">#91005b80</color>
-    <color name="fab_ripple">#99FFFFFF</color>
+    <color name="fab_ripple">#99303F9F</color>
     <color name="fab_menu_shadow">#66000000</color>
 
 </resources>

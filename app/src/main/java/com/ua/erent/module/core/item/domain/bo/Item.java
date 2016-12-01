@@ -11,6 +11,7 @@ import com.ua.erent.module.core.util.IBuilder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import dagger.internal.Preconditions;
 
@@ -22,7 +23,7 @@ public final class Item implements Parcelable {
 
     private final ItemID id;
     // todo add update logic
-    private final ArrayList<Category> categories;
+    private final List<Category> categories;
     private ItemInfo itemInfo;
     private Details details;
 
@@ -110,7 +111,6 @@ public final class Item implements Parcelable {
 
         categories = new ArrayList<>();
         in.readTypedList(categories, Category.CREATOR);
-        categories.trimToSize();
     }
 
     public ItemID getId() {

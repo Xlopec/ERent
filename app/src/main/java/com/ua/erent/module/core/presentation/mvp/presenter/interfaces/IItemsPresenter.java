@@ -17,4 +17,6 @@ public abstract class IItemsPresenter extends IBasePresenter<ItemsActivity> {
 
     public abstract void onLoadPrev();
 
+    public abstract void onRefresh();
+
 }

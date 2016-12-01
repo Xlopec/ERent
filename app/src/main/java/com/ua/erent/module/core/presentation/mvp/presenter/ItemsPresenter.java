@@ -15,13 +15,13 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.Subscription;
 
 /**
@@ -48,7 +48,7 @@ public class ItemsPresenter extends IItemsPresenter {
         this.itemAddedSub = model.getOnItemAddedObs()
                 .subscribe(items -> {
                     if (!isViewGone()) {
-                        addStart(items);
+                        //    addStart(items);
                     }
                 });
     }
@@ -100,11 +100,51 @@ public class ItemsPresenter extends IItemsPresenter {
     @Override
     public void onLoadNext() {
 
+        final ItemModel item = localCache.peekFirst();
+        final Observable<Collection<ItemModel>> obs;
+
+        obs = item == null ? model.fetch(2) : model.fetchNext(2, item.getId());
+
+        obs.subscribe(this::addStart,
+                th -> {
+                    if (!isViewGone()) {
+                        getView().showMessage(th.getMessage());
+                        getView().hideProgressStart();
+                    }
+                    Log.e("Tag", "error", th);
+                });
     }
 
     @Override
     public void onLoadPrev() {
 
+        final ItemModel item = localCache.peekLast();
+        final Observable<Collection<ItemModel>> obs;
+
+        obs = item == null ? model.fetch(2) : model.fetchPrev(2, item.getId());
+
+        obs.subscribe(this::addEnd,
+                th -> {
+                    if (!isViewGone()) {
+                        getView().showMessage(th.getMessage());
+                        getView().hideProgressEnd();
+                    }
+                    Log.e("Tag", "error", th);
+                });
+    }
+
+    @Override
+    public void onRefresh() {
+        model.fetch(PAGE_SIZE)
+                .doOnSubscribe(getView()::showProgress)
+                .doOnCompleted(getView()::hideProgress)
+                .subscribe(this::addStart,
+                        th -> {
+                            if (!isViewGone()) {
+                                getView().showMessage(th.getMessage());
+                            }
+                            Log.e("Tag", "error", th);
+                        });
     }
 
     private void addStart(Collection<ItemModel> arg) {
@@ -115,20 +155,29 @@ public class ItemsPresenter extends IItemsPresenter {
         if (arg == null)
             throw new NullPointerException();
 
-        final List<ItemModel> l;
+        if (!arg.isEmpty()) {
 
-        if (arg instanceof List) {
-            l = (List<ItemModel>) arg;
+            final List<ItemModel> l;
+
+            if (arg instanceof ArrayList) {
+                l = (ArrayList<ItemModel>) arg;
+            } else {
+                l = new ArrayList<>(arg);
+            }
+
+            int i = 0;
+
+            for (; i < MAX_VIEW_CACHE_SIZE && i < l.size(); ++i) {
+                localCache.addFirst(l.get(i));
+            }
+
+            final List<ItemModel> tmp = l.subList(0, i);
+
+            Collections.reverse(tmp);
+            getView().addNextItems(tmp);
         } else {
-            l = new ArrayList<>(arg);
+            getView().addNextItems(arg);
         }
-
-        final ListIterator<ItemModel> iterator = l.listIterator(l.size() - 1);
-
-        for (int i = 0; i < MAX_VIEW_CACHE_SIZE && iterator.hasPrevious(); ++i) {
-            localCache.addFirst(iterator.previous());
-        }
-        getView().addNextItems(localCache);
     }
 
     private void addEnd(Collection<ItemModel> c) {
@@ -139,17 +188,20 @@ public class ItemsPresenter extends IItemsPresenter {
         if (c == null)
             throw new NullPointerException();
 
-        if (c.size() + localCache.size() <= MAX_VIEW_CACHE_SIZE) {
-            localCache.addAll(c);
-        } else {
+        if (c.size() > MAX_VIEW_CACHE_SIZE) {
 
-            final Iterator<ItemModel> iterator = c.iterator();
+            List<ItemModel> l;
 
-            for (int i = 0; i < MAX_VIEW_CACHE_SIZE && iterator.hasNext(); ++i) {
-                localCache.addLast(iterator.next());
+            if (c instanceof List) {
+                l = (List<ItemModel>) c;
+            } else {
+                l = new ArrayList<>(c);
             }
+
+            c = l.subList(0, MAX_VIEW_CACHE_SIZE);
         }
-        getView().addPrevItems(localCache);
+        localCache.addAll(c);
+        getView().addPrevItems(c);
     }
 
 
