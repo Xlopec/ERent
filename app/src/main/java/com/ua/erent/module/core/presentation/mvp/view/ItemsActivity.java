@@ -1,18 +1,23 @@
 package com.ua.erent.module.core.presentation.mvp.view;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,6 +31,7 @@ import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IItemsPres
 import com.ua.erent.module.core.presentation.mvp.presenter.model.ItemModel;
 import com.ua.erent.module.core.presentation.mvp.view.interfaces.IItemsView;
 import com.ua.erent.module.core.presentation.mvp.view.util.IFutureBitmap;
+import com.ua.erent.module.core.presentation.mvp.view.util.IParcelableFutureBitmap;
 import com.ua.erent.module.core.presentation.mvp.view.util.ImageUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -40,6 +46,9 @@ import dagger.internal.Preconditions;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
+ * <p>
+ * Items screen
+ * </p>
  * Created by Максим on 11/13/2016.
  */
 
@@ -98,6 +107,7 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
 
     private static class ItemHolder extends TypedViewHolder {
 
+        private long id;
         private final ImageView avatar;
         private final ImageView photo;
         private final TextView title;
@@ -122,6 +132,13 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
             }
         }
 
+        public void setId(long id) {
+            this.id = id;
+        }
+
+        public long getId() {
+            return id;
+        }
     }
 
     private static class RecyclerItem {
@@ -146,7 +163,8 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
             return type;
         }
 
-        public <T> T getPayload() {
+        @SuppressWarnings("unchecked")
+        <T> T getPayload() {
             return (T) payload;
         }
     }
@@ -192,6 +210,7 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
                 final ItemModel model = data.get(position).getPayload();
                 final ItemHolder holder = (ItemHolder) mHolder;
 
+                holder.setId(model.getId());
                 holder.avatarBm = model.getUserAvatar();
 
                 if (!model.getGallery().isEmpty()) {
@@ -205,8 +224,6 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
                         model.getUsername()));
 
                 holder.description.setText(model.getDescription());
-            } else if (mHolder.type == Type.LOADER) {
-                // do something
             }
         }
 
@@ -218,10 +235,12 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
                 final ItemHolder holder = (ItemHolder) mHolder;
 
                 if (holder.avatarBm != null) {
-                    loadInto(holder.avatarBm, holder.avatar, R.drawable.ic_account_circle_blue_24dp);
+                    loadInto(holder.avatarBm, holder.avatar, R.drawable.ic_account_circle_def_24dp);
                 }
 
                 if (holder.photoBm != null) {
+                    holder.photo.setVisibility(View.VISIBLE);
+                    holder.photo.setOnClickListener(v -> presenter.onPhotoClicked(holder.getId(), holder.photo));
                     loadInto(holder.photoBm, holder.photo, R.drawable.image_placeholder_photo);
                 }
             }
@@ -235,8 +254,9 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
 
                 holder.photoBm = null;
                 holder.avatarBm = null;
-                holder.avatar.setImageResource(R.drawable.ic_account_circle_blue_24dp);
+                holder.avatar.setImageResource(R.drawable.ic_account_circle_def_24dp);
                 holder.photo.setImageDrawable(null);
+                holder.photo.setVisibility(View.GONE);
             }
         }
 
@@ -252,7 +272,6 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
 
             if (data.isEmpty() || data.get(0).getType() != Type.LOADER) {
                 data.add(0, new RecyclerItem(Type.LOADER, null));
-                notifyItemInserted(0);
             }
         }
 
@@ -260,7 +279,6 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
 
             if (!data.isEmpty() && data.get(0).getType() == Type.LOADER) {
                 data.remove(0);
-                notifyItemRemoved(0);
             }
         }
 
@@ -270,7 +288,6 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
 
             if (data.isEmpty() || data.get(lastIndx).getType() != Type.LOADER) {
                 data.add(new RecyclerItem(Type.LOADER, null));
-                notifyItemInserted(lastIndx);
             }
         }
 
@@ -280,7 +297,6 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
 
             if (!data.isEmpty() && data.get(lastIndx).getType() == Type.LOADER) {
                 data.remove(lastIndx);
-                notifyItemRemoved(lastIndx);
             }
         }
 
@@ -326,8 +342,8 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
 
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
 
-                final int firstPos = layoutManager.findFirstCompletelyVisibleItemPosition();//FirstVisibleItemPosition();
-                final int lastPos = layoutManager.findLastCompletelyVisibleItemPosition();//VisibleItemPosition();
+                final int firstPos = layoutManager.findFirstVisibleItemPosition();
+                final int lastPos = layoutManager.findLastVisibleItemPosition();
 
                 if (lastPos - firstPos >= adapter.getItemCount()) {
                     swipeRefreshLayout.setEnabled(true);
@@ -335,13 +351,15 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
                 } else if (firstPos == 0) {
                     swipeRefreshLayout.setEnabled(false);
                     adapter.addLoaderStart();
+                    adapter.notifyItemInserted(0);
                     layoutManager.scrollToPosition(0);
                     presenter.onLoadNext();
 
                 } else if (lastPos == adapter.getItemCount() - 1) {
                     swipeRefreshLayout.setEnabled(false);
                     adapter.addLoaderEnd();
-                    layoutManager.scrollToPosition(adapter.getItemCount() - 1);
+                    adapter.notifyDataSetChanged();//ItemInserted(adapter.getItemCount() - 1);
+                    //  layoutManager.scrollToPosition(adapter.getItemCount() - 1);
                     presenter.onLoadPrev();
                 }
             }
@@ -370,9 +388,14 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
-        );
+        final Window window = getWindow();
+
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.setSharedElementEnterTransition(TransitionInflater.from(this)
+                    .inflateTransition(android.R.transition.move));
+        }
 
         setSupportActionBar(toolbar);
 
@@ -397,6 +420,23 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
     }
 
     @Override
+    public void showGallery(Collection<? extends IParcelableFutureBitmap> futureBitmaps, ImageView imageView) {
+
+        final Intent intent = new Intent(this, GalleryActivity.class);
+
+        intent.putParcelableArrayListExtra(GalleryActivity.ARG_IMAGES, new ArrayList<>(futureBitmaps));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // start smooth transition between activities
+            final ActivityOptionsCompat options = ActivityOptionsCompat.
+                    makeSceneTransitionAnimation(this, imageView, imageView.getTransitionName());
+            startActivity(intent, options.toBundle());
+        } else {
+            startActivity(intent);
+        }
+    }
+
+    @Override
     public void showMessage(@NotNull String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
@@ -404,21 +444,25 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
     @Override
     public void showProgressStart() {
         adapter.addLoaderStart();
+        adapter.notifyDataSetChanged();//ItemInserted(0);
     }
 
     @Override
     public void hideProgressStart() {
         adapter.removeLoaderStart();
+        adapter.notifyDataSetChanged();//ItemRemoved(0);
     }
 
     @Override
     public void showProgressEnd() {
         adapter.addLoaderEnd();
+        adapter.notifyDataSetChanged();//ItemInserted(adapter.getItemCount() - 1);
     }
 
     @Override
     public void hideProgressEnd() {
         adapter.removeLoaderEnd();
+        adapter.notifyDataSetChanged();//ItemRemoved(adapter.getItemCount() - 1);
     }
 
     @Override
@@ -437,8 +481,8 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
 
         if (!items.isEmpty()) {
             adapter.addBegin(items);
-            adapter.notifyDataSetChanged();
         }
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -447,7 +491,7 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
 
         if (!items.isEmpty()) {
             adapter.addEnd(items);
-            adapter.notifyDataSetChanged();
         }
+        adapter.notifyDataSetChanged();
     }
 }

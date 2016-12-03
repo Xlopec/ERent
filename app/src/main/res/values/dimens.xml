@@ -1,5 +1,8 @@
 <resources>
 
+    <dimen name="default_circle_indicator_radius">4dp</dimen>
+    <dimen name="default_circle_indicator_stroke_width">1dp</dimen>
+
     <!-- -->
     <dimen name="marker_window_width">280dp</dimen>
     <dimen name="nav_header_avatar_size">72dp</dimen>

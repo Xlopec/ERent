@@ -1,7 +1,10 @@
 package com.ua.erent.module.core.presentation.mvp.view.interfaces;
 
+import android.widget.ImageView;
+
 import com.ua.erent.module.core.presentation.mvp.core.IBaseView;
 import com.ua.erent.module.core.presentation.mvp.presenter.model.ItemModel;
+import com.ua.erent.module.core.presentation.mvp.view.util.IParcelableFutureBitmap;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -12,6 +15,8 @@ import java.util.Collection;
  */
 
 public interface IItemsView extends IBaseView {
+
+    void showGallery(Collection<? extends IParcelableFutureBitmap> futureBitmaps, ImageView imageView);
 
     void showMessage(@NotNull String message);
 

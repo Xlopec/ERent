@@ -103,6 +103,8 @@
                  </intent-filter>-->
         </activity>
 
+        <activity android:name=".module.core.presentation.mvp.view.GalleryActivity" />
+
     </application>
 
 </manifest>

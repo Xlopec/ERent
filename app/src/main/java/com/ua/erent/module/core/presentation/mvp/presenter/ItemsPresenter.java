@@ -1,7 +1,9 @@
 package com.ua.erent.module.core.presentation.mvp.presenter;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.ua.erent.module.core.presentation.mvp.model.interfaces.IItemsModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IItemsPresenter;
@@ -13,7 +15,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
@@ -30,6 +31,7 @@ import rx.Subscription;
 
 public class ItemsPresenter extends IItemsPresenter {
 
+    private static final String TAG = ItemsPresenter.class.getSimpleName();
     private static final String ARG_CACHE = "argCache";
 
     private static final int MAX_VIEW_CACHE_SIZE = 40;
@@ -61,21 +63,30 @@ public class ItemsPresenter extends IItemsPresenter {
             if (savedState == null) {
 
                 model.fetch(PAGE_SIZE)
-                        .doOnSubscribe(view::showProgress)
-                        .doOnCompleted(view::hideProgress)
+                        .doOnSubscribe(getView()::showProgress)
+                        .doOnCompleted(getView()::hideProgress)
                         .subscribe(this::addEnd,
                                 th -> {
-                                    view.showMessage(th.getMessage());
-                                    Log.e("Tag", "error", th);
+                                    if (!isViewGone()) {
+                                        getView().showMessage(th.getMessage());
+                                        getView().hideProgress();
+                                    }
+                                    Log.e(TAG, "error", th);
                                 });
             } else {
 
-                final ItemModel[] cachedArr = (ItemModel[]) savedState.getParcelableArray(ARG_CACHE);
+                final Parcelable[] cachedArr = savedState.getParcelableArray(ARG_CACHE);
 
                 if (cachedArr == null)
                     throw new IllegalStateException("state wasn't saved!");
 
-                addEnd(Arrays.asList(cachedArr));
+                final ArrayList<ItemModel> cache = new ArrayList<>(cachedArr.length);
+
+                for(final Parcelable parcelable : cachedArr) {
+                    cache.add((ItemModel) parcelable);
+                }
+
+                addEnd(cache);
             }
         }
     }
@@ -98,12 +109,23 @@ public class ItemsPresenter extends IItemsPresenter {
     }
 
     @Override
+    public void onPhotoClicked(long id, @NotNull ImageView imageView) {
+        for (final ItemModel item : localCache) {
+
+            if (item.getId() == id) {
+                getView().showGallery(item.getGallery(), imageView);
+                break;
+            }
+        }
+    }
+
+    @Override
     public void onLoadNext() {
 
         final ItemModel item = localCache.peekFirst();
         final Observable<Collection<ItemModel>> obs;
 
-        obs = item == null ? model.fetch(2) : model.fetchNext(2, item.getId());
+        obs = item == null ? model.fetch(PAGE_SIZE) : model.fetchNext(PAGE_SIZE, item.getId());
 
         obs.subscribe(this::addStart,
                 th -> {
@@ -111,7 +133,7 @@ public class ItemsPresenter extends IItemsPresenter {
                         getView().showMessage(th.getMessage());
                         getView().hideProgressStart();
                     }
-                    Log.e("Tag", "error", th);
+                    Log.e(TAG, "error", th);
                 });
     }
 
@@ -121,7 +143,7 @@ public class ItemsPresenter extends IItemsPresenter {
         final ItemModel item = localCache.peekLast();
         final Observable<Collection<ItemModel>> obs;
 
-        obs = item == null ? model.fetch(2) : model.fetchPrev(2, item.getId());
+        obs = item == null ? model.fetch(PAGE_SIZE) : model.fetchPrev(PAGE_SIZE, item.getId());
 
         obs.subscribe(this::addEnd,
                 th -> {
@@ -129,7 +151,7 @@ public class ItemsPresenter extends IItemsPresenter {
                         getView().showMessage(th.getMessage());
                         getView().hideProgressEnd();
                     }
-                    Log.e("Tag", "error", th);
+                    Log.e(TAG, "error", th);
                 });
     }
 
@@ -142,8 +164,9 @@ public class ItemsPresenter extends IItemsPresenter {
                         th -> {
                             if (!isViewGone()) {
                                 getView().showMessage(th.getMessage());
+                                getView().hideProgress();
                             }
-                            Log.e("Tag", "error", th);
+                            Log.e(TAG, "error", th);
                         });
     }
 

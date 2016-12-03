@@ -27,7 +27,7 @@
                 android:layout_width="52dp"
                 android:layout_height="52dp"
                 android:layout_centerVertical="true"
-                app:srcCompat="@drawable/ic_account_circle_blue_24dp" />
+                app:srcCompat="@drawable/ic_account_circle_def_24dp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -101,8 +101,8 @@
             android:layout_marginRight="2dp"
             android:layout_marginStart="2dp"
             android:adjustViewBounds="true"
-            android:maxHeight="160dp"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:transitionName="@string/gallery_image_trans_name" />
 
     </LinearLayout>
 </FrameLayout>

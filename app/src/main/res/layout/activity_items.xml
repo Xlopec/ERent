@@ -17,10 +17,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <include
-                layout="@layout/toolbar_head"
+            <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:paddingEnd="7dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="7dp"
+                android:paddingStart="0dp"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
         </android.support.design.widget.AppBarLayout>
 
@@ -35,9 +42,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@id/main_app_bar_layout"
-                android:background="@color/cards_container_bg" />
+                android:background="@color/cards_container_bg"
+                android:overScrollMode="never" />
 
         </android.support.v4.widget.SwipeRefreshLayout>
+
+        <FrameLayout
+            android:id="@+id/items_fragment_host"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/main_app_bar_layout" />
 
     </RelativeLayout>
 
@@ -51,6 +65,7 @@
         android:paddingRight="10dp"
         android:paddingStart="0dp"
         android:paddingTop="0dp"
+        android:visibility="gone"
         fab:menu_animationDelayPerItem="50"
         fab:menu_backgroundColor="#91303F9F"
         fab:menu_buttonSpacing="15dp"

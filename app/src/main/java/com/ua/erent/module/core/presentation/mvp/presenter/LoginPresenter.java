@@ -145,9 +145,7 @@ public final class LoginPresenter extends ILoginPresenter {
         view.setLogin(model.getLastLogin());
 
         if (model.isSessionAlive()) {
-            view.bindToProgressView(Observable.create(subscriber -> {
-                model.login(new InitCallbackImp(subscriber));
-            }));
+            view.bindToProgressView(Observable.create(subscriber -> model.login(new InitCallbackImp(subscriber))));
         }
     }
 

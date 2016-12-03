@@ -3,7 +3,6 @@ package com.ua.erent.module.core.presentation.mvp.view.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Parcel;
 import android.support.annotation.Px;
 import android.support.v4.util.LruCache;
@@ -52,7 +51,7 @@ public class UrlBitmapFuture implements IParcelableFutureBitmap {
 
     private UrlBitmapFuture(Parcel in) {
         this.cache = new LruCache<>(1);
-        this.url = in.readParcelable(Uri.class.getClassLoader());
+        this.url = in.readParcelable(MyURL.class.getClassLoader());
     }
 
     @NotNull

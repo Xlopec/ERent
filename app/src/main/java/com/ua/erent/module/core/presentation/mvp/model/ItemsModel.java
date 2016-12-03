@@ -12,10 +12,12 @@ import com.ua.erent.module.core.presentation.mvp.presenter.model.ItemModel;
 import com.ua.erent.module.core.presentation.mvp.view.util.IParcelableFutureBitmap;
 import com.ua.erent.module.core.presentation.mvp.view.util.ImageUtils;
 import com.ua.erent.module.core.presentation.mvp.view.util.MyURL;
+import com.ua.erent.module.core.util.MyTextUtil;
 
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -69,26 +71,31 @@ public final class ItemsModel implements IItemsModel {
         final Collection<ItemModel> result = new ArrayList<>(items.size());
 
         for (final Item item : items) {
+
+            final String priceSub =
+                    item.getItemInfo().getPrice().compareTo(BigDecimal.ZERO) == 0 ?
+                            context.getString(R.string.items_price_free) :
+                            context.getString(R.string.items_price, item.getItemInfo().getPrice().toPlainString());
+
             final ItemModel.Builder builder = new ItemModel.Builder(
                     item.getId().getId(),
-                    item.getDetails().getUserInfo().getUsername(),
-                    item.getItemInfo().getName(),
-                    item.getItemInfo().getDescription(),
+                    MyTextUtil.capitalize(item.getDetails().getUserInfo().getUsername()),
+                    MyTextUtil.capitalize(item.getItemInfo().getName()),
+                    MyTextUtil.capitalize(item.getItemInfo().getDescription()),
                     formatTimestamp(item.getDetails().getPublicationDate()),
-                    item.getItemInfo().getPrice().toPlainString(),
+                    priceSub,
                     toCategories(item.getCategories()),
-                    item.getDetails().getBrand().getName(),
-                    item.getDetails().getRegion().getName());
+                    MyTextUtil.capitalize(item.getDetails().getBrand().getName()),
+                    MyTextUtil.capitalize(item.getDetails().getRegion().getName()))
+                    .addGallery(toGallery(item.getDetails().getPhotos()));
 
             final MyURL url = item.getDetails().getUserInfo().getAvatar();
 
             if (url != null) {
                 builder.setUserAvatar(ImageUtils.urlBitmap(url));
             }
-            builder.addGallery(toGallery(item.getDetails().getPhotos()));
             result.add(builder.build());
         }
-
         return result;
     }
 
@@ -107,7 +114,7 @@ public final class ItemsModel implements IItemsModel {
         final Collection<String> result = new ArrayList<>(categories.size());
 
         for (final Category category : categories) {
-            result.add(category.getTitle());
+            result.add(MyTextUtil.capitalize(category.getTitle()));
         }
         return result;
     }

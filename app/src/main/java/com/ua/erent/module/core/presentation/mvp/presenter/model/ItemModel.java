@@ -152,10 +152,13 @@ public final class ItemModel implements Parcelable {
     private ItemModel(Parcel in) {
         id = in.readLong();
         userAvatar = in.readParcelable(IParcelableFutureBitmap.class.getClassLoader());
-        final IParcelableFutureBitmap[] galleryArr =
-                (IParcelableFutureBitmap[]) in.readParcelableArray(IParcelableFutureBitmap.class.getClassLoader());
-        gallery = new ArrayList<>(galleryArr.length);
-        Collections.addAll(gallery, galleryArr);
+        final Parcelable [] parcelables = in.readParcelableArray(IParcelableFutureBitmap.class.getClassLoader());
+        gallery = new ArrayList<>(parcelables.length);
+
+        for (final Parcelable parcelable : parcelables) {
+            gallery.add((IParcelableFutureBitmap) parcelable);
+        }
+
         price = in.readString();
         title = in.readString();
         description = in.readString();
