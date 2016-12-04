@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.ua.erent.module.core.presentation.mvp.view.util.IParcelableFutureBitmap;
+import com.ua.erent.module.core.presentation.mvp.view.util.IUrlFutureBitmap;
 import com.ua.erent.module.core.util.IBuilder;
 
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +24,7 @@ public final class ItemModel implements Parcelable {
     private final long id;
     private final String username;
     private final IParcelableFutureBitmap userAvatar;
-    private final ArrayList<IParcelableFutureBitmap> gallery;
+    private final ArrayList<IUrlFutureBitmap> gallery;
     private final String price;
     private final String title;
     private final String description;
@@ -57,7 +58,7 @@ public final class ItemModel implements Parcelable {
         private final String region;
 
         private IParcelableFutureBitmap userAvatar;
-        private final Collection<IParcelableFutureBitmap> gallery;
+        private final Collection<IUrlFutureBitmap> gallery;
 
         public Builder(long id, String username, String title, String description,
                        String pubDate, String price, Collection<String> categories,
@@ -120,11 +121,11 @@ public final class ItemModel implements Parcelable {
             return this;
         }
 
-        public Collection<IParcelableFutureBitmap> getGallery() {
+        public Collection<IUrlFutureBitmap> getGallery() {
             return Collections.unmodifiableCollection(gallery);
         }
 
-        public Builder addGallery(@NotNull Collection<IParcelableFutureBitmap> gallery) {
+        public Builder addGallery(@NotNull Collection<IUrlFutureBitmap> gallery) {
             this.gallery.addAll(Preconditions.checkNotNull(gallery));
             return this;
         }
@@ -156,7 +157,7 @@ public final class ItemModel implements Parcelable {
         gallery = new ArrayList<>(parcelables.length);
 
         for (final Parcelable parcelable : parcelables) {
-            gallery.add((IParcelableFutureBitmap) parcelable);
+            gallery.add((IUrlFutureBitmap) parcelable);
         }
 
         price = in.readString();
@@ -177,7 +178,7 @@ public final class ItemModel implements Parcelable {
         return userAvatar;
     }
 
-    public Collection<IParcelableFutureBitmap> getGallery() {
+    public Collection<IUrlFutureBitmap> getGallery() {
         return Collections.unmodifiableCollection(gallery);
     }
 

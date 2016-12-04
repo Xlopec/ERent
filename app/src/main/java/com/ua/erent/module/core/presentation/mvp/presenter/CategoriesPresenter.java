@@ -12,6 +12,9 @@ import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ICategorie
 import com.ua.erent.module.core.presentation.mvp.presenter.model.CategoryModel;
 import com.ua.erent.module.core.presentation.mvp.view.CategoriesActivity;
 import com.ua.erent.module.core.presentation.mvp.view.interfaces.ICategoriesView;
+import com.ua.erent.module.core.presentation.mvp.view.util.ImageUtils;
+import com.ua.erent.module.core.presentation.mvp.view.util.MyURL;
+import com.ua.erent.module.core.util.MyTextUtil;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -95,9 +98,7 @@ public final class CategoriesPresenter extends ICategoriesPresenter {
 
     @Override
     public void onOpenCategory(long categoryId) {
-
-        System.out.println(categoryId);
-
+        getView().startActivity(model.createItemsIntent(categoryId));
     }
 
     @Override
@@ -164,29 +165,42 @@ public final class CategoriesPresenter extends ICategoriesPresenter {
         if (isViewGone())
             throw new IllegalStateException();
 
-        final User user = model.getCachedProfile();
+        if (model.isSessionAlive()) {
 
-        if (model.isSessionAlive() && ((user == null && model.hasConnection()) || user != null)) {
+            model.fetchUserProfile().subscribe(profile -> {
+                if (!isViewGone()) {
+                    getView().setDrawerMenu(R.menu.categories_drawer_authorized);
+                    getView().setCredentials(MyTextUtil.capitalize(profile.getFullName().getUsername()),
+                            profile.getContactInfo().getEmail());
 
-            if (user == null) {
+                    final MyURL avatarUrl = profile.getAvatar();
 
-                model.fetchUserProfile().subscribe(profile -> {
-                    if (!isViewGone()) {
-                        getView().setDrawerMenu(R.menu.categories_drawer_authorized);
-                        getView().setCredentials(profile.getFullName().getUsername(), profile.getContactInfo().getEmail());
+                    if (avatarUrl != null) {
+                        getView().setAvatar(ImageUtils.urlBitmap(avatarUrl));
                     }
-                }, th -> {
-                    if (!isViewGone()) {
-                        getView().setDrawerMenu(R.menu.categories_drawer_unauthorized);
+                }
+            }, th -> {
+                if (!isViewGone()) {
+
+                    final User user = model.getCachedProfile();
+
+                    getView().setDrawerMenu(R.menu.categories_drawer_authorized);
+
+                    if (user == null || !model.hasConnection()) {
                         getView().setCredentials(getView().getString(R.string.main_drawer_credentials_title_unauthorized),
                                 getView().getString(R.string.main_drawer_credentials_sub_title_unauthorized, BuildConfig.VERSION_NAME));
                         getView().showMessage(th.getMessage());
+                    } else {
+                        getView().setCredentials(MyTextUtil.capitalize(user.getFullName().getUsername()),
+                                user.getContactInfo().getEmail());
+                        final MyURL avatarUrl = user.getAvatar();
+
+                        if (avatarUrl != null) {
+                            getView().setAvatar(ImageUtils.urlBitmap(avatarUrl));
+                        }
                     }
-                });
-            } else {
-                getView().setDrawerMenu(R.menu.categories_drawer_authorized);
-                getView().setCredentials(user.getFullName().getUsername(), user.getContactInfo().getEmail());
-            }
+                }
+            });
         } else {
             getView().setDrawerMenu(R.menu.categories_drawer_unauthorized);
             getView().setCredentials(getView().getString(R.string.main_drawer_credentials_title_unauthorized),
@@ -219,6 +233,12 @@ public final class CategoriesPresenter extends ICategoriesPresenter {
                     getView().getString(R.string.main_drawer_credentials_sub_title_unauthorized, BuildConfig.VERSION_NAME));
         } else {
             getView().setCredentials(user.getFullName().getUsername(), user.getContactInfo().getEmail());
+
+            final MyURL avatarUrl = user.getAvatar();
+
+            if (avatarUrl != null) {
+                getView().setAvatar(ImageUtils.urlBitmap(avatarUrl));
+            }
         }
     }
 

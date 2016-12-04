@@ -42,7 +42,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@id/main_app_bar_layout"
-                android:background="@color/cards_container_bg"
                 android:overScrollMode="never" />
 
         </android.support.v4.widget.SwipeRefreshLayout>

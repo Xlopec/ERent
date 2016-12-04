@@ -3,6 +3,7 @@ package com.ua.erent.module.core.account.auth.user.api;
 import android.net.Uri;
 import android.webkit.MimeTypeMap;
 
+import com.ua.erent.BuildConfig;
 import com.ua.erent.module.core.account.auth.domain.bo.Session;
 import com.ua.erent.module.core.account.auth.user.domain.bo.User;
 import com.ua.erent.module.core.account.auth.user.domain.vo.ContactInfo;
@@ -10,6 +11,7 @@ import com.ua.erent.module.core.account.auth.user.domain.vo.FullName;
 import com.ua.erent.module.core.account.auth.user.domain.vo.PasswordForm;
 import com.ua.erent.module.core.account.auth.user.domain.vo.UserForm;
 import com.ua.erent.module.core.exception.FileUploadException;
+import com.ua.erent.module.core.presentation.mvp.view.util.MyURL;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -89,9 +91,10 @@ public final class UserProvider implements IUserProvider {
 
         return api.fetchUserProfile(session.getToken(), session.getUserId().getId())
                 .map(response -> new User.Builder()
-                        .setContactInfo(new ContactInfo(response.getEmail()))
+                        .setContactInfo(new ContactInfo(response.getEmail(), response.getPhone(), response.getSkype()))
                         .setFullName(new FullName(response.getUsername()))
                         .setId(session.getUserId())
+                        .setAvatar(response.getAvatar() == null ? null : new MyURL(BuildConfig.API_BASE_URL.concat(response.getAvatar())))
                         .build()
                 );
     }

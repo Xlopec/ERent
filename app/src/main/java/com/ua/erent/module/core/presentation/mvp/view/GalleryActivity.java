@@ -1,14 +1,23 @@
 package com.ua.erent.module.core.presentation.mvp.view;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -17,6 +26,7 @@ import android.widget.ImageView;
 
 import com.ua.erent.R;
 import com.ua.erent.module.core.presentation.mvp.view.util.IParcelableFutureBitmap;
+import com.ua.erent.module.core.presentation.mvp.view.util.IUrlFutureBitmap;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -29,10 +39,11 @@ public class GalleryActivity extends AppCompatActivity {
 
     public static final String ARG_IMAGES = "argImages";
     private static final String ARG_IMAGE_URLS_CACHE = "argImageUrlsCache";
+    private static final String ARG_MENU_IMAGE_URL = "argMenuImageUrl";
 
     private class Adapter extends PagerAdapter {
 
-        private final ArrayList<IParcelableFutureBitmap> images;
+        private final ArrayList<IUrlFutureBitmap> images;
 
         Adapter() {
             this.images = new ArrayList<>(0);
@@ -84,7 +95,11 @@ public class GalleryActivity extends AppCompatActivity {
             return object == view;
         }
 
-        void addAll(Collection<? extends IParcelableFutureBitmap> bitmaps) {
+        IUrlFutureBitmap getImage(int index) {
+            return images.get(index);
+        }
+
+        void addAll(Collection<? extends IUrlFutureBitmap> bitmaps) {
             images.addAll(Preconditions.checkNotNull(bitmaps));
         }
 
@@ -93,7 +108,7 @@ public class GalleryActivity extends AppCompatActivity {
         }
 
         void onRestoreInstanceState(Bundle savedState) {
-            final ArrayList<IParcelableFutureBitmap> cache =
+            final ArrayList<IUrlFutureBitmap> cache =
                     savedState.getParcelableArrayList(ARG_IMAGE_URLS_CACHE);
 
             if (cache != null) {
@@ -104,6 +119,8 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     private final Adapter adapter;
+
+    private IUrlFutureBitmap currentImage;
 
     public GalleryActivity() {
         adapter = new Adapter();
@@ -127,15 +144,19 @@ public class GalleryActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-            getWindow().setSharedElementEnterTransition(TransitionInflater.from(this)
-                    .inflateTransition(android.R.transition.move));
+            final Transition transition = TransitionInflater.from(this)
+                    .inflateTransition(android.R.transition.move);
+
+            window.setSharedElementEnterTransition(transition);
+            window.setSharedElementExitTransition(transition);
+            window.setSharedElementsUseOverlay(false);
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
 
         if (savedInstanceState == null) {
 
-            final ArrayList<IParcelableFutureBitmap> argArr =
+            final ArrayList<IUrlFutureBitmap> argArr =
                     getIntent().getParcelableArrayListExtra(GalleryActivity.ARG_IMAGES);
             adapter.addAll(argArr);
         } else {
@@ -155,6 +176,8 @@ public class GalleryActivity extends AppCompatActivity {
                 final ActionBar actionBar = getSupportActionBar();
 
                 if (actionBar != null) {
+                    currentImage = adapter.getImage(position);
+                    invalidateOptionsMenu();
                     actionBar.setTitle(getString(R.string.gallery_pager_title, position + 1, adapter.getCount()));
                 }
             }
@@ -166,6 +189,8 @@ public class GalleryActivity extends AppCompatActivity {
 
         imagePager.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        currentImage = adapter.getImage(0);
+        invalidateOptionsMenu();
 
         final ActionBar actionBar = getSupportActionBar();
 
@@ -174,6 +199,46 @@ public class GalleryActivity extends AppCompatActivity {
             actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.gallery_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        final Uri uri = Uri.parse(currentImage.getUrl().toExternalForm());
+        final Intent copyIntent = new Intent();
+        final Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+
+        copyIntent.putExtra(ARG_MENU_IMAGE_URL, uri);
+        menu.findItem(R.id.action_copy_url).setIntent(copyIntent);
+        menu.findItem(R.id.action_open_browser).setIntent(browserIntent);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        final int id = item.getItemId();
+
+        if (id == R.id.action_copy_url) {
+            final ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            final ClipData clip = ClipData.newUri(getContentResolver(), getString(R.string.gallery_clip_title),
+                    item.getIntent().getParcelableExtra(ARG_MENU_IMAGE_URL));
+            clipboard.setPrimaryClip(clip);
+
+        } else if (id == R.id.action_open_browser) {
+            startActivity(item.getIntent());
+
+        } else if (id == android.R.id.home) {
+            ActivityCompat.finishAfterTransition(this);
+        }
+
+        return true;
     }
 
     @Override

@@ -1,19 +1,24 @@
 package com.ua.erent.module.core.presentation.mvp.model;
 
 import android.content.Context;
+import android.content.Intent;
 
 import com.ua.erent.R;
+import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
 import com.ua.erent.module.core.item.domain.IItemAppService;
 import com.ua.erent.module.core.item.domain.api.filter.FilterBuilder;
 import com.ua.erent.module.core.item.domain.bo.Category;
 import com.ua.erent.module.core.item.domain.bo.Item;
 import com.ua.erent.module.core.presentation.mvp.model.interfaces.IItemsModel;
+import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ItemDetailsPresenter;
 import com.ua.erent.module.core.presentation.mvp.presenter.model.ItemModel;
-import com.ua.erent.module.core.presentation.mvp.view.util.IParcelableFutureBitmap;
+import com.ua.erent.module.core.presentation.mvp.view.ItemDetailsActivity;
+import com.ua.erent.module.core.presentation.mvp.view.util.IUrlFutureBitmap;
 import com.ua.erent.module.core.presentation.mvp.view.util.ImageUtils;
 import com.ua.erent.module.core.presentation.mvp.view.util.MyURL;
 import com.ua.erent.module.core.util.MyTextUtil;
 
+import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 
@@ -31,40 +36,78 @@ import rx.Observable;
 
 public final class ItemsModel implements IItemsModel {
 
-    private final IItemAppService appService;
+    private final IItemAppService itemAppService;
+    private final IAuthAppService authAppService;
     private final Context context;
 
     @Inject
-    public ItemsModel(Context context, IItemAppService appService) {
-        this.appService = appService;
+    public ItemsModel(Context context, IItemAppService itemAppService, IAuthAppService authAppService) {
+        this.itemAppService = itemAppService;
         this.context = context;
+        this.authAppService = authAppService;
     }
 
     @Override
-    public Observable<Collection<ItemModel>> fetch(long limit) {
-        return appService.fetchItems(new FilterBuilder().withLimit(limit).build())
+    public boolean isSessionAlive() {
+        return authAppService.isSessionAlive();
+    }
+
+    @Override
+    public Observable<Collection<ItemModel>> fetch(long categoryId, long limit) {
+        return itemAppService.fetchItems(new FilterBuilder()
+                .withCategory(categoryId)
+                .orderBy(FilterBuilder.OrderBy.PUB_DATE)
+                .withLimit(limit)
+                .build())
                 .map(this::toModel);
     }
 
     @Override
-    public Observable<Collection<ItemModel>> fetchNext(long limit, long lastId) {
-        return appService
-                .fetchItems(new FilterBuilder().withLastIdGreater(lastId)
-                        .sort(FilterBuilder.SortType.ASC).withLimit(limit).build())
+    public Observable<Collection<ItemModel>> fetchNext(long categoryId, long limit, long lastId) {
+        return itemAppService
+                .fetchItems(new FilterBuilder()
+                        .withLastIdGreater(lastId)
+                        .withCategory(categoryId)
+                        .orderBy(FilterBuilder.OrderBy.PUB_DATE)
+                        .sort(FilterBuilder.SortType.ASC)
+                        .withLimit(limit)
+                        .build())
                 .map(this::toModel);
     }
 
     @Override
-    public Observable<Collection<ItemModel>> fetchPrev(long limit, long lastId) {
-        return appService
-                .fetchItems(new FilterBuilder().withLastIdLower(lastId).withLimit(limit).build())
+    public Observable<Collection<ItemModel>> fetchPrev(long categoryId, long limit, long lastId) {
+        return itemAppService
+                .fetchItems(new FilterBuilder().withCategory(categoryId)
+                        .orderBy(FilterBuilder.OrderBy.PUB_DATE)
+                        .withLastIdLower(lastId)
+                        .withLimit(limit)
+                        .build())
                 .map(this::toModel);
     }
 
     @Override
     public Observable<Collection<ItemModel>> getOnItemAddedObs() {
-        return appService.getOnItemsAddedObs()
+        return itemAppService.getOnItemsAddedObs()
                 .map(this::toModel);
+    }
+
+    @Override
+    public Intent createItemDetailsIntent(@NotNull ItemModel item) {
+        final Intent intent = new Intent(context, ItemDetailsActivity.class);
+        intent.putExtra(ItemDetailsPresenter.ARG_ITEM, item);
+        return intent;
+    }
+
+    @Override
+    public Intent createComplainIntent(@NotNull String email, @NotNull String subject, @NotNull String body) {
+        final Intent intent = new Intent(Intent.ACTION_SEND);
+
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_TEXT, body);
+        return intent;
     }
 
     private Collection<ItemModel> toModel(Collection<Item> items) {
@@ -99,8 +142,8 @@ public final class ItemsModel implements IItemsModel {
         return result;
     }
 
-    private static Collection<IParcelableFutureBitmap> toGallery(Collection<? extends MyURL> src) {
-        final Collection<IParcelableFutureBitmap> result = new ArrayList<>(src.size());
+    private static Collection<IUrlFutureBitmap> toGallery(Collection<? extends MyURL> src) {
+        final Collection<IUrlFutureBitmap> result = new ArrayList<>(src.size());
 
         for (final MyURL url : src) {
             result.add(ImageUtils.urlBitmap(url));

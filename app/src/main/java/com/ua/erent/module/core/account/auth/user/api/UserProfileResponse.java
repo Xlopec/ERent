@@ -18,6 +18,12 @@ final class UserProfileResponse {
     private String email;
     @SerializedName("username")
     private String username;
+    @SerializedName("phone")
+    private String phone;
+    @SerializedName("skype")
+    private String skype;
+    @SerializedName("avatar")
+    private String avatar;
 
     public long getId() {
         return id;
@@ -43,12 +49,39 @@ final class UserProfileResponse {
         this.username = username;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getSkype() {
+        return skype;
+    }
+
+    public void setSkype(String skype) {
+        this.skype = skype;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     @Override
     public String toString() {
         return "UserProfileResponse{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
+                ", phone='" + phone + '\'' +
+                ", skype='" + skype + '\'' +
+                ", avatar='" + avatar + '\'' +
                 '}';
     }
 }

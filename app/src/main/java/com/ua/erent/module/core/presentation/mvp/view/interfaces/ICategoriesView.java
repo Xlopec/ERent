@@ -4,6 +4,7 @@ import android.support.annotation.MenuRes;
 
 import com.ua.erent.module.core.presentation.mvp.core.IBaseView;
 import com.ua.erent.module.core.presentation.mvp.presenter.model.CategoryModel;
+import com.ua.erent.module.core.presentation.mvp.view.util.IFutureBitmap;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -18,6 +19,8 @@ public interface ICategoriesView extends IBaseView {
     void setDrawerMenu(@MenuRes int resId);
 
     void setCredentials(String fullName, String email);
+
+    void setAvatar(@NotNull IFutureBitmap bitmap);
 
     void showMessage(@NotNull String message);
 

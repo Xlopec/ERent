@@ -25,7 +25,14 @@
         <item name="colorControlNormal">#FFF</item>
         <item name="colorControlActivated">@color/primary</item>
         <item name="colorControlHighlight">@color/primary</item>
+        <item name="android:statusBarColor">@color/primaryDark</item>
         <item name="imageButtonStyle">@style/iconButton</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
+    </style>
+
+    <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
+        <item name="android:background">#FFF</item>
+        <item name="android:popupBackground">@android:color/white</item>
     </style>
 
     <style name="MyTheme.Light" parent="MyTheme.Base">

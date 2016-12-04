@@ -2,6 +2,7 @@ package com.ua.erent.module.core.presentation.mvp.module;
 
 import android.content.Context;
 
+import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
 import com.ua.erent.module.core.di.scopes.ActivityScope;
 import com.ua.erent.module.core.item.domain.IItemAppService;
 import com.ua.erent.module.core.presentation.mvp.model.ItemsModel;
@@ -20,8 +21,8 @@ public final class ItemsModule {
 
     @Provides
     @ActivityScope
-    IItemsModel provideItemsModel(Context context, IItemAppService appService) {
-        return new ItemsModel(context, appService);
+    IItemsModel provideItemsModel(Context context, IItemAppService appService, IAuthAppService authAppService) {
+        return new ItemsModel(context, appService, authAppService);
     }
 
     @Provides

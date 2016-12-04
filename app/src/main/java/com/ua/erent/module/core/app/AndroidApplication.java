@@ -20,7 +20,7 @@ import org.acra.annotation.ReportsCrashes;
 @ReportsCrashes(
         mailTo = BuildConfig.APP_CRASH_MAILTO,
         mode = ReportingInteractionMode.TOAST,
-        resToastText = R.string.err_app_crash
+        resToastText = R.string.support_email
 )
 public final class AndroidApplication extends Application {
 

@@ -5,8 +5,4 @@
         android:id="@+id/action_email"
         android:title="@string/item_details_complain"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/action_conversation"
-        android:title="@string/items_to_conversation"
-        app:showAsAction="never" />
 </menu>

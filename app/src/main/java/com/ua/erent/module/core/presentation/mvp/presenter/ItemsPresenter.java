@@ -1,10 +1,14 @@
 package com.ua.erent.module.core.presentation.mvp.presenter;
 
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.ua.erent.R;
 import com.ua.erent.module.core.presentation.mvp.model.interfaces.IItemsModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IItemsPresenter;
 import com.ua.erent.module.core.presentation.mvp.presenter.model.ItemModel;
@@ -33,6 +37,7 @@ public class ItemsPresenter extends IItemsPresenter {
 
     private static final String TAG = ItemsPresenter.class.getSimpleName();
     private static final String ARG_CACHE = "argCache";
+    private static final String ARG_CATEGORY_CACHE = "argCategoryCache";
 
     private static final int MAX_VIEW_CACHE_SIZE = 40;
     private static final int PAGE_SIZE = 7;
@@ -42,10 +47,13 @@ public class ItemsPresenter extends IItemsPresenter {
 
     private final Subscription itemAddedSub;
 
+    private long categoryId;
+
     @Inject
     public ItemsPresenter(IItemsModel model) {
         this.model = model;
         this.localCache = new ArrayDeque<>(MAX_VIEW_CACHE_SIZE);
+        this.categoryId = -1;
 
         this.itemAddedSub = model.getOnItemAddedObs()
                 .subscribe(items -> {
@@ -62,7 +70,12 @@ public class ItemsPresenter extends IItemsPresenter {
 
             if (savedState == null) {
 
-                model.fetch(PAGE_SIZE)
+                categoryId = data.getLong(IItemsPresenter.ARG_CATEGORY_ID, -1);
+
+                if (categoryId == -1)
+                    throw new IllegalArgumentException("category id wasn't passed");
+
+                model.fetch(categoryId, PAGE_SIZE)
                         .doOnSubscribe(getView()::showProgress)
                         .doOnCompleted(getView()::hideProgress)
                         .subscribe(this::addEnd,
@@ -76,13 +89,17 @@ public class ItemsPresenter extends IItemsPresenter {
             } else {
 
                 final Parcelable[] cachedArr = savedState.getParcelableArray(ARG_CACHE);
+                categoryId = savedState.getLong(IItemsPresenter.ARG_CATEGORY_ID, -1);
 
                 if (cachedArr == null)
                     throw new IllegalStateException("state wasn't saved!");
 
+                if (categoryId == -1)
+                    throw new IllegalArgumentException("category id wasn't saved");
+
                 final ArrayList<ItemModel> cache = new ArrayList<>(cachedArr.length);
 
-                for(final Parcelable parcelable : cachedArr) {
+                for (final Parcelable parcelable : cachedArr) {
                     cache.add((ItemModel) parcelable);
                 }
 
@@ -94,6 +111,7 @@ public class ItemsPresenter extends IItemsPresenter {
     @Override
     public void onSaveInstanceState(@NotNull Bundle outState) {
         outState.putParcelableArray(ARG_CACHE, localCache.toArray(new ItemModel[localCache.size()]));
+        outState.putLong(ARG_CATEGORY_CACHE, categoryId);
         super.onSaveInstanceState(outState);
     }
 
@@ -105,7 +123,13 @@ public class ItemsPresenter extends IItemsPresenter {
 
     @Override
     public void onItemClicked(long id) {
+        for (final ItemModel item : localCache) {
 
+            if (item.getId() == id) {
+                getView().startActivity(model.createItemDetailsIntent(item));
+                break;
+            }
+        }
     }
 
     @Override
@@ -122,10 +146,10 @@ public class ItemsPresenter extends IItemsPresenter {
     @Override
     public void onLoadNext() {
 
-        final ItemModel item = localCache.peekFirst();
+        final ItemModel item = localCache.peekLast();
         final Observable<Collection<ItemModel>> obs;
 
-        obs = item == null ? model.fetch(PAGE_SIZE) : model.fetchNext(PAGE_SIZE, item.getId());
+        obs = item == null ? model.fetch(categoryId, PAGE_SIZE) : model.fetchNext(categoryId, PAGE_SIZE, item.getId());
 
         obs.subscribe(this::addStart,
                 th -> {
@@ -140,10 +164,10 @@ public class ItemsPresenter extends IItemsPresenter {
     @Override
     public void onLoadPrev() {
 
-        final ItemModel item = localCache.peekLast();
+        final ItemModel item = localCache.peekFirst();
         final Observable<Collection<ItemModel>> obs;
 
-        obs = item == null ? model.fetch(PAGE_SIZE) : model.fetchPrev(PAGE_SIZE, item.getId());
+        obs = item == null ? model.fetch(categoryId, PAGE_SIZE) : model.fetchPrev(categoryId, PAGE_SIZE, item.getId());
 
         obs.subscribe(this::addEnd,
                 th -> {
@@ -157,7 +181,13 @@ public class ItemsPresenter extends IItemsPresenter {
 
     @Override
     public void onRefresh() {
-        model.fetch(PAGE_SIZE)
+
+        final ItemModel item = localCache.peekLast();
+        final Observable<Collection<ItemModel>> obs;
+
+        obs = item == null ? model.fetch(categoryId, PAGE_SIZE) : model.fetchNext(categoryId, PAGE_SIZE, item.getId());
+
+        obs
                 .doOnSubscribe(getView()::showProgress)
                 .doOnCompleted(getView()::hideProgress)
                 .subscribe(this::addStart,
@@ -168,6 +198,37 @@ public class ItemsPresenter extends IItemsPresenter {
                             }
                             Log.e(TAG, "error", th);
                         });
+    }
+
+    @Override
+    public int getPopupResId() {
+        return model.isSessionAlive() ? R.menu.items_authorized_menu : R.menu.items_unauthorized_menu;
+    }
+
+    @Override
+    public void onOpenDialog(long id) {
+
+    }
+
+    @Override
+    public void onComplain(long id) {
+
+        for (final ItemModel itemModel : localCache) {
+
+            if (itemModel.getId() == id) {
+                final Context context = getView();
+                final Intent intent = model.createComplainIntent(context.getString(R.string.support_email),
+                        context.getString(R.string.item_details_complaint_subj, itemModel.getUsername()),
+                        context.getString(R.string.item_details_complaint_body, itemModel.getId(), itemModel.getUsername()));
+
+                try {
+                    context.startActivity(Intent.createChooser(intent, context.getString(R.string.item_details_email_client_chooser)));
+                } catch (final ActivityNotFoundException e) {
+                    getView().showText(context.getString(R.string.item_details_no_email_client));
+                }
+                break;
+            }
+        }
     }
 
     private void addStart(Collection<ItemModel> arg) {

@@ -11,14 +11,18 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +35,7 @@ import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IItemsPres
 import com.ua.erent.module.core.presentation.mvp.presenter.model.ItemModel;
 import com.ua.erent.module.core.presentation.mvp.view.interfaces.IItemsView;
 import com.ua.erent.module.core.presentation.mvp.view.util.IFutureBitmap;
-import com.ua.erent.module.core.presentation.mvp.view.util.IParcelableFutureBitmap;
+import com.ua.erent.module.core.presentation.mvp.view.util.IUrlFutureBitmap;
 import com.ua.erent.module.core.presentation.mvp.view.util.ImageUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -113,6 +117,7 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
         private final TextView title;
         private final TextView subTitle;
         private final TextView description;
+        private final ImageButton actionMenu;
 
         private IFutureBitmap avatarBm;
         private IFutureBitmap photoBm;
@@ -126,9 +131,11 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
                 subTitle = (TextView) itemView.findViewById(R.id.item_sub_title);
                 description = (TextView) itemView.findViewById(R.id.item_description);
                 photo = (ImageView) itemView.findViewById(R.id.item_photo);
+                actionMenu = (ImageButton) itemView.findViewById(R.id.item_action_menu);
             } else {
                 avatar = photo = null;
                 title = subTitle = description = null;
+                actionMenu = null;
             }
         }
 
@@ -224,6 +231,9 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
                         model.getUsername()));
 
                 holder.description.setText(model.getDescription());
+                holder.title.setOnClickListener(v -> presenter.onItemClicked(model.getId()));
+                holder.description.setOnClickListener(v -> presenter.onItemClicked(model.getId()));
+                holder.actionMenu.setOnClickListener(v -> showItemPopup(v, model.getId()));
             }
         }
 
@@ -275,11 +285,14 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
             }
         }
 
-        void removeLoaderStart() {
+        boolean removeLoaderStart() {
 
             if (!data.isEmpty() && data.get(0).getType() == Type.LOADER) {
                 data.remove(0);
+                return true;
             }
+
+            return false;
         }
 
         void addLoaderEnd() {
@@ -291,13 +304,16 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
             }
         }
 
-        void removeLoaderEnd() {
+        boolean removeLoaderEnd() {
 
             final int lastIndx = data.size() - 1;
 
             if (!data.isEmpty() && data.get(lastIndx).getType() == Type.LOADER) {
                 data.remove(lastIndx);
+                return true;
             }
+
+            return false;
         }
 
         private Collection<RecyclerItem> fromModels(Collection<ItemModel> itemModels) {
@@ -331,6 +347,7 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
 
         private final int hideDelta;
         private final int showDelta;
+        private int deltaY;
 
         ScrollListener(int hideDelta, int showDelta) {
             this.hideDelta = hideDelta;
@@ -345,21 +362,19 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
                 final int firstPos = layoutManager.findFirstVisibleItemPosition();
                 final int lastPos = layoutManager.findLastVisibleItemPosition();
 
-                if (lastPos - firstPos >= adapter.getItemCount()) {
+                if (lastPos - firstPos >= adapter.getItemCount() || deltaY == 0) {
                     swipeRefreshLayout.setEnabled(true);
 
-                } else if (firstPos == 0) {
+                } else if (firstPos == 0 && deltaY < 0) {
                     swipeRefreshLayout.setEnabled(false);
                     adapter.addLoaderStart();
                     adapter.notifyItemInserted(0);
-                    layoutManager.scrollToPosition(0);
                     presenter.onLoadNext();
 
-                } else if (lastPos == adapter.getItemCount() - 1) {
+                } else if (lastPos == adapter.getItemCount() - 1 && deltaY > 0) {
                     swipeRefreshLayout.setEnabled(false);
                     adapter.addLoaderEnd();
-                    adapter.notifyDataSetChanged();//ItemInserted(adapter.getItemCount() - 1);
-                    //  layoutManager.scrollToPosition(adapter.getItemCount() - 1);
+                    adapter.notifyItemInserted(lastPos + 1);
                     presenter.onLoadPrev();
                 }
             }
@@ -367,6 +382,8 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
 
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+
+            deltaY = dy;
 
             if (dy >= hideDelta) {
                 floatingActionMenu.hideMenuButton(true);
@@ -393,8 +410,15 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.setSharedElementEnterTransition(TransitionInflater.from(this)
-                    .inflateTransition(android.R.transition.move));
+
+            final Transition transition = TransitionInflater.from(this)
+                    .inflateTransition(android.R.transition.move);
+
+            window.setSharedElementEnterTransition(transition);
+            window.setSharedElementExitTransition(transition);
+            window.setSharedElementsUseOverlay(false);
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
 
         setSupportActionBar(toolbar);
@@ -413,6 +437,17 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
         itemsRecycleView.addOnScrollListener(new ScrollListener(ImageUtils.dpToPx(5), ImageUtils.dpToPx(5)));
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        final int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            finish();
+        }
+        return true;
+    }
+
     @NotNull
     @Override
     public Context getContext() {
@@ -420,7 +455,7 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
     }
 
     @Override
-    public void showGallery(Collection<? extends IParcelableFutureBitmap> futureBitmaps, ImageView imageView) {
+    public void showGallery(Collection<? extends IUrlFutureBitmap> futureBitmaps, ImageView imageView) {
 
         final Intent intent = new Intent(this, GalleryActivity.class);
 
@@ -444,25 +479,25 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
     @Override
     public void showProgressStart() {
         adapter.addLoaderStart();
-        adapter.notifyDataSetChanged();//ItemInserted(0);
+        adapter.notifyItemInserted(0);
     }
 
     @Override
     public void hideProgressStart() {
         adapter.removeLoaderStart();
-        adapter.notifyDataSetChanged();//ItemRemoved(0);
+        adapter.notifyItemRemoved(0);
     }
 
     @Override
     public void showProgressEnd() {
         adapter.addLoaderEnd();
-        adapter.notifyDataSetChanged();//ItemInserted(adapter.getItemCount() - 1);
+        adapter.notifyItemInserted(adapter.getItemCount() - 1);
     }
 
     @Override
     public void hideProgressEnd() {
         adapter.removeLoaderEnd();
-        adapter.notifyDataSetChanged();//ItemRemoved(adapter.getItemCount() - 1);
+        adapter.notifyItemRemoved(adapter.getItemCount() - 1);
     }
 
     @Override
@@ -477,21 +512,58 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
 
     @Override
     public void addNextItems(@NotNull Collection<ItemModel> items) {
-        adapter.removeLoaderStart();
 
-        if (!items.isEmpty()) {
+        final boolean removed = adapter.removeLoaderStart();
+
+        if (items.isEmpty()) {
+            if (removed) {
+                adapter.notifyItemRemoved(0);
+            }
+        } else {
             adapter.addBegin(items);
+            adapter.notifyItemRangeInserted(0, items.size());
         }
-        adapter.notifyDataSetChanged();
     }
 
     @Override
     public void addPrevItems(@NotNull Collection<ItemModel> items) {
-        adapter.removeLoaderEnd();
+        final int lastPos = adapter.getItemCount() - 1;
+        final boolean removed = adapter.removeLoaderEnd();
 
-        if (!items.isEmpty()) {
+        if (items.isEmpty()) {
+
+            if (removed) {
+                adapter.notifyItemRemoved(lastPos);
+            }
+        } else {
             adapter.addEnd(items);
+            adapter.notifyItemRangeInserted(lastPos, items.size());
         }
-        adapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void showText(@NotNull String string) {
+        Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
+    }
+
+    private void showItemPopup(View v, long itemId) {
+
+        final PopupMenu popupMenu = new PopupMenu(this, v);
+
+        popupMenu.inflate(presenter.getPopupResId());
+        popupMenu.setOnMenuItemClickListener(item -> {
+
+            final int id = item.getItemId();
+
+            if (id == R.id.action_email) {
+                presenter.onComplain(itemId);
+            } else if (id == R.id.action_conversation) {
+                presenter.onOpenDialog(itemId);
+            }
+
+            return true;
+        });
+        popupMenu.show();
+    }
+
 }

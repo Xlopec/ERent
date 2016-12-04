@@ -100,7 +100,7 @@ public final class ImageUtils {
         return new ResourceBitmapFuture(resId);
     }
 
-    public static IParcelableFutureBitmap urlBitmap(@NotNull MyURL url) {
+    public static IUrlFutureBitmap urlBitmap(@NotNull MyURL url) {
         return new UrlBitmapFuture(url);
     }
 

@@ -36,6 +36,7 @@ import com.ua.erent.module.core.presentation.mvp.presenter.model.CategoryModel;
 import com.ua.erent.module.core.presentation.mvp.view.interfaces.ICategoriesView;
 import com.ua.erent.module.core.presentation.mvp.view.util.IFutureBitmap;
 import com.ua.erent.module.core.presentation.mvp.view.util.ImageUtils;
+import com.ua.erent.module.core.presentation.mvp.view.util.MyCircleImageView;
 import com.ua.erent.module.core.presentation.mvp.view.util.SpaceDecorator;
 
 import org.jetbrains.annotations.NotNull;
@@ -69,6 +70,7 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
     protected SwipeRefreshLayout refreshLayout;
 
     private ImageView bgHeaderImageView;
+    private MyCircleImageView avatarImageView;
     private TextView headerCredentials;
     private TextView headerEmail;
     private View headerContainer;
@@ -151,7 +153,10 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
 
         @Override
         public void onViewAttachedToWindow(CategoryHolder holder) {
-            holder.tryLoadImage(presenter.getRandomColor(), CategoriesActivity.this);
+
+            if (holder.bitmap != null) {
+                holder.tryLoadImage(presenter.getRandomColor(), CategoriesActivity.this);
+            }
         }
 
         void addItem(CategoryModel model) {
@@ -206,6 +211,10 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
         categoriesRecycleView.setAdapter(adapter);
 
         final View headerView = navigationView.getHeaderView(0);
+
+        avatarImageView = (MyCircleImageView) headerView.findViewById(R.id.nav_avatar);
+        avatarImageView.setDrawingCacheEnabled(true);
+        avatarImageView.buildDrawingCache();
 
         headerContainer = headerView.findViewById(R.id.nav_header_container);
         headerCredentials = (TextView) headerView.findViewById(R.id.nav_username);
@@ -351,6 +360,20 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
     }
 
     @Override
+    public void setAvatar(@NotNull IFutureBitmap bitmap) {
+
+        final ViewGroup.LayoutParams params = avatarImageView.getLayoutParams();
+
+        bitmap.fetch(params.width, params.height, this)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(bm -> {
+                    avatarImageView.setBorderWidth(2);
+                    avatarImageView.setImageBitmap(bm);
+                });
+    }
+
+    @Override
     public void showMessage(@NotNull String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
@@ -377,7 +400,7 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
 
         final ViewGroup.LayoutParams params = headerContainer.getLayoutParams();
 
-        Observable.create(new Observable.OnSubscribe<BitmapDrawable>() {
+        Observable.defer(() -> Observable.create(new Observable.OnSubscribe<BitmapDrawable>() {
             @Override
             public void call(Subscriber<? super BitmapDrawable> subscriber) {
                 final Bitmap bitmap = ImageUtils.decodeSampledBitmapFromResource(
@@ -389,7 +412,7 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
                 subscriber.onNext(new BitmapDrawable(getResources(), bitmap));
                 subscriber.onCompleted();
             }
-        })
+        }))
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bgHeaderImageView::setImageDrawable);

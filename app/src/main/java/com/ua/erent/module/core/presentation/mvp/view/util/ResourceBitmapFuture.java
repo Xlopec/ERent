@@ -5,8 +5,6 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.support.annotation.Px;
 
-import com.ua.erent.R;
-
 import org.jetbrains.annotations.NotNull;
 
 import rx.Observable;
@@ -53,7 +51,7 @@ public class ResourceBitmapFuture implements IParcelableFutureBitmap {
                     try {
                         bitmap = ImageUtils.decodeSampledBitmapFromResource(
                                 context.getResources(),
-                                R.drawable.bike_test,
+                                resourceId,
                                 ImageUtils.pxToDp(width),
                                 ImageUtils.pxToDp(height));
                         subscriber.onNext(bitmap);

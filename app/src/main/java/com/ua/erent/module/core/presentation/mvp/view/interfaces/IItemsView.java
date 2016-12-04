@@ -4,7 +4,7 @@ import android.widget.ImageView;
 
 import com.ua.erent.module.core.presentation.mvp.core.IBaseView;
 import com.ua.erent.module.core.presentation.mvp.presenter.model.ItemModel;
-import com.ua.erent.module.core.presentation.mvp.view.util.IParcelableFutureBitmap;
+import com.ua.erent.module.core.presentation.mvp.view.util.IUrlFutureBitmap;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +16,7 @@ import java.util.Collection;
 
 public interface IItemsView extends IBaseView {
 
-    void showGallery(Collection<? extends IParcelableFutureBitmap> futureBitmaps, ImageView imageView);
+    void showGallery(Collection<? extends IUrlFutureBitmap> futureBitmaps, ImageView imageView);
 
     void showMessage(@NotNull String message);
 
@@ -36,4 +36,5 @@ public interface IItemsView extends IBaseView {
 
     void addPrevItems(@NotNull Collection<ItemModel> items);
 
+    void showText(@NotNull String string);
 }

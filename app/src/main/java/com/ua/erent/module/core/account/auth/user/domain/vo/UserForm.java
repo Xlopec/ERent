@@ -18,6 +18,8 @@ public final class UserForm implements Parcelable {
 
     private final FormField<String> username;
     private final FormField<String> email;
+    private final FormField<String> phone;
+    private final FormField<String> skype;
 
     public static final Creator<UserForm> CREATOR = new Creator<UserForm>() {
         @Override
@@ -35,6 +37,8 @@ public final class UserForm implements Parcelable {
 
         private FormField<String> username;
         private FormField<String> email;
+        private FormField<String> phone;
+        private FormField<String> skype;
 
         public Builder() {
             reset();
@@ -58,6 +62,16 @@ public final class UserForm implements Parcelable {
             return this;
         }
 
+        public final Builder setPhone(String phone) {
+            this.phone = new FormField<>(phone);
+            return this;
+        }
+
+        public final Builder setSkype(String skype) {
+            this.skype = new FormField<>(skype);
+            return this;
+        }
+
         protected final FormField<String> getEmailField() {
             return username;
         }
@@ -66,9 +80,19 @@ public final class UserForm implements Parcelable {
             return username;
         }
 
+        protected final FormField<String> getPhoneField() {
+            return phone;
+        }
+
+        protected final FormField<String> getSkypeField() {
+            return skype;
+        }
+
         public void reset() {
             username = new FormField<>();
             email = new FormField<>();
+            skype = new FormField<>();
+            phone = new FormField<>();
         }
 
         @Override
@@ -81,11 +105,15 @@ public final class UserForm implements Parcelable {
         Preconditions.checkNotNull(builder);
         this.username = Preconditions.checkNotNull(builder.getUsernameField(), "field wasn't set");
         this.email = Preconditions.checkNotNull(builder.getEmailField());
+        this.phone = builder.getPhoneField();
+        this.skype = builder.getSkypeField();
     }
 
     private UserForm(Parcel in) {
         username = in.readByte() == 1 ? new FormField<>() : new FormField<>(in.readString());
         email = in.readByte() == 1 ? new FormField<>() : new FormField<>(in.readString());
+        phone = in.readByte() == 1 ? new FormField<>() : new FormField<>(in.readString());
+        skype = in.readByte() == 1 ? new FormField<>() : new FormField<>(in.readString());
     }
 
     public FormField<String> getUsernameField() {
@@ -104,6 +132,14 @@ public final class UserForm implements Parcelable {
         return email.getValue();
     }
 
+    public String getPhone() {
+        return phone.getValue();
+    }
+
+    public String getSkype() {
+        return skype.getValue();
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -115,13 +151,19 @@ public final class UserForm implements Parcelable {
         dest.writeString(username.getValue());
         dest.writeByte((byte) (email.isEmpty() ? 1 : 0));
         dest.writeString(email.getValue());
+        dest.writeByte((byte) (phone.isEmpty() ? 1 : 0));
+        dest.writeString(phone.getValue());
+        dest.writeByte((byte) (skype.isEmpty() ? 1 : 0));
+        dest.writeString(skype.getValue());
     }
 
     @Override
     public String toString() {
-        return "Profile{" +
+        return "UserForm{" +
                 "username=" + username +
                 ", email=" + email +
+                ", phone=" + phone +
+                ", skype=" + skype +
                 '}';
     }
 }

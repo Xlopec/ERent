@@ -74,7 +74,7 @@ public final class UserDomain implements IUserDomain, IAppLifecycleManager.IStat
                         if (user != null) {
                             // updates user by applying update form
                             updated = new User.Builder(user)
-                                    .setContactInfo(new ContactInfo(userForm.getEmail()))
+                                    .setContactInfo(new ContactInfo(userForm.getEmail(), userForm.getPhone(), userForm.getSkype()))
                                     .setFullName(new FullName(userForm.getUsername()))
                                     .build();
 

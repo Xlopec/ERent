@@ -18,7 +18,7 @@ public final class FilterBuilder implements IBuilder<IApiFilter> {
 
     public enum OrderBy {
 
-        NAME("name");
+        NAME("name"), ID("id"), PRICE("price"), PUB_DATE("publicationDate");
 
         private final String by;
 
@@ -72,6 +72,16 @@ public final class FilterBuilder implements IBuilder<IApiFilter> {
 
     public FilterBuilder orderBy(@NotNull OrderBy orderBy) {
         classToFilter.put(Order.class, new Order(orderBy));
+        return this;
+    }
+
+    public FilterBuilder withCategory(long category) {
+        classToFilter.put(WithCategory.class, new WithCategory(category));
+        return this;
+    }
+
+    public FilterBuilder withCategory(long...categories) {
+        classToFilter.put(WithCategory.class, new WithCategory(categories));
         return this;
     }
 

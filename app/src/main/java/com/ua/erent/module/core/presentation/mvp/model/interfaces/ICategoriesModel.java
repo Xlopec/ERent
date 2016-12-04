@@ -20,6 +20,8 @@ public interface ICategoriesModel {
 
     Intent createLoginIntent();
 
+    Intent createItemsIntent(long categoryId);
+
     Intent createLogoutIntent();
 
     Observable<User> fetchUserProfile();

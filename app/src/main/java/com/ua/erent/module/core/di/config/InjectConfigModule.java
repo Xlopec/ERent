@@ -7,16 +7,19 @@ import com.ua.erent.module.core.presentation.mvp.component.CropComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerCategoriesComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerCropComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerInitialScreenComponent;
+import com.ua.erent.module.core.presentation.mvp.component.DaggerItemDetailsComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerItemsComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerLoginComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerRegisterComponent;
 import com.ua.erent.module.core.presentation.mvp.component.InitialScreenComponent;
+import com.ua.erent.module.core.presentation.mvp.component.ItemDetailsComponent;
 import com.ua.erent.module.core.presentation.mvp.component.ItemsComponent;
 import com.ua.erent.module.core.presentation.mvp.component.LoginComponent;
 import com.ua.erent.module.core.presentation.mvp.component.RegisterComponent;
 import com.ua.erent.module.core.presentation.mvp.module.CategoriesModule;
 import com.ua.erent.module.core.presentation.mvp.module.CropModule;
 import com.ua.erent.module.core.presentation.mvp.module.InitialScreenModule;
+import com.ua.erent.module.core.presentation.mvp.module.ItemDetailsModule;
 import com.ua.erent.module.core.presentation.mvp.module.ItemsModule;
 import com.ua.erent.module.core.presentation.mvp.module.LoginModule;
 import com.ua.erent.module.core.presentation.mvp.module.RegisterModule;
@@ -91,7 +94,9 @@ public final class InjectConfigModule extends Injector.IConfigModule {
                         .cropModule(new CropModule()).build())
                 .registerComponentFactory(CategoriesComponent.class, () -> DaggerCategoriesComponent.builder()
                         .appComponent(appComponent).categoriesModule(new CategoriesModule()).build())
-                .registerComponentFactory(SyncServiceComponent.class, () -> syncServiceComponent);
+                .registerComponentFactory(SyncServiceComponent.class, () -> syncServiceComponent)
+                .registerComponentFactory(ItemDetailsComponent.class, () -> DaggerItemDetailsComponent.builder()
+                        .appComponent(appComponent).itemDetailsModule(new ItemDetailsModule()).build());
     }
 
 }

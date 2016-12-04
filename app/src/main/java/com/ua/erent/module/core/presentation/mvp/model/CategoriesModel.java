@@ -12,13 +12,17 @@ import com.ua.erent.module.core.item.domain.ICategoryAppService;
 import com.ua.erent.module.core.item.domain.bo.Category;
 import com.ua.erent.module.core.networking.util.ConnectionManager;
 import com.ua.erent.module.core.presentation.mvp.model.interfaces.ICategoriesModel;
+import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IItemsPresenter;
 import com.ua.erent.module.core.presentation.mvp.presenter.model.CategoryModel;
 import com.ua.erent.module.core.presentation.mvp.view.CategoriesActivity;
 import com.ua.erent.module.core.presentation.mvp.view.InitialScreenActivity;
+import com.ua.erent.module.core.presentation.mvp.view.ItemsActivity;
 import com.ua.erent.module.core.presentation.mvp.view.util.ImageUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -35,6 +39,18 @@ public final class CategoriesModel implements ICategoriesModel {
     private final Application context;
     private final IAuthAppService authAppService;
     private final IUserAppService userAppService;
+
+    private static final Map<Long, Integer> categoryIdToImage;
+
+    static {
+        categoryIdToImage = new HashMap<>(5);
+
+        categoryIdToImage.put(1L, R.drawable.clothes_category);
+        categoryIdToImage.put(2L, R.drawable.tourism_category);
+        categoryIdToImage.put(3L, R.drawable.transport_category);
+        categoryIdToImage.put(4L, R.drawable.toys_category);
+        categoryIdToImage.put(5L, R.drawable.furniture_category);
+    }
 
     @Inject
     public CategoriesModel(Application context, ICategoryAppService categoryAppService,
@@ -55,6 +71,15 @@ public final class CategoriesModel implements ICategoriesModel {
     @Override
     public Intent createLoginIntent() {
         return new Intent(context, InitialScreenActivity.class);
+    }
+
+    @Override
+    public Intent createItemsIntent(long categoryId) {
+
+        final Intent intent = new Intent(context, ItemsActivity.class);
+
+        intent.putExtra(IItemsPresenter.ARG_CATEGORY_ID, categoryId);
+        return intent;
     }
 
     @Override
@@ -135,8 +160,11 @@ public final class CategoriesModel implements ICategoriesModel {
         final Collection<CategoryModel> result = new ArrayList<>(categories.size());
 
         for (final Category category : categories) {
-            result.add(new CategoryModel(category.getId().getId(), category.getTitle(),
-                    category.getDescription(), ImageUtils.resourceBitmap(R.drawable.bike_test)));
+            final long id = category.getId().getId();
+            result.add(new CategoryModel(id, category.getTitle(),
+                    category.getDescription(),
+                    categoryIdToImage.containsKey(id) ? ImageUtils.resourceBitmap(categoryIdToImage.get(id)) : null)
+            );
         }
 
         return result;

@@ -25,4 +25,10 @@ public abstract class IItemsPresenter extends IBasePresenter<ItemsActivity> {
 
     public abstract void onRefresh();
 
+    public abstract int getPopupResId();
+
+    public abstract void onOpenDialog(long id);
+
+    public abstract void onComplain(long id);
+
 }

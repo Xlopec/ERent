@@ -1,6 +1,10 @@
 package com.ua.erent.module.core.presentation.mvp.model.interfaces;
 
+import android.content.Intent;
+
 import com.ua.erent.module.core.presentation.mvp.presenter.model.ItemModel;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
@@ -12,12 +16,17 @@ import rx.Observable;
 
 public interface IItemsModel {
 
-    Observable<Collection<ItemModel>> fetch(long limit);
+    boolean isSessionAlive();
 
-    Observable<Collection<ItemModel>> fetchNext(long limit, long lastId);
+    Observable<Collection<ItemModel>> fetch(long categoryId, long limit);
 
-    Observable<Collection<ItemModel>> fetchPrev(long limit, long lastId);
+    Observable<Collection<ItemModel>> fetchNext(long categoryId, long limit, long lastId);
+
+    Observable<Collection<ItemModel>> fetchPrev(long categoryId, long limit, long lastId);
 
     Observable<Collection<ItemModel>> getOnItemAddedObs();
 
+    Intent createItemDetailsIntent(@NotNull ItemModel item);
+
+    Intent createComplainIntent(@NotNull String email, @NotNull String subject, @NotNull String body);
 }

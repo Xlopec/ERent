@@ -13,6 +13,9 @@ public final class UserPO {
     private static final String ID_COLUMN = "id";
     private static final String USERNAME_COLUMN = "username";
     private static final String EMAIL_COLUMN = "email";
+    private static final String URL_COLUMN = "url";
+    private static final String PHONE_COLUMN = "phone";
+    private static final String SKYPE_COLUMN = "skype";
 
     @DatabaseField(id = true, index = true, columnName = ID_COLUMN, dataType = DataType.LONG)
     private long id;
@@ -23,15 +26,24 @@ public final class UserPO {
     @DatabaseField(columnName = EMAIL_COLUMN, dataType = DataType.STRING, canBeNull = false)
     private String email;
 
+    @DatabaseField(columnName = URL_COLUMN, dataType = DataType.STRING)
+    private String url;
+
+    @DatabaseField(columnName = PHONE_COLUMN, dataType = DataType.STRING)
+    private String phone;
+
+    @DatabaseField(columnName = SKYPE_COLUMN, dataType = DataType.STRING)
+    private String skype;
+
     UserPO() {
     }
 
-    public String getEmail() {
-        return email;
+    public long getId() {
+        return id;
     }
 
-    public UserPO setEmail(String email) {
-        this.email = email;
+    public UserPO setId(long id) {
+        this.id = id;
         return this;
     }
 
@@ -44,12 +56,39 @@ public final class UserPO {
         return this;
     }
 
-    public long getId() {
-        return id;
+    public String getEmail() {
+        return email;
     }
 
-    public UserPO setId(long id) {
-        this.id = id;
+    public UserPO setEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public UserPO setUrl(String url) {
+        this.url = url;
+        return this;
+    }
+
+    public String getSkype() {
+        return skype;
+    }
+
+    public UserPO setSkype(String skype) {
+        this.skype = skype;
+        return this;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public UserPO setPhone(String phone) {
+        this.phone = phone;
         return this;
     }
 
@@ -59,6 +98,9 @@ public final class UserPO {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
+                ", url='" + url + '\'' +
+                ", phone='" + phone + '\'' +
+                ", skype='" + skype + '\'' +
                 '}';
     }
 }

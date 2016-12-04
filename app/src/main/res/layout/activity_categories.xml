@@ -28,6 +28,7 @@
             android:id="@+id/category_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:overScrollMode="never"
             android:padding="1dp" />
 
     </android.support.v4.widget.SwipeRefreshLayout>

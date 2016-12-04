@@ -3,6 +3,7 @@ package com.ua.erent.module.core.presentation.mvp.view.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Parcel;
 import android.support.annotation.Px;
 import android.support.v4.util.LruCache;
@@ -22,7 +23,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Максим on 11/28/2016.
  */
-public class UrlBitmapFuture implements IParcelableFutureBitmap {
+public class UrlBitmapFuture implements IUrlFutureBitmap {
 
     private final MyURL url;
     private final LruCache<Integer, Bitmap> cache;
@@ -52,6 +53,11 @@ public class UrlBitmapFuture implements IParcelableFutureBitmap {
     private UrlBitmapFuture(Parcel in) {
         this.cache = new LruCache<>(1);
         this.url = in.readParcelable(MyURL.class.getClassLoader());
+    }
+
+    @NotNull
+    public MyURL getUrl() {
+        return url;
     }
 
     @NotNull
