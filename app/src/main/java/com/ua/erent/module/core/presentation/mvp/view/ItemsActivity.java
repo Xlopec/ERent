@@ -13,15 +13,20 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,6 +46,7 @@ import com.ua.erent.module.core.presentation.mvp.view.util.ImageUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -59,6 +65,8 @@ import rx.android.schedulers.AndroidSchedulers;
 public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItemsPresenter>
         implements IItemsView {
 
+    private static final String TAG = ItemsActivity.class.getSimpleName();
+
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
 
@@ -70,6 +78,9 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
 
     @BindView(R.id.items_fab_menu)
     protected FloatingActionMenu floatingActionMenu;
+
+    @BindView(R.id.items_info_title)
+    protected TextView infoTextView;
 
     private final LinearLayoutManager layoutManager;
 
@@ -157,7 +168,7 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
         private final Object payload;
 
         RecyclerItem(Type type, Object payload) {
-            this.id = gen++;
+            this.id = ++gen;
             this.type = type;
             this.payload = payload;
         }
@@ -270,6 +281,11 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
             }
         }
 
+        void setItems(@NotNull Collection<ItemModel> items) {
+            data.clear();
+            data.addAll(fromModels(items));
+        }
+
         void addBegin(@NotNull Collection<ItemModel> items) {
             data.addAll(0, fromModels(items));
         }
@@ -357,6 +373,8 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 
+            hideKeyboard();
+
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
 
                 final int firstPos = layoutManager.findFirstVisibleItemPosition();
@@ -369,12 +387,14 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
                     swipeRefreshLayout.setEnabled(false);
                     adapter.addLoaderStart();
                     adapter.notifyItemInserted(0);
+                    layoutManager.scrollToPosition(0);
                     presenter.onLoadNext();
 
                 } else if (lastPos == adapter.getItemCount() - 1 && deltaY > 0) {
                     swipeRefreshLayout.setEnabled(false);
                     adapter.addLoaderEnd();
                     adapter.notifyItemInserted(lastPos + 1);
+                    layoutManager.scrollToPosition(lastPos + 1);
                     presenter.onLoadPrev();
                 }
             }
@@ -426,6 +446,7 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
         final ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
+            actionBar.setTitle("");
             actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -438,13 +459,52 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.items_menu, menu);
+
+        final MenuItem myActionMenuItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) myActionMenuItem.getActionView();
+        final EditText editTextView = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+
+        try {
+            final Field mCursorDrawableRes = TextView.class.getDeclaredField("mCursorDrawableRes");
+            mCursorDrawableRes.setAccessible(true);
+            mCursorDrawableRes.set(editTextView, R.drawable.white_cursor);
+        } catch (final Exception e) {
+            Log.e(TAG, "onCreateOptionsMenu: failed to get cursor", e);
+        }
+
+        searchView.setQueryHint(getString(R.string.items_search_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                presenter.onSearch(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+
+        });
+
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         final int id = item.getItemId();
 
         if (id == android.R.id.home) {
-            finish();
+            presenter.onBackButton();
+        } else if (id == R.id.action_refresh) {
+            presenter.onRefresh();
         }
+
         return true;
     }
 
@@ -452,6 +512,15 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
     @Override
     public Context getContext() {
         return this;
+    }
+
+    @Override
+    public void setTitle(@NotNull String title) {
+        final ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.setTitle(title);
+        }
     }
 
     @Override
@@ -511,39 +580,67 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
     }
 
     @Override
+    public void setItems(@NotNull Collection<ItemModel> items) {
+        adapter.setItems(items);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void addNextItems(@NotNull Collection<ItemModel> items) {
 
         final boolean removed = adapter.removeLoaderStart();
 
-        if (items.isEmpty()) {
-            if (removed) {
-                adapter.notifyItemRemoved(0);
-            }
-        } else {
-            adapter.addBegin(items);
-            adapter.notifyItemRangeInserted(0, items.size());
+        if (removed) {
+            adapter.notifyItemRemoved(0);
         }
+        adapter.addBegin(items);
+        adapter.notifyItemRangeInserted(0, items.size());
     }
 
     @Override
     public void addPrevItems(@NotNull Collection<ItemModel> items) {
-        final int lastPos = adapter.getItemCount() - 1;
+        int lastPos = adapter.getItemCount() - 1;
         final boolean removed = adapter.removeLoaderEnd();
 
-        if (items.isEmpty()) {
-
-            if (removed) {
-                adapter.notifyItemRemoved(lastPos);
-            }
-        } else {
-            adapter.addEnd(items);
-            adapter.notifyItemRangeInserted(lastPos, items.size());
+        if (removed) {
+            adapter.notifyItemRemoved(lastPos);
+            lastPos = adapter.getItemCount() - 1;
         }
+        adapter.addEnd(items);
+        adapter.notifyItemRangeInserted(lastPos, items.size());
     }
 
     @Override
     public void showText(@NotNull String string) {
         Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void setInfoMessageVisible(boolean visible) {
+        infoTextView.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setInfoMessage(String text) {
+        infoTextView.setText(text);
+    }
+
+    @Override
+    public void hideKeyboard() {
+
+        final View view = getCurrentFocus();
+
+        if (view != null) {
+
+            final InputMethodManager inputMethodManager = (InputMethodManager)
+                    getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        presenter.onBackButton();
     }
 
     private void showItemPopup(View v, long itemId) {

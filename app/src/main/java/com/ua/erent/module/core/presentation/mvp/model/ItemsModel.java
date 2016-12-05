@@ -78,9 +78,36 @@ public final class ItemsModel implements IItemsModel {
     @Override
     public Observable<Collection<ItemModel>> fetchPrev(long categoryId, long limit, long lastId) {
         return itemAppService
-                .fetchItems(new FilterBuilder().withCategory(categoryId)
+                .fetchItems(new FilterBuilder()
+                        .withCategory(categoryId)
                         .orderBy(FilterBuilder.OrderBy.PUB_DATE)
                         .withLastIdLower(lastId)
+                        .withLimit(limit)
+                        .build())
+                .map(this::toModel);
+    }
+
+    @Override
+    public Observable<Collection<ItemModel>> fetchNext(@NotNull String query, long limit, long lastId) {
+        return itemAppService
+                .fetchItems(new FilterBuilder()
+                        .withLastIdGreater(lastId)
+                        .withQuery(query)
+                        .orderBy(FilterBuilder.OrderBy.PUB_DATE)
+                        .sort(FilterBuilder.SortType.ASC)
+                        .withLimit(limit)
+                        .build())
+                .map(this::toModel);
+    }
+
+    @Override
+    public Observable<Collection<ItemModel>> fetchPrev(@NotNull String query, long limit, long lastId) {
+        return itemAppService
+                .fetchItems(new FilterBuilder()
+                        .withLastIdLower(lastId)
+                        .withQuery(query)
+                        .orderBy(FilterBuilder.OrderBy.PUB_DATE)
+                        .sort(FilterBuilder.SortType.ASC)
                         .withLimit(limit)
                         .build())
                 .map(this::toModel);
@@ -108,6 +135,16 @@ public final class ItemsModel implements IItemsModel {
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
         intent.putExtra(Intent.EXTRA_TEXT, body);
         return intent;
+    }
+
+    @Override
+    public Observable<Collection<ItemModel>> search(@NotNull String query, long limit) {
+        return itemAppService
+                .fetchItems(new FilterBuilder()
+                        .withQuery(query.replaceAll("(\\s\\s\\s*)|(\\n)", " "))
+                        .withLimit(limit)
+                        .build())
+                .map(this::toModel);
     }
 
     private Collection<ItemModel> toModel(Collection<Item> items) {

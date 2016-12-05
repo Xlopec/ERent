@@ -138,7 +138,7 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
             holder.setBitmap(model.getFutureBitmap());
             holder.setCategoryTitle(model.getTitle());
             holder.setDescription(model.getDescription());
-            holder.itemView.setOnClickListener(v -> presenter.onOpenCategory(model.getId()));
+            holder.itemView.setOnClickListener(v -> presenter.onOpenCategory(model));
         }
 
         @Override

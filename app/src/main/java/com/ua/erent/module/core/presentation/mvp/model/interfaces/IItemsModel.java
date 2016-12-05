@@ -24,9 +24,15 @@ public interface IItemsModel {
 
     Observable<Collection<ItemModel>> fetchPrev(long categoryId, long limit, long lastId);
 
+    Observable<Collection<ItemModel>> fetchNext(@NotNull String query, long limit, long lastId);
+
+    Observable<Collection<ItemModel>> fetchPrev(@NotNull String query, long limit, long lastId);
+
     Observable<Collection<ItemModel>> getOnItemAddedObs();
 
     Intent createItemDetailsIntent(@NotNull ItemModel item);
 
     Intent createComplainIntent(@NotNull String email, @NotNull String subject, @NotNull String body);
+
+    Observable<Collection<ItemModel>> search(@NotNull String query, long limit);
 }

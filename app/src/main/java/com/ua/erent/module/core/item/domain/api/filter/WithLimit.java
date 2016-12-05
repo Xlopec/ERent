@@ -9,11 +9,11 @@ import java.util.Map;
  * Created by Максим on 11/27/2016.
  */
 
-public final class WithLimit implements IApiFilter {
+final class WithLimit implements IApiFilter {
 
     private final long limit;
 
-    public WithLimit(long limit) {
+    WithLimit(long limit) {
         this.limit = limit;
     }
 

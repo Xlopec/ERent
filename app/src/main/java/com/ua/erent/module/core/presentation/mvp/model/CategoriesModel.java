@@ -19,6 +19,8 @@ import com.ua.erent.module.core.presentation.mvp.view.InitialScreenActivity;
 import com.ua.erent.module.core.presentation.mvp.view.ItemsActivity;
 import com.ua.erent.module.core.presentation.mvp.view.util.ImageUtils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -74,11 +76,11 @@ public final class CategoriesModel implements ICategoriesModel {
     }
 
     @Override
-    public Intent createItemsIntent(long categoryId) {
+    public Intent createItemsIntent(@NotNull CategoryModel category) {
 
         final Intent intent = new Intent(context, ItemsActivity.class);
 
-        intent.putExtra(IItemsPresenter.ARG_CATEGORY_ID, categoryId);
+        intent.putExtra(IItemsPresenter.ARG_CATEGORY, category);
         return intent;
     }
 

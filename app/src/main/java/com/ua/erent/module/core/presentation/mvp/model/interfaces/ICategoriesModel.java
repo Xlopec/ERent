@@ -6,6 +6,8 @@ import com.ua.erent.module.core.account.auth.domain.bo.Session;
 import com.ua.erent.module.core.account.auth.user.domain.bo.User;
 import com.ua.erent.module.core.presentation.mvp.presenter.model.CategoryModel;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Collection;
 
 import rx.Observable;
@@ -20,7 +22,7 @@ public interface ICategoriesModel {
 
     Intent createLoginIntent();
 
-    Intent createItemsIntent(long categoryId);
+    Intent createItemsIntent(@NotNull CategoryModel category);
 
     Intent createLogoutIntent();
 

@@ -5,8 +5,11 @@ import com.ua.erent.module.core.util.IBuilder;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+
+import dagger.internal.Preconditions;
 
 /**
  * Created by Максим on 11/27/2016.
@@ -80,8 +83,43 @@ public final class FilterBuilder implements IBuilder<IApiFilter> {
         return this;
     }
 
-    public FilterBuilder withCategory(long...categories) {
+    public FilterBuilder withCategory(long... categories) {
         classToFilter.put(WithCategory.class, new WithCategory(categories));
+        return this;
+    }
+
+    public FilterBuilder withOwner(long ownerId) {
+        classToFilter.put(Owner.class, new Owner(ownerId));
+        return this;
+    }
+
+    public FilterBuilder withOwner(long... ownerIds) {
+        classToFilter.put(Owner.class, new Owner(ownerIds));
+        return this;
+    }
+
+    public FilterBuilder withBrand(long brandId) {
+        classToFilter.put(Brand.class, new Brand(brandId));
+        return this;
+    }
+
+    public FilterBuilder withBrand(long... brandIds) {
+        classToFilter.put(Brand.class, new Brand(brandIds));
+        return this;
+    }
+
+    public FilterBuilder withPriceFrom(@NotNull BigDecimal from) {
+        classToFilter.put(PriceFrom.class, new PriceFrom(Preconditions.checkNotNull(from)));
+        return this;
+    }
+
+    public FilterBuilder withPriceTo(@NotNull BigDecimal to) {
+        classToFilter.put(PriceTo.class, new PriceTo(Preconditions.checkNotNull(to)));
+        return this;
+    }
+
+    public FilterBuilder withQuery(@NotNull String query) {
+        classToFilter.put(Query.class, new Query(Preconditions.checkNotNull(query)));
         return this;
     }
 

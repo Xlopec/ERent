@@ -9,7 +9,7 @@ import java.util.Map;
  * Created by Максим on 11/27/2016.
  */
 
-public final class WithLastId implements IApiFilter {
+final class WithLastId implements IApiFilter {
 
     enum Sign {
         GREATER(">%d"), LOWER("<%d");
@@ -28,7 +28,7 @@ public final class WithLastId implements IApiFilter {
     private final Sign sign;
     private final long lastId;
 
-    public WithLastId(Sign sign, long lastId) {
+    WithLastId(Sign sign, long lastId) {
         this.sign = sign;
         this.lastId = lastId;
     }
@@ -40,7 +40,6 @@ public final class WithLastId implements IApiFilter {
     public long getLastId() {
         return lastId;
     }
-
 
     @Override
     public Map<String, String> toFilter() {

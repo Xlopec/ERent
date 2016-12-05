@@ -11,16 +11,16 @@ import java.util.Map;
  * Created by Максим on 12/3/2016.
  */
 
-public final class WithCategory implements IApiFilter {
+final class WithCategory implements IApiFilter {
 
     private final Collection<Long> categories;
 
-    public WithCategory(long category) {
+    WithCategory(long category) {
         this.categories = new ArrayList<>(1);
         this.categories.add(category);
     }
 
-    public WithCategory(long... categories) {
+    WithCategory(long... categories) {
         this.categories = new ArrayList<>(categories.length);
 
         for (final long categoryId : categories) {

@@ -41,13 +41,17 @@
     <string name="categories_title_activity">Categories</string>
     <string name="categories_refresh">Refresh</string>
     <string name="categories_no_internet">No internet connection…</string>
-    <string name="categories_fetch_err">Failed to fetch categories</string>
+    <string name="categories_fetch_err">Failed to fetch brands</string>
 
     <!-- Items activity -->
     <string name="items_sub_title" formatted="false">%s, %s — by %s</string>
     <string name="items_price" formatted="false">%s UAH</string>
     <string name="items_price_free">free of charge</string>
     <string name="items_to_conversation">To conversation</string>
+    <string name="items_search">Search</string>
+    <string name="items_search_hint">Enter search query…</string>
+    <string name="items_search_not_found">Nothing was found</string>
+    <string name="items_empty">No items yet</string>
 
     <!-- Gallery activity -->
     <string name="gallery_copy_url">Copy url</string>

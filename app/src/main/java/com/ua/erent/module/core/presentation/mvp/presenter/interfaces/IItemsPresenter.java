@@ -13,7 +13,11 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class IItemsPresenter extends IBasePresenter<ItemsActivity> {
 
-    public static final String ARG_CATEGORY_ID = IItemsPresenter.class.getName().concat(".argCategoryId");
+    public static final String ARG_CATEGORY = IItemsPresenter.class.getName().concat(".argCategory");
+
+    public abstract void onSearch(@NotNull String query);
+
+    public abstract void onBackButton();
 
     public abstract void onItemClicked(long id);
 

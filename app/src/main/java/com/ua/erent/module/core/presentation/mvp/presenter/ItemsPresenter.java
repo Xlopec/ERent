@@ -8,9 +8,11 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.ua.erent.BuildConfig;
 import com.ua.erent.R;
 import com.ua.erent.module.core.presentation.mvp.model.interfaces.IItemsModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IItemsPresenter;
+import com.ua.erent.module.core.presentation.mvp.presenter.model.CategoryModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.model.ItemModel;
 import com.ua.erent.module.core.presentation.mvp.view.ItemsActivity;
 
@@ -26,8 +28,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.internal.Preconditions;
 import rx.Observable;
 import rx.Subscription;
+import rx.functions.Action1;
 
 /**
  * Created by Максим on 10/14/2016.
@@ -36,24 +40,28 @@ import rx.Subscription;
 public class ItemsPresenter extends IItemsPresenter {
 
     private static final String TAG = ItemsPresenter.class.getSimpleName();
-    private static final String ARG_CACHE = "argCache";
+    private static final String ARG_LOCAL_CACHE = "argLocalCache";
+    private static final String ARG_QUERY_DEQ_CACHE = "argQueryDequeCache";
     private static final String ARG_CATEGORY_CACHE = "argCategoryCache";
+    private static final String ARG_QUERY_CACHE = "argQueryCache";
 
     private static final int MAX_VIEW_CACHE_SIZE = 40;
-    private static final int PAGE_SIZE = 7;
+    private static final int PAGE_SIZE = 5;
 
+    private final Deque<ItemModel> queryCache;
     private final Deque<ItemModel> localCache;
     private final IItemsModel model;
 
     private final Subscription itemAddedSub;
 
-    private long categoryId;
+    private CategoryModel category;
+    private String query;
 
     @Inject
     public ItemsPresenter(IItemsModel model) {
         this.model = model;
         this.localCache = new ArrayDeque<>(MAX_VIEW_CACHE_SIZE);
-        this.categoryId = -1;
+        this.queryCache = new ArrayDeque<>(MAX_VIEW_CACHE_SIZE);
 
         this.itemAddedSub = model.getOnItemAddedObs()
                 .subscribe(items -> {
@@ -70,15 +78,24 @@ public class ItemsPresenter extends IItemsPresenter {
 
             if (savedState == null) {
 
-                categoryId = data.getLong(IItemsPresenter.ARG_CATEGORY_ID, -1);
+                category = data.getParcelable(IItemsPresenter.ARG_CATEGORY);
+                Preconditions.checkNotNull(category, "category wasn't passed");
 
-                if (categoryId == -1)
-                    throw new IllegalArgumentException("category id wasn't passed");
-
-                model.fetch(categoryId, PAGE_SIZE)
+                view.setTitle(category.getTitle());
+                model.fetch(category.getId(), PAGE_SIZE)
                         .doOnSubscribe(getView()::showProgress)
                         .doOnCompleted(getView()::hideProgress)
-                        .subscribe(this::addEnd,
+                        .subscribe(items -> {
+                                    if (!isViewGone()) {
+                                        if (items.isEmpty()) {
+                                            getView().setInfoMessageVisible(true);
+                                            getView().setInfoMessage(getView().getString(R.string.items_empty));
+                                        } else {
+                                            getView().setInfoMessageVisible(false);
+                                            getView().addNextItems(addStart(items, localCache));
+                                        }
+                                    }
+                                },
                                 th -> {
                                     if (!isViewGone()) {
                                         getView().showMessage(th.getMessage());
@@ -88,30 +105,35 @@ public class ItemsPresenter extends IItemsPresenter {
                                 });
             } else {
 
-                final Parcelable[] cachedArr = savedState.getParcelableArray(ARG_CACHE);
-                categoryId = savedState.getLong(IItemsPresenter.ARG_CATEGORY_ID, -1);
+                final Parcelable[] cachedArr = savedState.getParcelableArray(ARG_LOCAL_CACHE);
+                final Parcelable[] queryArr = savedState.getParcelableArray(ARG_QUERY_DEQ_CACHE);
 
-                if (cachedArr == null)
-                    throw new IllegalStateException("state wasn't saved!");
+                query = savedState.getString(ARG_QUERY_CACHE);
+                category = savedState.getParcelable(ARG_CATEGORY_CACHE);
 
-                if (categoryId == -1)
-                    throw new IllegalArgumentException("category id wasn't saved");
+                Preconditions.checkNotNull(category, "category wasn't saved");
+                view.setTitle(category.getTitle());
 
-                final ArrayList<ItemModel> cache = new ArrayList<>(cachedArr.length);
+                final ArrayList<ItemModel> localBundleCache = getFromCache(cachedArr);
+                final ArrayList<ItemModel> localQueryCache = getFromCache(queryArr);
 
-                for (final Parcelable parcelable : cachedArr) {
-                    cache.add((ItemModel) parcelable);
+                if (query == null) {
+                    addStart(localQueryCache, queryCache);
+                    view.setItems(addStart(localBundleCache, localCache));
+                } else {
+                    addStart(localBundleCache, localCache);
+                    view.setItems(addStart(localQueryCache, queryCache));
                 }
-
-                addEnd(cache);
             }
         }
     }
 
     @Override
     public void onSaveInstanceState(@NotNull Bundle outState) {
-        outState.putParcelableArray(ARG_CACHE, localCache.toArray(new ItemModel[localCache.size()]));
-        outState.putLong(ARG_CATEGORY_CACHE, categoryId);
+        outState.putParcelableArray(ARG_LOCAL_CACHE, localCache.toArray(new ItemModel[localCache.size()]));
+        outState.putParcelableArray(ARG_QUERY_DEQ_CACHE, queryCache.toArray(new ItemModel[queryCache.size()]));
+        outState.putParcelable(ARG_CATEGORY_CACHE, category);
+        outState.putString(ARG_QUERY_CACHE, query);
         super.onSaveInstanceState(outState);
     }
 
@@ -119,6 +141,49 @@ public class ItemsPresenter extends IItemsPresenter {
     protected void onDestroyed() {
         itemAddedSub.unsubscribe();
         localCache.clear();
+    }
+
+    @Override
+    public void onSearch(@NotNull String query) {
+        this.query = query;
+        getView().hideKeyboard();
+
+        model
+                .search(query, PAGE_SIZE)
+                .doOnSubscribe(getView()::showProgress)
+                .doOnCompleted(getView()::hideProgress)
+                .subscribe(items -> {
+                            if (!isViewGone()) {
+                                if (items.isEmpty()) {
+                                    getView().setInfoMessageVisible(true);
+                                    getView().setInfoMessage(getView().getString(R.string.items_search_not_found));
+                                } else {
+                                    getView().setInfoMessageVisible(false);
+                                }
+                                getView().setItems(addStart(items, queryCache));
+                            }
+                        },
+                        th -> {
+                            if (!isViewGone()) {
+                                getView().showMessage(th.getMessage());
+                                getView().hideProgressStart();
+                            }
+                            Log.e(TAG, "error", th);
+                        });
+    }
+
+    @Override
+    public void onBackButton() {
+
+        final ItemsActivity view = getView();
+
+        if (query == null) {
+            view.finish();
+        } else {
+            query = null;
+            queryCache.clear();
+            view.setItems(localCache);
+        }
     }
 
     @Override
@@ -146,12 +211,29 @@ public class ItemsPresenter extends IItemsPresenter {
     @Override
     public void onLoadNext() {
 
-        final ItemModel item = localCache.peekLast();
+        final Deque<ItemModel> dest;
         final Observable<Collection<ItemModel>> obs;
 
-        obs = item == null ? model.fetch(categoryId, PAGE_SIZE) : model.fetchNext(categoryId, PAGE_SIZE, item.getId());
+        if (query != null) {
+            final ItemModel item = queryCache.peekFirst();
 
-        obs.subscribe(this::addStart,
+            dest = queryCache;
+            obs = item == null ? model.search(query, PAGE_SIZE)
+                    : model.fetchNext(query, PAGE_SIZE, item.getId());
+
+        } else {
+            final ItemModel item = localCache.peekFirst();
+
+            dest = localCache;
+            obs = item == null ? model.fetch(category.getId(), PAGE_SIZE)
+                    : model.fetchNext(category.getId(), PAGE_SIZE, item.getId());
+        }
+
+        obs.subscribe(items -> {
+                    if (!isViewGone()) {
+                        getView().addNextItems(addStart(items, dest));
+                    }
+                },
                 th -> {
                     if (!isViewGone()) {
                         getView().showMessage(th.getMessage());
@@ -164,12 +246,29 @@ public class ItemsPresenter extends IItemsPresenter {
     @Override
     public void onLoadPrev() {
 
-        final ItemModel item = localCache.peekFirst();
         final Observable<Collection<ItemModel>> obs;
+        final Deque<ItemModel> dest;
 
-        obs = item == null ? model.fetch(categoryId, PAGE_SIZE) : model.fetchPrev(categoryId, PAGE_SIZE, item.getId());
+        if (query != null) {
+            final ItemModel item = queryCache.peekLast();
 
-        obs.subscribe(this::addEnd,
+            dest = queryCache;
+            obs = item == null ? model.search(query, PAGE_SIZE)
+                    : model.fetchPrev(query, PAGE_SIZE, item.getId());
+
+        } else {
+            final ItemModel item = localCache.peekLast();
+
+            dest = localCache;
+            obs = item == null ? model.fetch(category.getId(), PAGE_SIZE)
+                    : model.fetchPrev(category.getId(), PAGE_SIZE, item.getId());
+        }
+
+        obs.subscribe(items -> {
+                    if (!isViewGone()) {
+                        addEnd(items, dest);
+                    }
+                },
                 th -> {
                     if (!isViewGone()) {
                         getView().showMessage(th.getMessage());
@@ -182,15 +281,48 @@ public class ItemsPresenter extends IItemsPresenter {
     @Override
     public void onRefresh() {
 
-        final ItemModel item = localCache.peekLast();
+        final Action1<Collection<ItemModel>> refreshDefAction = items -> {
+            if (!isViewGone()) {
+                if (items.isEmpty()) {
+                    getView().setInfoMessageVisible(true);
+                    getView().setInfoMessage(getView().getString(R.string.items_empty));
+                } else {
+                    getView().setInfoMessageVisible(false);
+                    getView().addNextItems(addStart(items, localCache));
+                }
+            }
+        };
+
+        final Action1<Collection<ItemModel>> refreshSearchAction = items -> {
+            if (!isViewGone()) {
+                if (items.isEmpty()) {
+                    getView().setInfoMessageVisible(true);
+                    getView().setInfoMessage(getView().getString(R.string.items_search_not_found));
+                } else {
+                    getView().setInfoMessageVisible(false);
+                    getView().addNextItems(addStart(items, queryCache));
+                }
+            }
+        };
+
         final Observable<Collection<ItemModel>> obs;
 
-        obs = item == null ? model.fetch(categoryId, PAGE_SIZE) : model.fetchNext(categoryId, PAGE_SIZE, item.getId());
+        if (query != null) {
+
+            final ItemModel item = queryCache.peekFirst();
+            obs = item == null ? model.search(query, PAGE_SIZE)
+                    : model.fetchNext(query, PAGE_SIZE, item.getId());
+        } else {
+
+            final ItemModel item = localCache.peekFirst();
+            obs = item == null ? model.fetch(category.getId(), PAGE_SIZE)
+                    : model.fetchNext(category.getId(), PAGE_SIZE, item.getId());
+        }
 
         obs
                 .doOnSubscribe(getView()::showProgress)
                 .doOnCompleted(getView()::hideProgress)
-                .subscribe(this::addStart,
+                .subscribe(query == null ? refreshDefAction : refreshSearchAction,
                         th -> {
                             if (!isViewGone()) {
                                 getView().showMessage(th.getMessage());
@@ -231,7 +363,7 @@ public class ItemsPresenter extends IItemsPresenter {
         }
     }
 
-    private void addStart(Collection<ItemModel> arg) {
+    private Collection<ItemModel> addStart(Collection<ItemModel> arg, Deque<ItemModel> dest) {
 
         if (isViewGone())
             throw new IllegalStateException();
@@ -252,19 +384,22 @@ public class ItemsPresenter extends IItemsPresenter {
             int i = 0;
 
             for (; i < MAX_VIEW_CACHE_SIZE && i < l.size(); ++i) {
-                localCache.addFirst(l.get(i));
+                dest.addFirst(l.get(i));
             }
 
             final List<ItemModel> tmp = l.subList(0, i);
 
             Collections.reverse(tmp);
-            getView().addNextItems(tmp);
-        } else {
-            getView().addNextItems(arg);
+            arg = tmp;
         }
+
+        if (BuildConfig.DEBUG) {
+            ensureValidState(dest);
+        }
+        return arg;
     }
 
-    private void addEnd(Collection<ItemModel> c) {
+    private void addEnd(Collection<ItemModel> c, Deque<ItemModel> dest) {
 
         if (isViewGone())
             throw new IllegalStateException();
@@ -284,9 +419,39 @@ public class ItemsPresenter extends IItemsPresenter {
 
             c = l.subList(0, MAX_VIEW_CACHE_SIZE);
         }
-        localCache.addAll(c);
+
+        dest.addAll(c);
+
+        if (BuildConfig.DEBUG) {
+            ensureValidState(dest);
+        }
+
         getView().addPrevItems(c);
     }
 
+    private static void ensureValidState(Iterable<ItemModel> it) {
+
+        ItemModel prev = null;
+
+        for (final ItemModel model : it) {
+            if (prev != null) {
+                if (model.getId() >= prev.getId()) {
+                    throw new IllegalStateException("invalid id");
+                }
+            }
+            prev = model;
+        }
+    }
+
+    private static ArrayList<ItemModel> getFromCache(Parcelable[] parcelables) {
+        Preconditions.checkNotNull(parcelables);
+        final ArrayList<ItemModel> result = new ArrayList<>(parcelables.length);
+
+        for (int i = parcelables.length - 1; i >= 0; --i) {
+            result.add((ItemModel) parcelables[i]);
+        }
+
+        return result;
+    }
 
 }

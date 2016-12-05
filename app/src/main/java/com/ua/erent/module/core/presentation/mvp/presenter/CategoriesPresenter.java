@@ -97,8 +97,8 @@ public final class CategoriesPresenter extends ICategoriesPresenter {
     }
 
     @Override
-    public void onOpenCategory(long categoryId) {
-        getView().startActivity(model.createItemsIntent(categoryId));
+    public void onOpenCategory(@NotNull CategoryModel category) {
+        getView().startActivity(model.createItemsIntent(category));
     }
 
     @Override

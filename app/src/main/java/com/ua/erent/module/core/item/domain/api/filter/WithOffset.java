@@ -9,11 +9,11 @@ import java.util.Map;
  * Created by Максим on 11/27/2016.
  */
 
-public final class WithOffset implements IApiFilter {
+final class WithOffset implements IApiFilter {
 
     private final long offset;
 
-    public WithOffset(long offset) {
+    WithOffset(long offset) {
         this.offset = offset;
     }
 

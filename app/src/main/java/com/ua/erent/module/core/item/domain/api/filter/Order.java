@@ -9,11 +9,11 @@ import java.util.Map;
  * Created by Максим on 11/27/2016.
  */
 
-public final class Order implements IApiFilter {
+final class Order implements IApiFilter {
 
     private final FilterBuilder.OrderBy orderBy;
 
-    public Order(FilterBuilder.OrderBy orderBy) {
+    Order(FilterBuilder.OrderBy orderBy) {
         this.orderBy = orderBy;
     }
 

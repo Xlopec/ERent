@@ -31,6 +31,17 @@
 
         </android.support.design.widget.AppBarLayout>
 
+        <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+            android:id="@+id/items_info_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="@dimen/activity_side_pad"
+            android:layout_marginLeft="@dimen/activity_side_pad"
+            android:layout_marginRight="@dimen/activity_side_pad"
+            android:layout_marginStart="@dimen/activity_side_pad"
+            android:textColor="@color/accent" />
+
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/items_swipe_refresh"
             android:layout_width="match_parent"
@@ -45,12 +56,6 @@
                 android:overScrollMode="never" />
 
         </android.support.v4.widget.SwipeRefreshLayout>
-
-        <FrameLayout
-            android:id="@+id/items_fragment_host"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/main_app_bar_layout" />
 
     </RelativeLayout>
 

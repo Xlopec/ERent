@@ -16,6 +16,8 @@ import java.util.Collection;
 
 public interface IItemsView extends IBaseView {
 
+    void setTitle(@NotNull String title);
+
     void showGallery(Collection<? extends IUrlFutureBitmap> futureBitmaps, ImageView imageView);
 
     void showMessage(@NotNull String message);
@@ -32,9 +34,18 @@ public interface IItemsView extends IBaseView {
 
     void hideProgress();
 
+    void setItems(@NotNull Collection<ItemModel> items);
+
     void addNextItems(@NotNull Collection<ItemModel> items);
 
     void addPrevItems(@NotNull Collection<ItemModel> items);
 
     void showText(@NotNull String string);
+
+    void setInfoMessageVisible(boolean visible);
+
+    void setInfoMessage(String text);
+
+    void hideKeyboard();
+
 }

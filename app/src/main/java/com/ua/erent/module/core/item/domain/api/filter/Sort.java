@@ -9,11 +9,11 @@ import java.util.Map;
  * Created order Максим on 11/27/2016.
  */
 
-public final class Sort implements IApiFilter {
+final class Sort implements IApiFilter {
 
     private final FilterBuilder.SortType sortType;
 
-    public Sort(FilterBuilder.SortType sortType) {
+    Sort(FilterBuilder.SortType sortType) {
         this.sortType = sortType;
     }
 
