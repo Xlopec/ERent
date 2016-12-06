@@ -27,7 +27,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,7 +51,6 @@ import java.util.Collection;
 import java.util.List;
 
 import butterknife.BindView;
-import dagger.internal.Preconditions;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -84,109 +82,6 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
 
     private final LinearLayoutManager layoutManager;
 
-    public enum Type {
-
-        LOADER(0), CONTENT(1);
-
-        private final int type;
-
-        Type(int type) {
-            this.type = type;
-        }
-
-        public int getType() {
-            return type;
-        }
-
-        public static Type forId(int id) {
-            for (final Type t : Type.values()) {
-                if (t.type == id) return t;
-            }
-            return null;
-        }
-    }
-
-    private abstract static class TypedViewHolder extends RecyclerView.ViewHolder {
-
-        private final Type type;
-
-        TypedViewHolder(@NotNull View itemView, @NotNull Type type) {
-            super(itemView);
-            this.type = Preconditions.checkNotNull(type);
-        }
-
-        public Type getType() {
-            return type;
-        }
-    }
-
-    private static class ItemHolder extends TypedViewHolder {
-
-        private long id;
-        private final ImageView avatar;
-        private final ImageView photo;
-        private final TextView title;
-        private final TextView subTitle;
-        private final TextView description;
-        private final ImageButton actionMenu;
-
-        private IFutureBitmap avatarBm;
-        private IFutureBitmap photoBm;
-
-        ItemHolder(View itemView, Type type) {
-            super(itemView, type);
-
-            if (type == Type.CONTENT) {
-                avatar = (ImageView) itemView.findViewById(R.id.item_user_avatar);
-                title = (TextView) itemView.findViewById(R.id.item_title);
-                subTitle = (TextView) itemView.findViewById(R.id.item_sub_title);
-                description = (TextView) itemView.findViewById(R.id.item_description);
-                photo = (ImageView) itemView.findViewById(R.id.item_photo);
-                actionMenu = (ImageButton) itemView.findViewById(R.id.item_action_menu);
-            } else {
-                avatar = photo = null;
-                title = subTitle = description = null;
-                actionMenu = null;
-            }
-        }
-
-        public void setId(long id) {
-            this.id = id;
-        }
-
-        public long getId() {
-            return id;
-        }
-    }
-
-    private static class RecyclerItem {
-
-        private static long gen;
-
-        private final long id;
-        private final Type type;
-        private final Object payload;
-
-        RecyclerItem(Type type, Object payload) {
-            this.id = ++gen;
-            this.type = type;
-            this.payload = payload;
-        }
-
-        public long getId() {
-            return id;
-        }
-
-        public Type getType() {
-            return type;
-        }
-
-        @SuppressWarnings("unchecked")
-        <T> T getPayload() {
-            return (T) payload;
-        }
-    }
-
     private class Adapter extends RecyclerView.Adapter<TypedViewHolder> {
 
         private final List<RecyclerItem> data;
@@ -214,8 +109,8 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
         @Override
         public TypedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            final Type type = Type.forId(viewType);
-            final int rootId = type == Type.CONTENT ? R.layout.good_item : R.layout.progress_item;
+            final ContentType type = ContentType.forId(viewType);
+            final int rootId = type == ContentType.CONTENT ? R.layout.good_item : R.layout.progress_item;
 
             return new ItemHolder(LayoutInflater.from(getContext()).inflate(rootId, parent, false), type);
         }
@@ -223,61 +118,61 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
         @Override
         public void onBindViewHolder(TypedViewHolder mHolder, int position) {
 
-            if (mHolder.type == Type.CONTENT) {
+            if (mHolder.getType() == ContentType.CONTENT) {
 
                 final ItemModel model = data.get(position).getPayload();
                 final ItemHolder holder = (ItemHolder) mHolder;
 
                 holder.setId(model.getId());
-                holder.avatarBm = model.getUserAvatar();
+                holder.setAvatarBm(model.getUserAvatar());
 
                 if (!model.getGallery().isEmpty()) {
-                    holder.photoBm = model.getGallery().iterator().next();
+                    holder.setPhotoBm(model.getGallery().iterator().next());
                 }
 
-                holder.title.setText(model.getTitle());
-                holder.subTitle.setText(getContext().getString(R.string.items_sub_title,
+                holder.getTitle().setText(model.getTitle());
+                holder.getSubTitle().setText(getContext().getString(R.string.items_sub_title,
                         model.getRegion(),
                         model.getPrice(),
                         model.getUsername()));
 
-                holder.description.setText(model.getDescription());
-                holder.title.setOnClickListener(v -> presenter.onItemClicked(model.getId()));
-                holder.description.setOnClickListener(v -> presenter.onItemClicked(model.getId()));
-                holder.actionMenu.setOnClickListener(v -> showItemPopup(v, model.getId()));
+                holder.getDescription().setText(model.getDescription());
+                holder.getTitle().setOnClickListener(v -> presenter.onItemClicked(model.getId()));
+                holder.getDescription().setOnClickListener(v -> presenter.onItemClicked(model.getId()));
+                holder.getActionMenu().setOnClickListener(v -> showItemPopup(v, model.getId()));
             }
         }
 
         @Override
         public void onViewAttachedToWindow(TypedViewHolder mHolder) {
 
-            if (mHolder.type == Type.CONTENT) {
+            if (mHolder.getType() == ContentType.CONTENT) {
 
                 final ItemHolder holder = (ItemHolder) mHolder;
 
-                if (holder.avatarBm != null) {
-                    loadInto(holder.avatarBm, holder.avatar, R.drawable.ic_account_circle_def_24dp);
+                if (holder.getAvatarBm() != null) {
+                    loadInto(holder.getAvatarBm(), holder.getAvatar(), R.drawable.ic_account_circle_def_24dp);
                 }
 
-                if (holder.photoBm != null) {
-                    holder.photo.setVisibility(View.VISIBLE);
-                    holder.photo.setOnClickListener(v -> presenter.onPhotoClicked(holder.getId(), holder.photo));
-                    loadInto(holder.photoBm, holder.photo, R.drawable.image_placeholder_photo);
+                if (holder.getPhotoBm() != null) {
+                    holder.getPhoto().setVisibility(View.VISIBLE);
+                    holder.getPhoto().setOnClickListener(v -> presenter.onPhotoClicked(holder.getId(), holder.getPhoto()));
+                    loadInto(holder.getPhotoBm(), holder.getPhoto(), R.drawable.image_placeholder_photo);
                 }
             }
         }
 
         @Override
         public void onViewDetachedFromWindow(TypedViewHolder mHolder) {
-            if (mHolder.type == Type.CONTENT) {
+            if (mHolder.getType() == ContentType.CONTENT) {
 
                 final ItemHolder holder = (ItemHolder) mHolder;
 
-                holder.photoBm = null;
-                holder.avatarBm = null;
-                holder.avatar.setImageResource(R.drawable.ic_account_circle_def_24dp);
-                holder.photo.setImageDrawable(null);
-                holder.photo.setVisibility(View.GONE);
+                holder.setPhotoBm(null);
+                holder.setAvatarBm(null);
+                holder.getAvatar().setImageResource(R.drawable.ic_account_circle_def_24dp);
+                holder.getPhoto().setImageDrawable(null);
+                holder.getPhoto().setVisibility(View.GONE);
             }
         }
 
@@ -296,14 +191,14 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
 
         void addLoaderStart() {
 
-            if (data.isEmpty() || data.get(0).getType() != Type.LOADER) {
-                data.add(0, new RecyclerItem(Type.LOADER, null));
+            if (data.isEmpty() || data.get(0).getType() != ContentType.LOADER) {
+                data.add(0, new RecyclerItem(ContentType.LOADER, null));
             }
         }
 
         boolean removeLoaderStart() {
 
-            if (!data.isEmpty() && data.get(0).getType() == Type.LOADER) {
+            if (!data.isEmpty() && data.get(0).getType() == ContentType.LOADER) {
                 data.remove(0);
                 return true;
             }
@@ -315,8 +210,8 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
 
             final int lastIndx = data.size() - 1;
 
-            if (data.isEmpty() || data.get(lastIndx).getType() != Type.LOADER) {
-                data.add(new RecyclerItem(Type.LOADER, null));
+            if (data.isEmpty() || data.get(lastIndx).getType() != ContentType.LOADER) {
+                data.add(new RecyclerItem(ContentType.LOADER, null));
             }
         }
 
@@ -324,7 +219,7 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
 
             final int lastIndx = data.size() - 1;
 
-            if (!data.isEmpty() && data.get(lastIndx).getType() == Type.LOADER) {
+            if (!data.isEmpty() && data.get(lastIndx).getType() == ContentType.LOADER) {
                 data.remove(lastIndx);
                 return true;
             }
@@ -335,7 +230,7 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
         private Collection<RecyclerItem> fromModels(Collection<ItemModel> itemModels) {
             final Collection<RecyclerItem> result = new ArrayList<>(itemModels.size());
             for (final ItemModel itemModel : itemModels) {
-                result.add(new RecyclerItem(Type.CONTENT, itemModel));
+                result.add(new RecyclerItem(ContentType.CONTENT, itemModel));
             }
             return result;
         }

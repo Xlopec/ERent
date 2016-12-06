@@ -74,6 +74,10 @@
 
     <!-- Search fragment -->
     <string name="search_input_hint">Search query…</string>
+    <string name="search_price_range">Price range</string>
+    <string name="search_categories_failure">Failed to fetch categories…</string>
+    <string name="search_brands_failure">Failed to fetch brands…</string>
+    <string name="search_regions_failure">Failed to fetch regions…</string>
 
     <!-- Strings related to signIn -->
     <string name="action_settings">Settings</string>

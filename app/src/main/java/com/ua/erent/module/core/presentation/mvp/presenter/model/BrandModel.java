@@ -1,10 +1,13 @@
 package com.ua.erent.module.core.presentation.mvp.presenter.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Максим on 12/6/2016.
  */
 
-public final class BrandModel {
+public final class BrandModel implements Parcelable {
 
     private final long id;
     private final String name;
@@ -15,6 +18,36 @@ public final class BrandModel {
         this.name = name;
         this.description = description;
     }
+
+    private BrandModel(Parcel in) {
+        id = in.readLong();
+        name = in.readString();
+        description = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(name);
+        dest.writeString(description);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<BrandModel> CREATOR = new Creator<BrandModel>() {
+        @Override
+        public BrandModel createFromParcel(Parcel in) {
+            return new BrandModel(in);
+        }
+
+        @Override
+        public BrandModel[] newArray(int size) {
+            return new BrandModel[size];
+        }
+    };
 
     public long getId() {
         return id;

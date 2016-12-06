@@ -1,10 +1,13 @@
 package com.ua.erent.module.core.presentation.mvp.presenter.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Максим on 12/6/2016.
  */
 
-public final class RegionModel {
+public final class RegionModel implements Parcelable {
 
     private final long id;
     private final String name;
@@ -13,6 +16,23 @@ public final class RegionModel {
         this.id = id;
         this.name = name;
     }
+
+    private RegionModel(Parcel in) {
+        id = in.readLong();
+        name = in.readString();
+    }
+
+    public static final Creator<RegionModel> CREATOR = new Creator<RegionModel>() {
+        @Override
+        public RegionModel createFromParcel(Parcel in) {
+            return new RegionModel(in);
+        }
+
+        @Override
+        public RegionModel[] newArray(int size) {
+            return new RegionModel[size];
+        }
+    };
 
     public long getId() {
         return id;
@@ -47,5 +67,16 @@ public final class RegionModel {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(name);
     }
 }

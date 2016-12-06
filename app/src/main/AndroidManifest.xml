@@ -44,8 +44,6 @@
                 android:resource="@xml/syncadapter" />
         </service>
 
-        <activity android:name=".module.core.presentation.mvp.view.NextActivity" />
-
         <activity
             android:name=".module.core.presentation.mvp.view.CategoriesActivity"
             android:label="@string/categories_title_activity">

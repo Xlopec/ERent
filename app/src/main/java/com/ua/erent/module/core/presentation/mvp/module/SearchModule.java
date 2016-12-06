@@ -1,5 +1,7 @@
 package com.ua.erent.module.core.presentation.mvp.module;
 
+import android.content.Context;
+
 import com.ua.erent.module.core.di.scopes.FragmentScope;
 import com.ua.erent.module.core.item.domain.ICategoryAppService;
 import com.ua.erent.module.core.item.domain.IItemAppService;
@@ -20,9 +22,9 @@ public final class SearchModule {
 
     @Provides
     @FragmentScope
-    ISearchModel provideModel(ICategoryAppService categoryAppService,
+    ISearchModel provideModel(Context context, ICategoryAppService categoryAppService,
                               ConnectionManager connectionManager, IItemAppService itemAppService) {
-        return new SearchModel(categoryAppService, connectionManager, itemAppService);
+        return new SearchModel(context, categoryAppService, connectionManager, itemAppService);
     }
 
     @Provides

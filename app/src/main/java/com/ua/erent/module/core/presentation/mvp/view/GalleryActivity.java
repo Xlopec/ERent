@@ -35,7 +35,7 @@ import java.util.Collection;
 import dagger.internal.Preconditions;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class GalleryActivity extends AppCompatActivity {
+public final class GalleryActivity extends AppCompatActivity {
 
     public static final String ARG_IMAGES = "argImages";
     private static final String ARG_IMAGE_URLS_CACHE = "argImageUrlsCache";

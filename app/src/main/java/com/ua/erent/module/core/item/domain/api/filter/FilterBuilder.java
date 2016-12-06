@@ -108,6 +108,16 @@ public final class FilterBuilder implements IBuilder<IApiFilter> {
         return this;
     }
 
+    public FilterBuilder withRegion(long regionId) {
+        classToFilter.put(Region.class, new Region(regionId));
+        return this;
+    }
+
+    public FilterBuilder withRegion(long... regionIds) {
+        classToFilter.put(Region.class, new Region(regionIds));
+        return this;
+    }
+
     public FilterBuilder withPriceFrom(@NotNull BigDecimal from) {
         classToFilter.put(PriceFrom.class, new PriceFrom(Preconditions.checkNotNull(from)));
         return this;

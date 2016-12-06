@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -69,7 +70,7 @@ public final class ConnectionManager {
     }
 
     public Observable<Boolean> getNetworkObservable() {
-        return networkObs;
+        return networkObs.asObservable().observeOn(AndroidSchedulers.mainThread());
     }
 
 }
