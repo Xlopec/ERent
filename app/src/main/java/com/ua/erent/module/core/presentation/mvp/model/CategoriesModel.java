@@ -9,26 +9,24 @@ import com.ua.erent.module.core.account.auth.domain.bo.Session;
 import com.ua.erent.module.core.account.auth.user.domain.IUserAppService;
 import com.ua.erent.module.core.account.auth.user.domain.bo.User;
 import com.ua.erent.module.core.item.domain.ICategoryAppService;
-import com.ua.erent.module.core.item.domain.bo.Category;
 import com.ua.erent.module.core.networking.util.ConnectionManager;
 import com.ua.erent.module.core.presentation.mvp.model.interfaces.ICategoriesModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IItemsPresenter;
 import com.ua.erent.module.core.presentation.mvp.presenter.model.CategoryModel;
+import com.ua.erent.module.core.presentation.mvp.util.CategoriesConverter;
 import com.ua.erent.module.core.presentation.mvp.view.CategoriesActivity;
 import com.ua.erent.module.core.presentation.mvp.view.InitialScreenActivity;
 import com.ua.erent.module.core.presentation.mvp.view.ItemsActivity;
-import com.ua.erent.module.core.presentation.mvp.view.util.ImageUtils;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.inject.Inject;
 
 import rx.Observable;
+
+import static com.ua.erent.module.core.presentation.mvp.util.CategoriesConverter.toModel;
 
 /**
  * Created by Максим on 11/12/2016.
@@ -41,18 +39,6 @@ public final class CategoriesModel implements ICategoriesModel {
     private final Application context;
     private final IAuthAppService authAppService;
     private final IUserAppService userAppService;
-
-    private static final Map<Long, Integer> categoryIdToImage;
-
-    static {
-        categoryIdToImage = new HashMap<>(5);
-
-        categoryIdToImage.put(1L, R.drawable.clothes_category);
-        categoryIdToImage.put(2L, R.drawable.tourism_category);
-        categoryIdToImage.put(3L, R.drawable.transport_category);
-        categoryIdToImage.put(4L, R.drawable.toys_category);
-        categoryIdToImage.put(5L, R.drawable.furniture_category);
-    }
 
     @Inject
     public CategoriesModel(Application context, ICategoryAppService categoryAppService,
@@ -142,34 +128,19 @@ public final class CategoriesModel implements ICategoriesModel {
 
     @Override
     public Observable<Collection<CategoryModel>> getOnCategoriesDeletedObs() {
-        return categoryAppService.getOnCategoriesDeletedObs().map(this::toModel);
+        return categoryAppService.getOnCategoriesDeletedObs().map(CategoriesConverter::toModel);
     }
 
     @Override
     public Observable<Collection<CategoryModel>> fetchCategories() {
-        return categoryAppService.fetchCategories().map(this::toModel)
+        return categoryAppService.fetchCategories().map(CategoriesConverter::toModel)
                 .onErrorResumeNext(throwable ->
                         Observable.error(new Throwable(context.getString(R.string.categories_fetch_err))));
     }
 
     @Override
     public Observable<Collection<CategoryModel>> getOnCategoriesAddedObs() {
-        return categoryAppService.getOnCategoriesAddedObs().map(this::toModel);
-    }
-
-    private Collection<CategoryModel> toModel(Collection<Category> categories) {
-
-        final Collection<CategoryModel> result = new ArrayList<>(categories.size());
-
-        for (final Category category : categories) {
-            final long id = category.getId().getId();
-            result.add(new CategoryModel(id, category.getTitle(),
-                    category.getDescription(),
-                    categoryIdToImage.containsKey(id) ? ImageUtils.resourceBitmap(categoryIdToImage.get(id)) : null)
-            );
-        }
-
-        return result;
+        return categoryAppService.getOnCategoriesAddedObs().map(CategoriesConverter::toModel);
     }
 
 }

@@ -6,9 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+import com.ua.erent.module.core.item.domain.api.IBrandsProvider;
+import com.ua.erent.module.core.item.domain.api.IRegionsProvider;
 import com.ua.erent.module.core.item.domain.api.ItemProvider;
 import com.ua.erent.module.core.item.domain.bo.Item;
+import com.ua.erent.module.core.item.domain.vo.Brand;
 import com.ua.erent.module.core.item.domain.vo.ItemID;
+import com.ua.erent.module.core.item.domain.vo.Region;
 import com.ua.erent.module.core.item.sync.ItemSynchronizeable;
 import com.ua.erent.module.core.networking.util.IApiFilter;
 
@@ -28,13 +32,18 @@ import rx.subjects.PublishSubject;
 
 public final class ItemDomain implements IItemDomain {
 
-    private final ItemProvider provider;
+    private final ItemProvider itemProvider;
+    private final IBrandsProvider brandProvider;
+    private final IRegionsProvider regionsProvider;
     private final PublishSubject<Collection<Item>> addedItemsObs;
 
     @Inject
-    public ItemDomain(Application application, ItemProvider provider) {
+    public ItemDomain(Application application, ItemProvider itemProvider, IBrandsProvider brandProvider,
+                      IRegionsProvider regionsProvider) {
 
-        this.provider = provider;
+        this.itemProvider = itemProvider;
+        this.brandProvider = brandProvider;
+        this.regionsProvider = regionsProvider;
         this.addedItemsObs = PublishSubject.create();
 
         application.registerReceiver(new BroadcastReceiver() {
@@ -54,7 +63,7 @@ public final class ItemDomain implements IItemDomain {
 
     @Override
     public Observable<Collection<Item>> fetchItems(@NotNull IApiFilter filter) {
-        return provider.fetchItems(filter).map(items -> {
+        return itemProvider.fetchItems(filter).map(items -> {
             synchronized (addedItemsObs) {
                 addedItemsObs.onNext(items);
             }
@@ -64,11 +73,21 @@ public final class ItemDomain implements IItemDomain {
 
     @Override
     public Observable<Item> fetchById(@NotNull ItemID id) {
-        return provider.fetchItem(id);
+        return itemProvider.fetchItem(id);
     }
 
     @Override
     public Observable<Collection<Item>> getOnItemsAddedObs() {
         return addedItemsObs.observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<Collection<Brand>> fetchBrands() {
+        return brandProvider.fetchBrands();
+    }
+
+    @Override
+    public Observable<Collection<Region>> fetchRegions() {
+        return regionsProvider.fetchRegions();
     }
 }

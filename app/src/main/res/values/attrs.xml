@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <declare-styleable name="CompoundImage">
+        <attr name="drawableAnim" format="reference" />
+        <attr name="font" format="string" />
+    </declare-styleable>
+
     <declare-styleable name="TypefacedTextView">
         <attr name="customFont" format="string" />
     </declare-styleable>

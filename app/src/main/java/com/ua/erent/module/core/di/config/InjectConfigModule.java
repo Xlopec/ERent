@@ -6,11 +6,13 @@ import com.ua.erent.module.core.presentation.mvp.component.CategoriesComponent;
 import com.ua.erent.module.core.presentation.mvp.component.CropComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerCategoriesComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerCropComponent;
+import com.ua.erent.module.core.presentation.mvp.component.DaggerSearchComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerInitialScreenComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerItemDetailsComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerItemsComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerLoginComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerRegisterComponent;
+import com.ua.erent.module.core.presentation.mvp.component.SearchComponent;
 import com.ua.erent.module.core.presentation.mvp.component.InitialScreenComponent;
 import com.ua.erent.module.core.presentation.mvp.component.ItemDetailsComponent;
 import com.ua.erent.module.core.presentation.mvp.component.ItemsComponent;
@@ -23,6 +25,7 @@ import com.ua.erent.module.core.presentation.mvp.module.ItemDetailsModule;
 import com.ua.erent.module.core.presentation.mvp.module.ItemsModule;
 import com.ua.erent.module.core.presentation.mvp.module.LoginModule;
 import com.ua.erent.module.core.presentation.mvp.module.RegisterModule;
+import com.ua.erent.module.core.presentation.mvp.module.SearchModule;
 import com.ua.erent.module.core.sync.di.SyncServiceComponent;
 import com.ua.erent.module.core.util.IBuilder;
 
@@ -96,7 +99,9 @@ public final class InjectConfigModule extends Injector.IConfigModule {
                         .appComponent(appComponent).categoriesModule(new CategoriesModule()).build())
                 .registerComponentFactory(SyncServiceComponent.class, () -> syncServiceComponent)
                 .registerComponentFactory(ItemDetailsComponent.class, () -> DaggerItemDetailsComponent.builder()
-                        .appComponent(appComponent).itemDetailsModule(new ItemDetailsModule()).build());
+                        .appComponent(appComponent).itemDetailsModule(new ItemDetailsModule()).build())
+                .registerComponentFactory(SearchComponent.class, () -> DaggerSearchComponent.builder()
+                        .appComponent(appComponent).searchModule(new SearchModule()).build());
     }
 
 }

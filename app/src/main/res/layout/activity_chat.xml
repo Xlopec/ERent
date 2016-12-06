@@ -138,7 +138,7 @@
             android:layout_weight="1"
             android:backgroundTint="@android:color/transparent"
             android:hint="Enter answer"
-            app:customFont="Roboto-Thin" />-
+            app:customFont="Roboto-Thin" />
 
         <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/chat_send_btn"

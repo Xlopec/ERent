@@ -104,19 +104,7 @@ public final class CategoriesPresenter extends ICategoriesPresenter {
     @Override
     public void onRefresh() {
 
-        model.fetchCategories().subscribe(categories -> {
-                    if (!isViewGone()) {
-                        syncWithView(categories);
-                        getView().hideRefreshProgress();
-                    }
-                }, th -> {
-                    if (!isViewGone()) {
-                        getView().hideRefreshProgress();
-                    }
-                    Log.w(TAG, "error occurred on refresh#", th);
-                }
-        );
-    }
+     }
 
     @Override
     public void onLogin() {
@@ -136,8 +124,7 @@ public final class CategoriesPresenter extends ICategoriesPresenter {
         if (savedState == null) {
 
             if (model.hasConnection()) {
-                // no cached categories available,
-                // pull them from the api server
+
                 model.fetchCategories()
                         .doOnSubscribe(getView()::showRefreshProgress)
                         .doOnCompleted(getView()::hideRefreshProgress)

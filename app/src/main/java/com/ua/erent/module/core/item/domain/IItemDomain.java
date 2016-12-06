@@ -1,7 +1,9 @@
 package com.ua.erent.module.core.item.domain;
 
 import com.ua.erent.module.core.item.domain.bo.Item;
+import com.ua.erent.module.core.item.domain.vo.Brand;
 import com.ua.erent.module.core.item.domain.vo.ItemID;
+import com.ua.erent.module.core.item.domain.vo.Region;
 import com.ua.erent.module.core.networking.util.IApiFilter;
 
 import org.jetbrains.annotations.NotNull;
@@ -21,5 +23,9 @@ public interface IItemDomain {
     Observable<Item> fetchById(@NotNull ItemID id);
 
     Observable<Collection<Item>> getOnItemsAddedObs();
+
+    Observable<Collection<Brand>> fetchBrands();
+
+    Observable<Collection<Region>> fetchRegions();
 
 }

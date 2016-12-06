@@ -37,7 +37,7 @@ import rx.functions.Action1;
  * Created by Максим on 10/14/2016.
  */
 
-public class ItemsPresenter extends IItemsPresenter {
+public final class ItemsPresenter extends IItemsPresenter {
 
     private static final String TAG = ItemsPresenter.class.getSimpleName();
     private static final String ARG_LOCAL_CACHE = "argLocalCache";

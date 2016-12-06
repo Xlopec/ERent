@@ -470,7 +470,7 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
         try {
             final Field mCursorDrawableRes = TextView.class.getDeclaredField("mCursorDrawableRes");
             mCursorDrawableRes.setAccessible(true);
-            mCursorDrawableRes.set(editTextView, R.drawable.white_cursor);
+            mCursorDrawableRes.set(editTextView, R.drawable.light_cursor);
         } catch (final Exception e) {
             Log.e(TAG, "onCreateOptionsMenu: failed to get cursor", e);
         }

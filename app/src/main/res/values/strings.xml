@@ -40,6 +40,7 @@
     <!-- Categories activity -->
     <string name="categories_title_activity">Categories</string>
     <string name="categories_refresh">Refresh</string>
+    <string name="categories_adv_search">Advanced search</string>
     <string name="categories_no_internet">No internet connection…</string>
     <string name="categories_fetch_err">Failed to fetch brands</string>
 
@@ -70,6 +71,9 @@
         belongs to user %s, because it \'CAUSE HERE\'</string>
     <string name="item_details_email_client_chooser">Choose email client</string>
     <string name="item_details_no_email_client">No email clients available</string>
+
+    <!-- Search fragment -->
+    <string name="search_input_hint">Search query…</string>
 
     <!-- Strings related to signIn -->
     <string name="action_settings">Settings</string>

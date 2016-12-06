@@ -1,0 +1,95 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:rsb="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/cards_container_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:context="com.ua.erent.module.core.presentation.mvp.view.AdvancedSearchFragment">
+
+        <LinearLayout
+            style="@style/ShadowFrameWhite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="24dp">
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/search_back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingEnd="10dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="10dp"
+                android:paddingStart="0dp"
+                android:src="@drawable/wr_back_def_24dp" />
+
+            <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedEditText
+                android:id="@+id/search_query_field"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:hint="@string/search_input_hint"
+                android:maxLines="1"
+                app:customFont="Roboto-Regular" />
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/search_go_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingEnd="0dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="0dp"
+                android:paddingStart="10dp"
+                android:src="@drawable/wr_search_def_24dp" />
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/search_categories_container"
+            style="@style/ShadowFrameWhite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/search_brands_container"
+            style="@style/ShadowFrameWhite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/search_regions_container"
+            style="@style/ShadowFrameWhite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <RelativeLayout
+            style="@style/ShadowFrameWhite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+                android:id="@+id/search_price_range_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Price range"
+                app:customFont="Roboto-Medium" />
+
+            <org.florescu.android.rangeseekbar.RangeSeekBar
+                android:id="@+id/search_price_range"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/search_price_range_title"
+                rsb:singleThumb="false" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</ScrollView>

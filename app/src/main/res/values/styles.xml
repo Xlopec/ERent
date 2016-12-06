@@ -27,8 +27,8 @@
         <item name="colorControlHighlight">@color/primary</item>
         <item name="android:statusBarColor">@color/primaryDark</item>
         <item name="imageButtonStyle">@style/iconButton</item>
-        <item name="android:editTextStyle">@style/EditText.Light</item>
-        <item name="editTextStyle">@style/EditText.Light</item>
+        <item name="android:editTextStyle">@style/EditText.Dark</item>
+        <item name="editTextStyle">@style/EditText.Dark</item>
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
     </style>
 
@@ -47,6 +47,8 @@
         <item name="android:textColorSecondary">@color/secondaryTextW</item>
         <item name="android:textColorPrimary">@color/primaryTextB</item>
         <item name="android:itemTextAppearance">@style/ItemTextStyle</item>
+        <item name="android:editTextStyle">@style/EditText.Light</item>
+        <item name="editTextStyle">@style/EditText.Light</item>
     </style>
 
     <style name="ItemTextStyle" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
@@ -80,7 +82,14 @@
         <item name="android:textColor">@color/primaryTextW</item>
         <item name="android:textColorSecondary">@color/secondaryTextW</item>
         <item name="android:fontFamily">sans-serif-thin</item>
-        <item name="android:textCursorDrawable">@drawable/white_cursor</item>
+        <item name="android:textCursorDrawable">@drawable/light_cursor</item>
+    </style>
+
+    <style name="EditText.Dark" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/primaryTextB</item>
+        <item name="android:textColorSecondary">@color/secondaryTextB</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:textCursorDrawable">@drawable/dark_cursor</item>
     </style>
 
     <style name="secondaryText" parent="TextAppearance.AppCompat.Small">
@@ -112,6 +121,14 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat</item>
     </style>
 
+    <style name="FullscreenDialog" parent="MyTheme.Base" >
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:textColor">@color/primaryTextB</item>
+    </style>
+
     <style name="SpinnerItem.Light" parent="android:Widget.TextView.SpinnerItem">
         <item name="android:textColor">@color/primaryTextW</item>
     </style>
@@ -123,7 +140,7 @@
 
     <style name="ShadowFrameWhite">
         <item name="android:background">@android:drawable/dialog_holo_light_frame</item>
-        <!--<item name="android:padding">10dp</item>-->
+        <item name="android:padding">20dp</item>
     </style>
 
     <style name="divider">

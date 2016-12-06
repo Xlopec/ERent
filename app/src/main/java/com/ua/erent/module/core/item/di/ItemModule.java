@@ -6,8 +6,12 @@ import com.ua.erent.module.core.item.domain.IItemAppService;
 import com.ua.erent.module.core.item.domain.IItemDomain;
 import com.ua.erent.module.core.item.domain.ItemAppService;
 import com.ua.erent.module.core.item.domain.ItemDomain;
+import com.ua.erent.module.core.item.domain.api.BrandsProvider;
+import com.ua.erent.module.core.item.domain.api.IBrandsProvider;
+import com.ua.erent.module.core.item.domain.api.IRegionsProvider;
 import com.ua.erent.module.core.item.domain.api.ItemProvider;
 import com.ua.erent.module.core.item.domain.api.ItemProviderImp;
+import com.ua.erent.module.core.item.domain.api.RegionsProvider;
 
 import javax.inject.Singleton;
 
@@ -29,14 +33,27 @@ public final class ItemModule {
 
     @Provides
     @Singleton
-    ItemProvider provideProvider(Retrofit retrofit) {
+    ItemProvider provideItemProvider(Retrofit retrofit) {
         return new ItemProviderImp(retrofit);
+    }
+
+    @Provides
+    @Singleton
+    IBrandsProvider provideBrandsProvider(Retrofit retrofit) {
+        return new BrandsProvider(retrofit);
+    }
+
+    @Provides
+    @Singleton
+    IRegionsProvider provideRegionsProvider(Retrofit retrofit) {
+        return new RegionsProvider(retrofit);
     }
 
     @Singleton
     @Provides
-    IItemDomain provideDomain(Application app, ItemProvider provider) {
-        return new ItemDomain(app, provider);
+    IItemDomain provideDomain(Application app, ItemProvider itemProvider, IBrandsProvider brandProvider,
+                              IRegionsProvider regionsProvider) {
+        return new ItemDomain(app, itemProvider, brandProvider, regionsProvider);
     }
 
 }

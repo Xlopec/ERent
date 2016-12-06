@@ -6,4 +6,8 @@
         android:id="@+id/action_refresh"
         android:title="@string/categories_refresh"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_adv_search"
+        android:title="@string/categories_adv_search"
+        app:showAsAction="never" />
 </menu>

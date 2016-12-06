@@ -87,6 +87,7 @@ dependencies {
     compile 'com.j256.ormlite:ormlite-android:5.0'
     compile 'com.github.clans:fab:1.6.3'
     compile 'com.android.support:support-v4:24.2.1'
+    compile 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
     testCompile 'junit:junit:4.12'
     apt 'com.google.dagger:dagger-compiler:2.7'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'

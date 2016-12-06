@@ -1,7 +1,9 @@
 package com.ua.erent.module.core.item.domain;
 
 import com.ua.erent.module.core.item.domain.bo.Item;
+import com.ua.erent.module.core.item.domain.vo.Brand;
 import com.ua.erent.module.core.item.domain.vo.ItemID;
+import com.ua.erent.module.core.item.domain.vo.Region;
 import com.ua.erent.module.core.networking.util.IApiFilter;
 
 import org.jetbrains.annotations.NotNull;
@@ -38,5 +40,15 @@ public final class ItemAppService implements IItemAppService {
     @Override
     public Observable<Collection<Item>> getOnItemsAddedObs() {
         return domain.getOnItemsAddedObs();
+    }
+
+    @Override
+    public Observable<Collection<Brand>> fetchBrands() {
+        return domain.fetchBrands();
+    }
+
+    @Override
+    public Observable<Collection<Region>> fetchRegions() {
+        return domain.fetchRegions();
     }
 }

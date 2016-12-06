@@ -269,6 +269,11 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
         if (id == R.id.action_refresh) {
             refreshLayout.setRefreshing(true);
             presenter.onRefresh();
+        } else if(id == R.id.action_adv_search) {
+
+            AdvancedSearchFragment fr = AdvancedSearchFragment.newInstance("", "");
+
+            fr.show(getSupportFragmentManager(), "fr_dialog");
         }
 
         return true;
