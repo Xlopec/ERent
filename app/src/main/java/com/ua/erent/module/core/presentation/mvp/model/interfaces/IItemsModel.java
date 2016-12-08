@@ -34,5 +34,7 @@ public interface IItemsModel {
 
     Intent createComplainIntent(@NotNull String email, @NotNull String subject, @NotNull String body);
 
+    Intent createConversationIntent(long itemId, long userId);
+
     Observable<Collection<ItemModel>> search(@NotNull String query, long limit);
 }

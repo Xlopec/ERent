@@ -93,7 +93,7 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
 
         @Override
         public int getItemViewType(int position) {
-            return data.get(position).getType().getType();
+            return data.get(position).getType().getValId();
         }
 
         @Override
@@ -139,7 +139,7 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
                 holder.getDescription().setText(model.getDescription());
                 holder.getTitle().setOnClickListener(v -> presenter.onItemClicked(model.getId()));
                 holder.getDescription().setOnClickListener(v -> presenter.onItemClicked(model.getId()));
-                holder.getActionMenu().setOnClickListener(v -> showItemPopup(v, model.getId()));
+                holder.getActionMenu().setOnClickListener(v -> showItemPopup(v, model.getId(), model.getUserId()));
             }
         }
 
@@ -538,7 +538,7 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
         presenter.onBackButton();
     }
 
-    private void showItemPopup(View v, long itemId) {
+    private void showItemPopup(View v, long itemId, long userId) {
 
         final PopupMenu popupMenu = new PopupMenu(this, v);
 
@@ -550,7 +550,7 @@ public final class ItemsActivity extends InjectableActivity<ItemsActivity, IItem
             if (id == R.id.action_email) {
                 presenter.onComplain(itemId);
             } else if (id == R.id.action_conversation) {
-                presenter.onOpenDialog(itemId);
+                presenter.onOpenDialog(itemId, userId);
             }
 
             return true;

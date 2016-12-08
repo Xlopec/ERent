@@ -40,6 +40,7 @@ public final class ItemConverter {
 
             final ItemModel.Builder builder = new ItemModel.Builder(
                     item.getId().getId(),
+                    item.getDetails().getUserInfo().getId().getId(),
                     MyTextUtil.capitalize(item.getDetails().getUserInfo().getUsername()),
                     MyTextUtil.capitalize(item.getItemInfo().getName()),
                     MyTextUtil.capitalize(item.getItemInfo().getDescription()),

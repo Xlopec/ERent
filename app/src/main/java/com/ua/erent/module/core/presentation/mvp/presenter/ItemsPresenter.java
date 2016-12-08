@@ -338,8 +338,14 @@ public final class ItemsPresenter extends IItemsPresenter {
     }
 
     @Override
-    public void onOpenDialog(long id) {
+    public void onOpenDialog(long itemId, long userId) {
 
+        if(!model.isSessionAlive())
+            throw new IllegalStateException("session was expired!");
+
+        final Intent intent = model.createConversationIntent(itemId, userId);
+
+        getView().startActivity(intent);
     }
 
     @Override

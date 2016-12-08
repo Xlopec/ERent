@@ -6,12 +6,13 @@
     android:orientation="horizontal">
 
     <Space
-        android:id="@+id/message_spacing"
+        android:id="@+id/message_spacing_left"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0" />
 
     <LinearLayout
+        android:id="@+id/message_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -40,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/activity_side_pad"
-                android:text="Some message here"
+                android:text="Some message here dg dgergc drgc vdgerg ergdg dgrg dg"
                 app:customFont="Roboto-Regular" />
         </LinearLayout>
 

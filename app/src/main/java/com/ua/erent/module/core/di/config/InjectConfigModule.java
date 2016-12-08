@@ -3,8 +3,10 @@ package com.ua.erent.module.core.di.config;
 import com.ua.erent.module.core.app.AppComponent;
 import com.ua.erent.module.core.di.Injector;
 import com.ua.erent.module.core.presentation.mvp.component.CategoriesComponent;
+import com.ua.erent.module.core.presentation.mvp.component.ChatComponent;
 import com.ua.erent.module.core.presentation.mvp.component.CropComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerCategoriesComponent;
+import com.ua.erent.module.core.presentation.mvp.component.DaggerChatComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerCropComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerSearchComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerInitialScreenComponent;
@@ -19,6 +21,7 @@ import com.ua.erent.module.core.presentation.mvp.component.ItemsComponent;
 import com.ua.erent.module.core.presentation.mvp.component.LoginComponent;
 import com.ua.erent.module.core.presentation.mvp.component.RegisterComponent;
 import com.ua.erent.module.core.presentation.mvp.module.CategoriesModule;
+import com.ua.erent.module.core.presentation.mvp.module.ChatModule;
 import com.ua.erent.module.core.presentation.mvp.module.CropModule;
 import com.ua.erent.module.core.presentation.mvp.module.InitialScreenModule;
 import com.ua.erent.module.core.presentation.mvp.module.ItemDetailsModule;
@@ -101,7 +104,9 @@ public final class InjectConfigModule extends Injector.IConfigModule {
                 .registerComponentFactory(ItemDetailsComponent.class, () -> DaggerItemDetailsComponent.builder()
                         .appComponent(appComponent).itemDetailsModule(new ItemDetailsModule()).build())
                 .registerComponentFactory(SearchComponent.class, () -> DaggerSearchComponent.builder()
-                        .appComponent(appComponent).searchModule(new SearchModule()).build());
+                        .appComponent(appComponent).searchModule(new SearchModule()).build())
+                .registerComponentFactory(ChatComponent.class, () -> DaggerChatComponent.builder()
+                        .appComponent(appComponent).chatModule(new ChatModule()).build());
     }
 
 }

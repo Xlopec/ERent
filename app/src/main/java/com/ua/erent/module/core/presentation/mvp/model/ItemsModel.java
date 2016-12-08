@@ -10,6 +10,7 @@ import com.ua.erent.module.core.presentation.mvp.model.interfaces.IItemsModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.ItemDetailsPresenter;
 import com.ua.erent.module.core.presentation.mvp.presenter.model.ItemModel;
 import com.ua.erent.module.core.presentation.mvp.util.ItemConverter;
+import com.ua.erent.module.core.presentation.mvp.view.ChatActivity;
 import com.ua.erent.module.core.presentation.mvp.view.ItemDetailsActivity;
 
 import org.jetbrains.annotations.NotNull;
@@ -124,6 +125,14 @@ public final class ItemsModel implements IItemsModel {
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
         intent.putExtra(Intent.EXTRA_TEXT, body);
+        return intent;
+    }
+
+    @Override
+    public Intent createConversationIntent(long itemId, long userId) {
+
+        final Intent intent = new Intent(context, ChatActivity.class);
+
         return intent;
     }
 

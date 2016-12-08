@@ -10,8 +10,8 @@
     <color name="primaryTextB">#86000000</color>
     <color name="secondaryTextB">#54000000</color>
     <color name="primaryLight">#C5CAE9</color>
-    <color name="primary">#3F51B5</color>
-    <color name="primaryDark">#303F9F</color>
+    <color name="primary">#4255bd</color>
+    <color name="primaryDark">#354497</color>
     <color name="accent">#536DFE</color>
 
     <color name="cards_container_bg">#E8E8E8</color>

@@ -31,7 +31,7 @@ public abstract class IItemsPresenter extends IBasePresenter<ItemsActivity> {
 
     public abstract int getPopupResId();
 
-    public abstract void onOpenDialog(long id);
+    public abstract void onOpenDialog(long itemId, long userId);
 
     public abstract void onComplain(long id);
 

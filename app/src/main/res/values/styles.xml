@@ -25,7 +25,6 @@
         <item name="colorControlNormal">#FFF</item>
         <item name="colorControlActivated">@color/primary</item>
         <item name="colorControlHighlight">@color/primary</item>
-        <item name="android:statusBarColor">@color/primaryDark</item>
         <item name="imageButtonStyle">@style/iconButton</item>
         <item name="android:editTextStyle">@style/EditText.Dark</item>
         <item name="editTextStyle">@style/EditText.Dark</item>

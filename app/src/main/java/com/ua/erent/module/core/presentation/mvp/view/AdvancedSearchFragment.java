@@ -294,7 +294,7 @@ public final class AdvancedSearchFragment extends InjectableDialogFragment<Advan
 
         @Override
         public int getItemViewType(int position) {
-            return data.get(position).getType().getType();
+            return data.get(position).getType().getValId();
         }
 
         @Override

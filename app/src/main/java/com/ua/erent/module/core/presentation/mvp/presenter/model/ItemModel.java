@@ -22,6 +22,7 @@ import dagger.internal.Preconditions;
 public final class ItemModel implements Parcelable {
 
     private final long id;
+    private final long userId;
     private final String username;
     private final IParcelableFutureBitmap userAvatar;
     private final ArrayList<IUrlFutureBitmap> gallery;
@@ -48,6 +49,7 @@ public final class ItemModel implements Parcelable {
     public static final class Builder implements IBuilder<ItemModel> {
 
         private final long id;
+        private final long userId;
         private final String username;
         private final String title;
         private final String description;
@@ -60,11 +62,12 @@ public final class ItemModel implements Parcelable {
         private IParcelableFutureBitmap userAvatar;
         private final Collection<IUrlFutureBitmap> gallery;
 
-        public Builder(long id, String username, String title, String description,
+        public Builder(long id, long userId, String username, String title, String description,
                        String pubDate, String price, Collection<String> categories,
                        String brand, String region) {
 
             this.id = id;
+            this.userId = userId;
             this.username = username;
             this.title = title;
             this.description = description;
@@ -98,6 +101,10 @@ public final class ItemModel implements Parcelable {
 
         public String getPrice() {
             return price;
+        }
+
+        public long getUserId() {
+            return userId;
         }
 
         public Collection<String> getCategories() {
@@ -138,6 +145,7 @@ public final class ItemModel implements Parcelable {
 
     private ItemModel(Builder builder) {
         this.id = builder.getId();
+        this.userId = builder.getId();
         this.username = builder.getUsername();
         this.brand = builder.getBrand();
         this.categories = new ArrayList<>(builder.getCategories());
@@ -152,6 +160,7 @@ public final class ItemModel implements Parcelable {
 
     private ItemModel(Parcel in) {
         id = in.readLong();
+        userId = in.readLong();
         userAvatar = in.readParcelable(IParcelableFutureBitmap.class.getClassLoader());
         final Parcelable [] parcelables = in.readParcelableArray(IParcelableFutureBitmap.class.getClassLoader());
         gallery = new ArrayList<>(parcelables.length);
@@ -214,6 +223,10 @@ public final class ItemModel implements Parcelable {
         return username;
     }
 
+    public long getUserId() {
+        return userId;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -222,6 +235,7 @@ public final class ItemModel implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
+        dest.writeLong(userId);
         dest.writeParcelable(userAvatar, flags);
         dest.writeParcelableArray(gallery.toArray(new IParcelableFutureBitmap[gallery.size()]), flags);
         dest.writeString(price);
@@ -242,11 +256,13 @@ public final class ItemModel implements Parcelable {
         ItemModel itemModel = (ItemModel) o;
 
         if (id != itemModel.id) return false;
+        if (userId != itemModel.userId) return false;
+        if (!username.equals(itemModel.username)) return false;
         if (userAvatar != null ? !userAvatar.equals(itemModel.userAvatar) : itemModel.userAvatar != null)
             return false;
-        if (!gallery.equals(itemModel.gallery)) return false;
+        if (gallery != null ? !gallery.equals(itemModel.gallery) : itemModel.gallery != null)
+            return false;
         if (!price.equals(itemModel.price)) return false;
-        if (!username.equals(itemModel.username)) return false;
         if (!title.equals(itemModel.title)) return false;
         if (!description.equals(itemModel.description)) return false;
         if (!pubDate.equals(itemModel.pubDate)) return false;
@@ -259,12 +275,13 @@ public final class ItemModel implements Parcelable {
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (int) (userId ^ (userId >>> 32));
+        result = 31 * result + username.hashCode();
         result = 31 * result + (userAvatar != null ? userAvatar.hashCode() : 0);
-        result = 31 * result + gallery.hashCode();
+        result = 31 * result + (gallery != null ? gallery.hashCode() : 0);
         result = 31 * result + price.hashCode();
         result = 31 * result + title.hashCode();
         result = 31 * result + description.hashCode();
-        result = 31 * result + username.hashCode();
         result = 31 * result + pubDate.hashCode();
         result = 31 * result + categories.hashCode();
         result = 31 * result + brand.hashCode();
@@ -276,7 +293,8 @@ public final class ItemModel implements Parcelable {
     public String toString() {
         return "ItemModel{" +
                 "id=" + id +
-                ", username=" + username +
+                ", userId=" + userId +
+                ", username='" + username + '\'' +
                 ", userAvatar=" + userAvatar +
                 ", gallery=" + gallery +
                 ", price='" + price + '\'' +
