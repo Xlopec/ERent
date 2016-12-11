@@ -17,6 +17,7 @@ import com.ua.erent.module.core.presentation.mvp.util.ItemConverter;
 import com.ua.erent.module.core.presentation.mvp.view.CategoriesActivity;
 import com.ua.erent.module.core.presentation.mvp.view.InitialScreenActivity;
 import com.ua.erent.module.core.presentation.mvp.view.ItemsActivity;
+import com.ua.erent.module.core.presentation.mvp.view.MyItemsActivity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -52,6 +53,11 @@ public final class CategoriesModel implements ICategoriesModel {
     @Override
     public void logout() {
         authAppService.logout();
+    }
+
+    @Override
+    public Intent createMyItemsIntent() {
+        return new Intent(context, MyItemsActivity.class);
     }
 
     @Override

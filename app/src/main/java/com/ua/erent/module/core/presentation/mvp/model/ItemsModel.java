@@ -47,6 +47,7 @@ public final class ItemsModel implements IItemsModel {
     public Observable<Collection<ItemModel>> fetch(long categoryId, long limit) {
         return itemAppService.fetchItems(new FilterBuilder()
                 .withCategory(categoryId)
+                .sort(FilterBuilder.SortType.ASC)
                 .orderBy(FilterBuilder.OrderBy.PUB_DATE)
                 .withLimit(limit)
                 .build())

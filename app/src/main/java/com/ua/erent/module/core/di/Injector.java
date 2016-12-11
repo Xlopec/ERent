@@ -212,7 +212,7 @@ public final class Injector {
 
         if (factory == null) {
             throw new RuntimeException(String.format("Unknown component class (%s), did you forget " +
-                    "to signUp corresponding provider factory?", component));
+                    "to register corresponding provider factory?", component));
         }
 
         return factory.create();

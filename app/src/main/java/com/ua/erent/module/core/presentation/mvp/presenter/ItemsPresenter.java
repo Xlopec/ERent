@@ -230,6 +230,7 @@ public final class ItemsPresenter extends IItemsPresenter {
 
         obs.subscribe(items -> {
                     if (!isViewGone()) {
+                        getView().setInfoMessageVisible(false);
                         getView().addNextItems(addStart(items, dest));
                     }
                 },
@@ -265,6 +266,7 @@ public final class ItemsPresenter extends IItemsPresenter {
 
         obs.subscribe(items -> {
                     if (!isViewGone()) {
+                        getView().setInfoMessageVisible(false);
                         addEnd(items, dest);
                     }
                 },

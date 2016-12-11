@@ -12,7 +12,6 @@ import com.ua.erent.module.core.networking.util.IApiFilter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -21,7 +20,6 @@ import dagger.internal.Preconditions;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -34,7 +32,6 @@ import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 
 /**
  * Created by Максим on 11/7/2016.
@@ -54,7 +51,7 @@ public final class ItemProviderImp implements ItemProvider {
          */
         @GET("things")
         @Headers("Content-Type: application/json")
-        Observable<Collection<ItemResponse>> getItems(@QueryMap Map<String, String> query);
+        Observable<ItemResponse> getItems(@QueryMap Map<String, String> query);
 
         /**
          * Fetches all items from the api server
@@ -63,7 +60,7 @@ public final class ItemProviderImp implements ItemProvider {
          */
         @GET("things")
         @Headers("Content-Type: application/json")
-        Observable<Collection<ItemResponse>> getItems();
+        Observable<ItemResponse> getItems();
 
         /**
          * Fetches specified item from the api server
@@ -77,7 +74,7 @@ public final class ItemProviderImp implements ItemProvider {
 
         @PUT("things")
         @Headers("Content-Type: application/json")
-        Observable<ItemResponse> createItem(
+        Observable<RespItem> createItem(
                 @NotNull @Header("Authorization") String token,
                 @NotNull @Body ItemCreationReq form
         );
@@ -100,17 +97,21 @@ public final class ItemProviderImp implements ItemProvider {
 
     @Override
     public Observable<Collection<Item>> fetchItems() {
-        return api.getItems().observeOn(AndroidSchedulers.mainThread()).map(ConverterFactory::toItem);
+        return api.getItems().observeOn(AndroidSchedulers.mainThread())
+                .map(itemResp -> ConverterFactory.toItem(itemResp.items));
     }
 
     @Override
     public Observable<Collection<Item>> fetchItems(@NotNull IApiFilter filter) {
-        return api.getItems(filter.toFilter()).observeOn(AndroidSchedulers.mainThread()).map(ConverterFactory::toItem);
+        return api.getItems(filter.toFilter()).observeOn(AndroidSchedulers.mainThread())
+                .map(itemResp -> ConverterFactory.toItem(itemResp.items));
     }
 
     @Override
     public Observable<Item> fetchItem(@NotNull ItemID id) {
-        return api.getItemForId(id.getId()).observeOn(AndroidSchedulers.mainThread()).map(ConverterFactory::toItem);
+        return api.getItemForId(id.getId()).observeOn(AndroidSchedulers.mainThread())
+                .map(itemResp -> itemResp.items.isEmpty() ? null :
+                        ConverterFactory.toItem(itemResp.items.iterator().next()));
     }
 
     @Override
@@ -123,18 +124,18 @@ public final class ItemProviderImp implements ItemProvider {
         body.price = form.getPrice().doubleValue();
         body.brandId = form.getBrandId();
         body.regionId = form.getRegionId();
-        body.categoryIds = toPrimitive(form.getCategoryIds().toArray(new Long [form.getCategoryIds().size()]));
+        body.categoryIds = toPrimitive(form.getCategoryIds().toArray(new Long[form.getCategoryIds().size()]));
         body.visibility = true;
 
         return api.createItem(session.getToken(), body)
                 .map(ConverterFactory::toItem)
                 .flatMap(item -> {
 
-                    if(form.getUris().isEmpty()) return Observable.just(item);
+                    if (form.getUris().isEmpty()) return Observable.just(item);
 
                     final Collection<Observable<Void>> photoObs = new ArrayList<>(form.getUris().size());
 
-                    for(final Uri uri : form.getUris()) {
+                    for (final Uri uri : form.getUris()) {
                         final String mimeType = MimeTypeMap.getFileExtensionFromUrl(uri.toString());
                         final RequestBody photoReqBody = RequestBody
                                 .create(MediaType.parse("image/".concat(mimeType)), new File(uri.getPath()));
@@ -143,32 +144,13 @@ public final class ItemProviderImp implements ItemProvider {
                     }
 
                     return Observable.zip(photoObs, args -> item);
-                })
-                .onErrorResumeNext(new Func1<Throwable, Observable<? extends Item>>() {
-                    @Override
-                    public Observable<? extends Item> call(Throwable throwable) {
-
-                        if(throwable instanceof HttpException) {
-                            HttpException httpException = (HttpException) throwable;
-                            String msg = httpException.message();
-                            try {
-                                String respB = httpException.response().errorBody().string();
-                                respB+="";
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        return Observable.error(throwable);
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread());
+                }).observeOn(AndroidSchedulers.mainThread());
     }
 
-    private static long [] toPrimitive(Long [] from) {
-        final long [] res = new long[from.length];
+    private static long[] toPrimitive(Long[] from) {
+        final long[] res = new long[from.length];
 
-        for(int i = 0; i < from.length; ++i) {
+        for (int i = 0; i < from.length; ++i) {
             res[i] = from[i];
         }
         return res;

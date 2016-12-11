@@ -20,6 +20,8 @@ public interface ICategoriesModel {
 
     void logout();
 
+    Intent createMyItemsIntent();
+
     Intent createLoginIntent();
 
     Intent createItemsIntent(@NotNull CategoryModel category);

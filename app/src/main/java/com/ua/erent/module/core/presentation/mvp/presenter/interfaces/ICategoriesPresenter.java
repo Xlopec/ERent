@@ -22,4 +22,5 @@ public abstract class ICategoriesPresenter extends IBasePresenter<CategoriesActi
 
     public abstract void onLogout();
 
+    public abstract void onItems();
 }

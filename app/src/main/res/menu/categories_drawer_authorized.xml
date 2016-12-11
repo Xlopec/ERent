@@ -5,6 +5,7 @@
 
         <item
             android:id="@+id/action_profile"
+            android:visible="false"
             android:icon="@drawable/ic_account_circle_black_24dp"
             android:title="@string/main_drawer_profile" />
 
@@ -20,6 +21,7 @@
 
         <item
             android:id="@+id/action_setting"
+            android:visible="false"
             android:icon="@drawable/ic_setting_black_24dp"
             android:title="@string/main_drawer_settings" />
     </group>

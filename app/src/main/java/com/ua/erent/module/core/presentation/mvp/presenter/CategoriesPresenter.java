@@ -117,6 +117,11 @@ public final class CategoriesPresenter extends ICategoriesPresenter {
         getView().startActivity(model.createLogoutIntent());
     }
 
+    @Override
+    public void onItems() {
+        getView().startActivity(model.createMyItemsIntent());
+    }
+
     private void setupCategories(Bundle savedState) {
 
         final Collection<CategoryModel> categoryModels = model.getCategories();
@@ -127,7 +132,7 @@ public final class CategoriesPresenter extends ICategoriesPresenter {
 
                 model.fetchCategories()
                         .doOnSubscribe(getView()::showRefreshProgress)
-                        .doOnCompleted(getView()::hideRefreshProgress)
+                        .doOnTerminate(getView()::hideRefreshProgress)
                         .subscribe(this::syncWithView,
                                 th -> {
                                     if (!isViewGone()) {

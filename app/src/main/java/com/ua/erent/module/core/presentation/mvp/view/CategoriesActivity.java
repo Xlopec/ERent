@@ -289,7 +289,7 @@ public final class CategoriesActivity extends InjectableActivity<CategoriesActiv
         } else if (id == R.id.action_conversation) {
 
         } else if (id == R.id.action_items) {
-
+            presenter.onItems();
         } else if (id == R.id.action_logout) {
             presenter.onLogout();
         } else if (id == R.id.action_setting) {

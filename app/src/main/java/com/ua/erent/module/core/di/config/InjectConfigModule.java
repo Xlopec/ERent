@@ -9,6 +9,7 @@ import com.ua.erent.module.core.presentation.mvp.component.DaggerCategoriesCompo
 import com.ua.erent.module.core.presentation.mvp.component.DaggerChatComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerCropComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerItemCreationComponent;
+import com.ua.erent.module.core.presentation.mvp.component.DaggerMyItemsComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerSearchComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerInitialScreenComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerItemDetailsComponent;
@@ -16,6 +17,7 @@ import com.ua.erent.module.core.presentation.mvp.component.DaggerItemsComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerLoginComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerRegisterComponent;
 import com.ua.erent.module.core.presentation.mvp.component.ItemCreationComponent;
+import com.ua.erent.module.core.presentation.mvp.component.MyItemsComponent;
 import com.ua.erent.module.core.presentation.mvp.component.SearchComponent;
 import com.ua.erent.module.core.presentation.mvp.component.InitialScreenComponent;
 import com.ua.erent.module.core.presentation.mvp.component.ItemDetailsComponent;
@@ -29,6 +31,7 @@ import com.ua.erent.module.core.presentation.mvp.module.InitialScreenModule;
 import com.ua.erent.module.core.presentation.mvp.module.ItemDetailsModule;
 import com.ua.erent.module.core.presentation.mvp.module.ItemsModule;
 import com.ua.erent.module.core.presentation.mvp.module.LoginModule;
+import com.ua.erent.module.core.presentation.mvp.module.MyItemsModule;
 import com.ua.erent.module.core.presentation.mvp.module.RegisterModule;
 import com.ua.erent.module.core.presentation.mvp.module.SearchModule;
 import com.ua.erent.module.core.sync.di.SyncServiceComponent;
@@ -110,7 +113,9 @@ public final class InjectConfigModule extends Injector.IConfigModule {
                 .registerComponentFactory(ChatComponent.class, () -> DaggerChatComponent.builder()
                         .appComponent(appComponent).chatModule(new ChatModule()).build())
                 .registerComponentFactory(ItemCreationComponent.class, () -> DaggerItemCreationComponent.builder()
-                        .appComponent(appComponent).itemsModule(new ItemsModule()).build());
+                        .appComponent(appComponent).itemsModule(new ItemsModule()).build())
+                .registerComponentFactory(MyItemsComponent.class, () -> DaggerMyItemsComponent.builder()
+                        .appComponent(appComponent).myItemsModule(new MyItemsModule()).build());
     }
 
 }

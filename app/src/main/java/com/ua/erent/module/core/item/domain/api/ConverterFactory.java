@@ -3,7 +3,6 @@ package com.ua.erent.module.core.item.domain.api;
 import com.ua.erent.BuildConfig;
 import com.ua.erent.module.core.account.auth.user.domain.vo.UserID;
 import com.ua.erent.module.core.item.domain.bo.Category;
-import com.ua.erent.module.core.item.domain.bo.Item;
 import com.ua.erent.module.core.item.domain.vo.Brand;
 import com.ua.erent.module.core.item.domain.vo.CategoryID;
 import com.ua.erent.module.core.item.domain.vo.Details;
@@ -23,7 +22,7 @@ import dagger.internal.Preconditions;
 
 /**
  * <p>
- * Converters server api response into {@linkplain Item}
+ * Converters server api response into {@linkplain com.ua.erent.module.core.item.domain.bo.Item}
  * </p>
  * Created by Максим on 11/8/2016.
  */
@@ -35,16 +34,16 @@ final class ConverterFactory {
     }
 
     /**
-     * Converts {@linkplain ItemResponse} into {@linkplain Item}
+     * Converts {@linkplain RespItem} into {@linkplain com.ua.erent.module.core.item.domain.bo.Item}
      *
      * @param convert server response to convert
-     * @return new instance of {@linkplain Item}
+     * @return new instance of {@linkplain com.ua.erent.module.core.item.domain.bo.Item}
      */
-    static Item toItem(@NotNull ItemResponse convert) {
+    static com.ua.erent.module.core.item.domain.bo.Item toItem(@NotNull RespItem convert) {
 
         Preconditions.checkNotNull(convert);
 
-        return new Item.Builder().setId(new ItemID(convert.id))
+        return new com.ua.erent.module.core.item.domain.bo.Item.Builder().setId(new ItemID(convert.id))
                 .setCategories(toCategory(convert.categories))
                 .setItemInfo(new ItemInfo(convert.name, convert.description, new BigDecimal(convert.price)))
                 .setDetails(new Details.Builder()
@@ -61,27 +60,27 @@ final class ConverterFactory {
     }
 
     /**
-     * Converts collection of {@linkplain ItemResponse} into collection of {@linkplain Item}
+     * Converts collection of {@linkplain RespItem} into collection of {@linkplain com.ua.erent.module.core.item.domain.bo.Item}
      *
      * @param convert server response collection to convert
-     * @return new collection of {@linkplain Item}
+     * @return new collection of {@linkplain com.ua.erent.module.core.item.domain.bo.Item}
      */
-    static Collection<Item> toItem(@NotNull Collection<ItemResponse> convert) {
+    static Collection<com.ua.erent.module.core.item.domain.bo.Item> toItem(@NotNull Collection<RespItem> convert) {
         Preconditions.checkNotNull(convert);
 
-        final Collection<Item> result = new ArrayList<>(convert.size());
+        final Collection<com.ua.erent.module.core.item.domain.bo.Item> result = new ArrayList<>(convert.size());
 
-        for (final ItemResponse respItem : convert) {
+        for (final RespItem respItem : convert) {
             result.add(toItem(respItem));
         }
         return result;
     }
 
-    private static Collection<Category> toCategory(ItemResponse.Category [] categories) {
+    private static Collection<Category> toCategory(RespItem.Category [] categories) {
 
         final Collection<Category> result = new ArrayList<>(categories.length);
 
-        for(final ItemResponse.Category category : categories) {
+        for(final RespItem.Category category : categories) {
             result.add(new Category(category.name, new CategoryID(category.id), category.description));
         }
 
