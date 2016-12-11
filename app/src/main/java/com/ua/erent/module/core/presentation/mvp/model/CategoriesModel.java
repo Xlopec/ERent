@@ -13,7 +13,7 @@ import com.ua.erent.module.core.networking.util.ConnectionManager;
 import com.ua.erent.module.core.presentation.mvp.model.interfaces.ICategoriesModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IItemsPresenter;
 import com.ua.erent.module.core.presentation.mvp.presenter.model.CategoryModel;
-import com.ua.erent.module.core.presentation.mvp.util.CategoriesConverter;
+import com.ua.erent.module.core.presentation.mvp.util.ItemConverter;
 import com.ua.erent.module.core.presentation.mvp.view.CategoriesActivity;
 import com.ua.erent.module.core.presentation.mvp.view.InitialScreenActivity;
 import com.ua.erent.module.core.presentation.mvp.view.ItemsActivity;
@@ -25,8 +25,6 @@ import java.util.Collection;
 import javax.inject.Inject;
 
 import rx.Observable;
-
-import static com.ua.erent.module.core.presentation.mvp.util.CategoriesConverter.toModel;
 
 /**
  * Created by Максим on 11/12/2016.
@@ -123,24 +121,24 @@ public final class CategoriesModel implements ICategoriesModel {
 
     @Override
     public Collection<CategoryModel> getCategories() {
-        return toModel(categoryAppService.getCachedCategories());
+        return ItemConverter.toCategoryModel(categoryAppService.getCachedCategories());
     }
 
     @Override
     public Observable<Collection<CategoryModel>> getOnCategoriesDeletedObs() {
-        return categoryAppService.getOnCategoriesDeletedObs().map(CategoriesConverter::toModel);
+        return categoryAppService.getOnCategoriesDeletedObs().map(ItemConverter::toCategoryModel);
     }
 
     @Override
     public Observable<Collection<CategoryModel>> fetchCategories() {
-        return categoryAppService.fetchCategories().map(CategoriesConverter::toModel)
+        return categoryAppService.fetchCategories().map(ItemConverter::toCategoryModel)
                 .onErrorResumeNext(throwable ->
                         Observable.error(new Throwable(context.getString(R.string.categories_fetch_err))));
     }
 
     @Override
     public Observable<Collection<CategoryModel>> getOnCategoriesAddedObs() {
-        return categoryAppService.getOnCategoriesAddedObs().map(CategoriesConverter::toModel);
+        return categoryAppService.getOnCategoriesAddedObs().map(ItemConverter::toCategoryModel);
     }
 
 }

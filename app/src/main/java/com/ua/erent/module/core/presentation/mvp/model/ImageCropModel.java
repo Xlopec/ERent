@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public final class ImageCropModel implements IImageCropModel {
 
-    private static final String IMAGE_FORMAT = "png";
+    private static final String IMAGE_FORMAT = "jpeg";
 
     private static final String TAG = ImageCropModel.class.getSimpleName();
 

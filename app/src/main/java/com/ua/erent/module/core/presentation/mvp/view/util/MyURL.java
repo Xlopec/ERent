@@ -3,6 +3,8 @@ package com.ua.erent.module.core.presentation.mvp.view.util;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -23,11 +25,11 @@ public class MyURL implements Parcelable {
 
     private final URL url;
 
-    public MyURL(URL url) {
+    public MyURL(@NotNull URL url) {
         this.url = Preconditions.checkNotNull(url);
     }
 
-    public MyURL(String url) {
+    public MyURL(@NotNull String url) {
         try {
             this.url = new URL(url);
         } catch (MalformedURLException e) {

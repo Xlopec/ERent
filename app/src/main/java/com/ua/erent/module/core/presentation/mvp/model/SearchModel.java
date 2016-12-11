@@ -14,7 +14,6 @@ import com.ua.erent.module.core.presentation.mvp.presenter.model.BrandModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.model.CategoryModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.model.ItemModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.model.RegionModel;
-import com.ua.erent.module.core.presentation.mvp.util.CategoriesConverter;
 import com.ua.erent.module.core.presentation.mvp.util.ItemConverter;
 
 import org.jetbrains.annotations.NotNull;
@@ -59,12 +58,12 @@ public final class SearchModel implements ISearchModel {
 
     @Override
     public Collection<CategoryModel> getCategories() {
-        return CategoriesConverter.toModel(categoryAppService.getCachedCategories());
+        return ItemConverter.toCategoryModel(categoryAppService.getCachedCategories());
     }
 
     @Override
     public Observable<Collection<CategoryModel>> fetchCategories() {
-        return categoryAppService.fetchCategories().map(CategoriesConverter::toModel);
+        return categoryAppService.fetchCategories().map(ItemConverter::toCategoryModel);
     }
 
     @Override
@@ -106,7 +105,7 @@ public final class SearchModel implements ISearchModel {
             builder.withPriceTo(new BigDecimal(form.getPriceTo()));
         }
 
-        return itemAppService.fetchItems(builder.build()).map(data -> ItemConverter.toModel(context, data));
+        return itemAppService.fetchItems(builder.build()).map(data -> ItemConverter.toCategoryModel(context, data));
     }
 
     private static long [] toPrimitive(Collection<Long> coll) {

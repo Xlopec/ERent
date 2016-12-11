@@ -2,6 +2,7 @@ package com.ua.erent.module.core.item.di;
 
 import android.app.Application;
 
+import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
 import com.ua.erent.module.core.item.domain.IItemAppService;
 import com.ua.erent.module.core.item.domain.IItemDomain;
 import com.ua.erent.module.core.item.domain.ItemAppService;
@@ -51,9 +52,10 @@ public final class ItemModule {
 
     @Singleton
     @Provides
-    IItemDomain provideDomain(Application app, ItemProvider itemProvider, IBrandsProvider brandProvider,
+    IItemDomain provideDomain(Application app, IAuthAppService authAppService,
+                              ItemProvider itemProvider, IBrandsProvider brandProvider,
                               IRegionsProvider regionsProvider) {
-        return new ItemDomain(app, itemProvider, brandProvider, regionsProvider);
+        return new ItemDomain(app, authAppService, itemProvider, brandProvider, regionsProvider);
     }
 
 }

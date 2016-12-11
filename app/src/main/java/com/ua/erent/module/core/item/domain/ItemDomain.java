@@ -6,11 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+import com.ua.erent.module.core.account.auth.domain.IAuthAppService;
 import com.ua.erent.module.core.item.domain.api.IBrandsProvider;
 import com.ua.erent.module.core.item.domain.api.IRegionsProvider;
 import com.ua.erent.module.core.item.domain.api.ItemProvider;
 import com.ua.erent.module.core.item.domain.bo.Item;
 import com.ua.erent.module.core.item.domain.vo.Brand;
+import com.ua.erent.module.core.item.domain.vo.ItemForm;
 import com.ua.erent.module.core.item.domain.vo.ItemID;
 import com.ua.erent.module.core.item.domain.vo.Region;
 import com.ua.erent.module.core.item.sync.ItemSynchronizeable;
@@ -22,6 +24,7 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
+import dagger.internal.Preconditions;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
@@ -32,14 +35,17 @@ import rx.subjects.PublishSubject;
 
 public final class ItemDomain implements IItemDomain {
 
+    private final IAuthAppService authAppService;
     private final ItemProvider itemProvider;
     private final IBrandsProvider brandProvider;
     private final IRegionsProvider regionsProvider;
     private final PublishSubject<Collection<Item>> addedItemsObs;
 
     @Inject
-    public ItemDomain(Application application, ItemProvider itemProvider, IBrandsProvider brandProvider,
+    public ItemDomain(Application application, IAuthAppService authAppService, ItemProvider itemProvider,
+                      IBrandsProvider brandProvider,
                       IRegionsProvider regionsProvider) {
+        this.authAppService = authAppService;
 
         this.itemProvider = itemProvider;
         this.brandProvider = brandProvider;
@@ -89,5 +95,16 @@ public final class ItemDomain implements IItemDomain {
     @Override
     public Observable<Collection<Region>> fetchRegions() {
         return regionsProvider.fetchRegions();
+    }
+
+    @Override
+    public Observable<Item> createItem(@NotNull ItemForm form) {
+
+        Preconditions.checkNotNull(form, "creation form == null");
+
+        if (!authAppService.isSessionAlive())
+            throw new IllegalStateException(String.format("%s session expired", getClass()));
+
+        return itemProvider.createItem(authAppService.getSession(), form);
     }
 }

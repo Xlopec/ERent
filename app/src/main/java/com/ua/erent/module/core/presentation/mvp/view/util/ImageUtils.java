@@ -3,6 +3,7 @@ package com.ua.erent.module.core.presentation.mvp.view.util;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.annotation.DrawableRes;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
@@ -106,6 +107,10 @@ public final class ImageUtils {
 
     public static IParcelableFutureBitmap urlBitmap(@NotNull URL url) {
         return new UrlBitmapFuture(url);
+    }
+
+    public static UriBitmap uriBitmap(@NotNull Uri uri) {
+        return new UriBitmap(uri);
     }
 
 }

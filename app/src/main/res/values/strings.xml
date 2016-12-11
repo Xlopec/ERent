@@ -72,6 +72,20 @@
     <string name="item_details_email_client_chooser">Choose email client</string>
     <string name="item_details_no_email_client">No email clients available</string>
 
+    <!-- Item creation activity -->
+    <string name="creation_progress">Operation in progress…</string>
+    <string name="creation_refreshing">Refreshing…</string>
+    <string name="creation_progress_success">%s was successfully created…</string>
+    <string name="creation_category_not_set">Category wasn\'t set</string>
+    <string name="creation_region_not_set">Region wasn\'t set</string>
+    <string name="creation_brand_not_set">Brand wasn\'t set</string>
+    <string name="creation_categories_failure">Failed to fetch categories…</string>
+    <string name="creation_brands_failure">Failed to fetch brands…</string>
+    <string name="creation_regions_failure">Failed to fetch regions…</string>
+    <string name="creation_add_image">Add image</string>
+    <string name="creation_clear_images">Clear images</string>
+    <string name="creation_pick_dialog_title">Select image</string>
+
     <!-- Search fragment -->
     <string name="search_input_hint">Search query…</string>
     <string name="search_price_range">Price range</string>

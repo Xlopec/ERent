@@ -8,7 +8,6 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.ua.erent.BuildConfig;
 import com.ua.erent.R;
 import com.ua.erent.module.core.presentation.mvp.model.interfaces.IItemsModel;
 import com.ua.erent.module.core.presentation.mvp.presenter.interfaces.IItemsPresenter;
@@ -340,7 +339,7 @@ public final class ItemsPresenter extends IItemsPresenter {
     @Override
     public void onOpenDialog(long itemId, long userId) {
 
-        if(!model.isSessionAlive())
+        if (!model.isSessionAlive())
             throw new IllegalStateException("session was expired!");
 
         final Intent intent = model.createConversationIntent(itemId, userId);
@@ -399,9 +398,9 @@ public final class ItemsPresenter extends IItemsPresenter {
             arg = tmp;
         }
 
-        if (BuildConfig.DEBUG) {
+        /*if (BuildConfig.DEBUG) {
             ensureValidState(dest);
-        }
+        }*/
         return arg;
     }
 
@@ -427,11 +426,9 @@ public final class ItemsPresenter extends IItemsPresenter {
         }
 
         dest.addAll(c);
-
-        if (BuildConfig.DEBUG) {
+        /*if (BuildConfig.DEBUG) {
             ensureValidState(dest);
-        }
-
+        }*/
         getView().addPrevItems(c);
     }
 

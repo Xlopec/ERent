@@ -8,14 +8,14 @@ import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
-import android.widget.ImageView;
 
-public class TouchImageView extends ImageView {
+public class TouchImageView extends AppCompatImageView {
     Matrix matrix;
     // We can be in one of these 3 states
     static final int NONE = 0;

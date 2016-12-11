@@ -54,7 +54,8 @@ final class ConverterFactory {
                         .setPublicationDate(convert.publicationDate)
                         .setUserInfo(
                                 new UserInfo(new UserID(convert.owner.id), convert.owner.username,
-                                        new MyURL(BuildConfig.API_BASE_URL.concat(convert.owner.avatarUrl)))
+                                        convert.owner.avatarUrl == null ? null :
+                                                new MyURL(BuildConfig.API_BASE_URL.concat(convert.owner.avatarUrl)))
                         ).build())
                 .build();
     }

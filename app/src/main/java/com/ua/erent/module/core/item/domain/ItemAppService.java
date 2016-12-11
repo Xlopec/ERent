@@ -2,6 +2,7 @@ package com.ua.erent.module.core.item.domain;
 
 import com.ua.erent.module.core.item.domain.bo.Item;
 import com.ua.erent.module.core.item.domain.vo.Brand;
+import com.ua.erent.module.core.item.domain.vo.ItemForm;
 import com.ua.erent.module.core.item.domain.vo.ItemID;
 import com.ua.erent.module.core.item.domain.vo.Region;
 import com.ua.erent.module.core.networking.util.IApiFilter;
@@ -50,5 +51,10 @@ public final class ItemAppService implements IItemAppService {
     @Override
     public Observable<Collection<Region>> fetchRegions() {
         return domain.fetchRegions();
+    }
+
+    @Override
+    public Observable<Item> createItem(@NotNull ItemForm form) {
+        return domain.createItem(form);
     }
 }

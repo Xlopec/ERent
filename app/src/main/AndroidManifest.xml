@@ -47,10 +47,10 @@
         <activity
             android:name=".module.core.presentation.mvp.view.CategoriesActivity"
             android:label="@string/categories_title_activity">
-            <!--  <intent-filter>
-                  <action android:name="android.intent.action.MAIN" />
-                  <category android:name="android.intent.category.LAUNCHER" />
-              </intent-filter>-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".module.core.presentation.mvp.view.InitialScreenActivity"
@@ -97,13 +97,19 @@
             -->
         </activity>
         <activity android:name=".module.core.presentation.mvp.view.ChatActivity">
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <activity android:name=".module.core.presentation.mvp.view.GalleryActivity" />
-        <activity android:name=".module.core.presentation.mvp.view.ConversationsActivity"></activity>
+        <activity android:name=".module.core.presentation.mvp.view.ConversationsActivity" />
+        <activity android:name=".module.core.presentation.mvp.view.ItemCreateActivity">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+        </activity>
     </application>
 
 </manifest>

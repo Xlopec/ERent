@@ -8,12 +8,14 @@ import com.ua.erent.module.core.presentation.mvp.component.CropComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerCategoriesComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerChatComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerCropComponent;
+import com.ua.erent.module.core.presentation.mvp.component.DaggerItemCreationComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerSearchComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerInitialScreenComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerItemDetailsComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerItemsComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerLoginComponent;
 import com.ua.erent.module.core.presentation.mvp.component.DaggerRegisterComponent;
+import com.ua.erent.module.core.presentation.mvp.component.ItemCreationComponent;
 import com.ua.erent.module.core.presentation.mvp.component.SearchComponent;
 import com.ua.erent.module.core.presentation.mvp.component.InitialScreenComponent;
 import com.ua.erent.module.core.presentation.mvp.component.ItemDetailsComponent;
@@ -106,7 +108,9 @@ public final class InjectConfigModule extends Injector.IConfigModule {
                 .registerComponentFactory(SearchComponent.class, () -> DaggerSearchComponent.builder()
                         .appComponent(appComponent).searchModule(new SearchModule()).build())
                 .registerComponentFactory(ChatComponent.class, () -> DaggerChatComponent.builder()
-                        .appComponent(appComponent).chatModule(new ChatModule()).build());
+                        .appComponent(appComponent).chatModule(new ChatModule()).build())
+                .registerComponentFactory(ItemCreationComponent.class, () -> DaggerItemCreationComponent.builder()
+                        .appComponent(appComponent).itemsModule(new ItemsModule()).build());
     }
 
 }

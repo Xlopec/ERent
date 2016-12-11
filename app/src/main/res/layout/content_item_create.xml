@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:overScrollMode="never"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.ua.erent.module.core.presentation.mvp.view.ItemDetailsActivity"
+    tools:showIn="@layout/activity_item_create">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/activity_side_pad"
+        android:paddingLeft="@dimen/activity_side_pad"
+        android:paddingRight="@dimen/activity_side_pad"
+        android:paddingStart="@dimen/activity_side_pad">
+
+        <LinearLayout
+            android:id="@+id/item_section_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="15dp"
+                android:paddingTop="15dp">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/item_name_icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_centerVertical="true"
+                    app:srcCompat="@drawable/ic_label_def_24dp" />
+
+                <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedEditText
+                    android:id="@+id/item_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_toEndOf="@id/item_name_icon"
+                    android:layout_toRightOf="@id/item_name_icon"
+                    android:background="@android:color/transparent"
+                    android:ellipsize="end"
+                    android:hint="Enter name"
+                    android:inputType="textAutoComplete"
+                    android:maxLines="1"
+                    app:customFont="Roboto-Light" />
+
+                <View
+                    style="@style/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/item_name"
+                    android:layout_marginLeft="66dp"
+                    android:layout_marginStart="66dp"
+                    android:layout_marginTop="10dp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="15dp"
+                android:paddingTop="15dp">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/item_price_icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_centerVertical="true"
+                    app:srcCompat="@drawable/ic_credit_card_default_24dp" />
+
+                <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedEditText
+                    android:id="@+id/item_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_toEndOf="@id/item_price_icon"
+                    android:layout_toRightOf="@id/item_price_icon"
+                    android:background="@android:color/transparent"
+                    android:ellipsize="end"
+                    android:hint="Enter price"
+                    android:inputType="numberDecimal"
+                    android:maxLines="1"
+                    app:customFont="Roboto-Light" />
+
+                <View
+                    style="@style/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/item_price"
+                    android:layout_marginLeft="66dp"
+                    android:layout_marginStart="66dp"
+                    android:layout_marginTop="10dp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/item_category_root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="15dp"
+                android:paddingTop="15dp">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/item_category_icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_centerVertical="true"
+                    app:srcCompat="@drawable/ic_credit_card_default_24dp" />
+
+                <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+                    android:id="@+id/item_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_toEndOf="@id/item_category_icon"
+                    android:layout_toRightOf="@id/item_category_icon"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Select category"
+                    app:customFont="Roboto-Light" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/item_category_sub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/item_category"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_toEndOf="@id/item_category_icon"
+                    android:layout_toRightOf="@id/item_category_icon"
+                    android:text="Tap to select category" />
+
+                <View
+                    style="@style/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/item_category_sub"
+                    android:layout_marginLeft="66dp"
+                    android:layout_marginStart="66dp"
+                    android:layout_marginTop="10dp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/item_brand_root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="15dp"
+                android:paddingTop="15dp">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/item_brand_icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_centerVertical="true"
+                    app:srcCompat="@drawable/ic_credit_card_default_24dp" />
+
+                <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+                    android:id="@+id/item_brand"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_toEndOf="@id/item_brand_icon"
+                    android:layout_toRightOf="@id/item_brand_icon"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Select brand"
+                    app:customFont="Roboto-Light" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/item_brand_sub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/item_brand"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_toEndOf="@id/item_brand_icon"
+                    android:layout_toRightOf="@id/item_brand_icon"
+                    android:text="Tap to select brand" />
+
+                <View
+                    style="@style/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/item_brand_sub"
+                    android:layout_marginLeft="66dp"
+                    android:layout_marginStart="66dp"
+                    android:layout_marginTop="10dp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/item_region_root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="15dp"
+                android:paddingTop="15dp">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/item_region_icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_centerVertical="true"
+                    app:srcCompat="@drawable/ic_credit_card_default_24dp" />
+
+                <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedTextView
+                    android:id="@+id/item_region"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_toEndOf="@id/item_region_icon"
+                    android:layout_toRightOf="@id/item_region_icon"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Select region"
+                    app:customFont="Roboto-Light" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/item_region_sub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/item_region"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_toEndOf="@id/item_region_icon"
+                    android:layout_toRightOf="@id/item_region_icon"
+                    android:text="Tap to select region" />
+
+                <View
+                    style="@style/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/item_region_sub"
+                    android:layout_marginLeft="66dp"
+                    android:layout_marginStart="66dp"
+                    android:layout_marginTop="10dp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="15dp"
+                android:paddingTop="15dp">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/item_description_icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_centerVertical="true"
+                    app:srcCompat="@drawable/ic_mode_edit_def_24dp" />
+
+                <com.ua.erent.module.core.presentation.mvp.view.util.TypefacedEditText
+                    android:id="@+id/item_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_toEndOf="@id/item_description_icon"
+                    android:layout_toRightOf="@id/item_description_icon"
+                    android:background="@android:color/transparent"
+                    android:ellipsize="end"
+                    android:hint="Enter description"
+                    android:inputType="textAutoComplete"
+                    android:maxLines="1"
+                    app:customFont="Roboto-Light" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</android.support.v4.widget.NestedScrollView>

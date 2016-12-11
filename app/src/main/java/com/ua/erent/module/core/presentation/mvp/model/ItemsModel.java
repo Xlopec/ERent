@@ -50,7 +50,7 @@ public final class ItemsModel implements IItemsModel {
                 .orderBy(FilterBuilder.OrderBy.PUB_DATE)
                 .withLimit(limit)
                 .build())
-                .map(data -> ItemConverter.toModel(context, data));
+                .map(data -> ItemConverter.toCategoryModel(context, data));
     }
 
     @Override
@@ -63,7 +63,7 @@ public final class ItemsModel implements IItemsModel {
                         .sort(FilterBuilder.SortType.ASC)
                         .withLimit(limit)
                         .build())
-                .map(data -> ItemConverter.toModel(context, data));
+                .map(data -> ItemConverter.toCategoryModel(context, data));
     }
 
     @Override
@@ -75,7 +75,7 @@ public final class ItemsModel implements IItemsModel {
                         .withLastIdLower(lastId)
                         .withLimit(limit)
                         .build())
-                .map(data -> ItemConverter.toModel(context, data));
+                .map(data -> ItemConverter.toCategoryModel(context, data));
     }
 
     @Override
@@ -88,7 +88,7 @@ public final class ItemsModel implements IItemsModel {
                         .sort(FilterBuilder.SortType.ASC)
                         .withLimit(limit)
                         .build())
-                .map(data -> ItemConverter.toModel(context, data));
+                .map(data -> ItemConverter.toCategoryModel(context, data));
     }
 
     @Override
@@ -101,13 +101,13 @@ public final class ItemsModel implements IItemsModel {
                         .sort(FilterBuilder.SortType.ASC)
                         .withLimit(limit)
                         .build())
-                .map(data -> ItemConverter.toModel(context, data));
+                .map(data -> ItemConverter.toCategoryModel(context, data));
     }
 
     @Override
     public Observable<Collection<ItemModel>> getOnItemAddedObs() {
         return itemAppService.getOnItemsAddedObs()
-                .map(data -> ItemConverter.toModel(context, data));
+                .map(data -> ItemConverter.toCategoryModel(context, data));
     }
 
     @Override
@@ -143,7 +143,7 @@ public final class ItemsModel implements IItemsModel {
                         .withQuery(query.replaceAll("(\\s\\s\\s*)|(\\n)", " "))
                         .withLimit(limit)
                         .build())
-                .map(data -> ItemConverter.toModel(context, data));
+                .map(data -> ItemConverter.toCategoryModel(context, data));
     }
 
 }

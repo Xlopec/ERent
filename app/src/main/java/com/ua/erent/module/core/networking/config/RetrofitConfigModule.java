@@ -15,6 +15,7 @@ import com.ua.erent.module.core.util.JodaTimeDeserializer;
 import org.joda.time.DateTime;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import dagger.internal.Preconditions;
 import okhttp3.OkHttpClient;
@@ -84,31 +85,33 @@ public final class RetrofitConfigModule extends IConfigModule<Retrofit> {
 
             httpClient.addInterceptor(chain -> {
                 final Response response = chain.proceed(chain.request());
-               // String respBody = response.body().string();
+                // String respBody = response.body().string();
                 interceptService.intercept(response);
                 return response;
             });
         }
 
-        httpClient.addNetworkInterceptor(
-                (chain) -> {
-                    // packet interception
-                    final Request original = chain.request();
-                    final String reqBody = bodyToString(original.body());
+        httpClient
+                .connectTimeout(1, TimeUnit.MINUTES)
+                .addNetworkInterceptor(
+                        (chain) -> {
+                            // packet interception
+                            final Request original = chain.request();
+                            final String reqBody = bodyToString(original.body());
 
-                    final String str = String.format("Headers %s, request body: %s",
-                            original.headers(), reqBody);
+                            final String str = String.format("Headers %s, request body: %s",
+                                    original.headers(), reqBody);
 
-                    Log.d("Tag", str);
+                            Log.d("Tag", str);
 
-                    final Request request = original.newBuilder().
-                            //header("Content-Type", "application/json").
-                            method(original.method(), original.body()).
-                            build();
+                            final Request request = original.newBuilder().
+                                    //header("Content-Type", "application/json").
+                                            method(original.method(), original.body()).
+                                            build();
 
-                    return chain.proceed(request);
-                }
-        ).addInterceptor(logging);
+                            return chain.proceed(request);
+                        }
+                ).addInterceptor(logging);
 
         return retrofit = new Retrofit.Builder().
                 baseUrl(BuildConfig.API_BASE_URL.concat("/api/")).

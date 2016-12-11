@@ -3,7 +3,6 @@ package com.ua.erent.module.core.presentation.mvp.view.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Parcel;
 import android.support.annotation.Px;
 import android.support.v4.util.LruCache;
@@ -64,7 +63,7 @@ public class UrlBitmapFuture implements IUrlFutureBitmap {
     @Override
     public Observable<Bitmap> fetch(@Px int reqW, @Px int reqH, @NotNull Context context) {
 
-        return cache.get(1) == null ? Observable.defer(() ->
+        return cache.get(0) == null ? Observable.defer(() ->
                 Observable.create((Observable.OnSubscribe<Bitmap>) subscriber -> {
 
                     subscriber.onStart();
@@ -84,7 +83,7 @@ public class UrlBitmapFuture implements IUrlFutureBitmap {
                             final Bitmap rawBm = BitmapFactory.decodeStream(is);
                             int outW = rawBm.getWidth(), outH = rawBm.getHeight();
 
-                            while (outW / 2 > reqW && outH / 2 > outH) {
+                            while (outW / 2 > reqW && outH / 2 > reqH) {
                                 outW /= 2;
                                 outH /= 2;
                             }
@@ -104,7 +103,7 @@ public class UrlBitmapFuture implements IUrlFutureBitmap {
                     }
                 }))
                 .subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread())
-                : Observable.just(cache.get(1));
+                : Observable.just(cache.get(0));
     }
 
     @Override

@@ -24,7 +24,7 @@ public final class UserInfo implements Parcelable {
     private final String username;
     private final MyURL avatar;
 
-    public UserInfo(@NotNull UserID id, @NotNull String username, @NotNull MyURL avatar) {
+    public UserInfo(@NotNull UserID id, @NotNull String username, MyURL avatar) {
 
         if (!USERNAME_VALIDATOR.isValid(username))
             throw new IllegalArgumentException(String.format("invalid username %s", username));
